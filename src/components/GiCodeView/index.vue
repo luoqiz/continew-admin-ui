@@ -1,5 +1,5 @@
 <template>
-    <CodeMirror
+  <CodeMirror
     :model-value="codeValue"
     :tab-size="config.tabSize"
     :basic="config.basic"
@@ -7,7 +7,7 @@
     :readonly="config.readonly"
     :extensions="extensions"
     style="height: 100%; border-width:1px; border-style:solid;"
-    />
+  />
 </template>
 
 <script lang="ts" setup>

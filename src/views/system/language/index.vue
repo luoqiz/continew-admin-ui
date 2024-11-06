@@ -2,8 +2,8 @@
 import { Message } from '@arco-design/web-vue'
 import LanguageAddModal from './LanguageAddModal.vue'
 import { type LanguageQuery, type LanguageResp, deleteLanguage, getLanguage, listLanguage, updateLanguage } from '@/apis/system/language'
-import { useTable } from '@/hooks'
 import { useDict } from '@/hooks/app'
+import { useDeleteDialog } from '@/hooks/modules/useDeleteDialog'
 
 defineOptions({ name: 'Language' })
 
@@ -17,20 +17,23 @@ const queryForm = reactive<LanguageQuery>({
   status: undefined,
   createUser: undefined,
   createTime: undefined,
-  sort: ['createTime,desc']
+  sort: ['createTime,desc'],
 })
 
-const {
-  tableData: dataList,
-  search,
-  handleDelete
-} = useTable((page) => listLanguage({ ...queryForm, ...page }), { immediate: true })
+const dataList = ref([], { immediate: true })
+// 获取列表
+const search = async () => {
+  const data = await listLanguage({ ...queryForm, page: 1, size: 1000 })
+  dataList.value = data.data.list
+}
 
 // 删除
 const onDelete = (record: LanguageResp) => {
-  return handleDelete(() => deleteLanguage(record.id), {
+  return useDeleteDialog(() => deleteLanguage(record.id), () => {
+    search()
+  }, {
     content: `是否确定删除该条数据？`,
-    showModal: true
+    showModal: true,
   })
 }
 
@@ -57,6 +60,8 @@ const saveContent = async () => {
   }
 }
 
+onMounted(() => { search() })
+
 // const cmRef = ref()
 
 // const cmOptions = {
@@ -82,19 +87,20 @@ const saveContent = async () => {
 
 <template>
   <div class="table-page">
-      <a-row justify="space-between" align="center" class="header page_header">
+    <a-row justify="space-between" align="center" class="header page_header">
       <a-space wrap>
         <div class="title">语言管理</div>
       </a-space>
-      </a-row>
-      <a-row justify="space-between" align="center" class="header page_header">
-        <a-space wrap>
-          <a-radio-group v-model="queryForm.dictItem" type="button" @change="search">
-              <a-radio v-for="item of language_type" :key="item.value" :value="item.value"> {{ item.label }}</a-radio>
-            </a-radio-group>
-        </a-space>
-      </a-row>
-      <a-row align="stretch" :gutter="14" class="flex-1 h-full page_content">
+    </a-row>
+    <a-row justify="space-between" align="center" class="header page_header">
+      <a-space wrap>
+        <a-radio-group v-model="queryForm.dictItem" type="button" @change="search">
+          <a-radio key="all" value="">全部</a-radio>
+          <a-radio v-for="item of language_type" :key="item.value" :value="item.value"> {{ item.label }}</a-radio>
+        </a-radio-group>
+      </a-space>
+    </a-row>
+    <a-row align="stretch" :gutter="14" class="flex-1 h-full page_content">
       <a-col :xs="0" :sm="0" :md="6" :lg="5" :xl="5" :xxl="4" class="h-full ov-hidden">
         <div class="left-tree">
           <div class="left-tree__search flex flex-row">
@@ -102,26 +108,26 @@ const saveContent = async () => {
               <template #prefix><icon-search /></template>
             </a-input>
             <button class="m-2" size="large" @click="onAdd">
-            <icon-plus />
+              <icon-plus />
             </button>
           </div>
           <div class="left-tree__container mt-4">
-              <div class="left-tree__tree">
-                <a-list size="small">
-                  <a-list-item v-for="item in dataList" :key="item.id" :class="currentModule?.id === item.id ? 'bg-blue-2' : ''" @click="changeModule(item)">
-                    {{ item.moduleName }}
-                    <template #actions>
-                      <a-link
-                        v-permission="['generator:language:delete']"
-                        status="danger"
-                        @click="onDelete(item)"
-                      >
-                        <icon-delete />
-                      </a-link>
-                    </template>
-                  </a-list-item>
-                </a-list>
-              </div>
+            <div class="left-tree__tree">
+              <a-list size="small">
+                <a-list-item v-for="item in dataList" :key="item.id" :class="currentModule?.id === item.id ? 'bg-blue-2' : ''" @click="changeModule(item)">
+                  {{ item.moduleName }}
+                  <template #actions>
+                    <a-link
+                      v-permission="['generator:language:delete']"
+                      status="danger"
+                      @click="onDelete(item)"
+                    >
+                      <icon-delete />
+                    </a-link>
+                  </template>
+                </a-list-item>
+              </a-list>
+            </div>
           </div>
         </div>
       </a-col>
@@ -150,16 +156,15 @@ const saveContent = async () => {
               </Codemirror>
               -->
               <div style="height: calc(100% - 24px); width: 100%;">
-                <GiCodeView v-model="currentModule.content" type="yaml" :config="{ readonly: false }"></GiCodeView>
+                <GiCodeView :code-json="currentModule.content" type="yaml" :config="{ readonly: false, tabSize: 2 }"></GiCodeView>
               </div>
-              </div>
+            </div>
           </a-row>
         </div>
       </a-col>
     </a-row>
-    </div>
-
     <LanguageAddModal ref="LanguageAddModalRef" @save-success="search" />
+  </div>
 </template>
 
 <style lang="scss" scoped>

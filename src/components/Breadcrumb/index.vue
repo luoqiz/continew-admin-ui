@@ -5,9 +5,9 @@
         v-if="item.redirect === 'noRedirect' || item.redirect === '' || index === breadcrumbList.length - 1"
         class="gi_line_1"
       >
-        {{ item.meta.title }}
+        {{ item.meta.locale ? $t(item.meta.locale) : item.meta.title }}
       </span>
-      <span v-else class="gi_line_1 breadcrumb-item-title" @click="handleLink(item)">{{ item.meta.title }}</span>
+      <span v-else class="gi_line_1 breadcrumb-item-title" @click="handleLink(item)">{{ item.meta.locale ? $t(item.meta.locale) : item.meta.title }}</span>
     </a-breadcrumb-item>
   </a-breadcrumb>
 </template>
