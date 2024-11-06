@@ -62,6 +62,7 @@ const formatAsyncRoutes = (menus: RouteItem[]) => {
       redirect: item.redirect,
       meta: {
         title: item.title,
+        locale: item.locale,
         hidden: item.isHidden,
         keepAlive: item.isCache,
         icon: item.icon,

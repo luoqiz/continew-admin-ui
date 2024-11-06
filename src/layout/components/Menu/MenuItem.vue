@@ -16,10 +16,10 @@
         />
       </template>
       <!-- <span>{{ onlyOneChild?.meta?.title }}</span> -->
-      <span>{{ $t(onlyOneChild?.meta?.locale ? onlyOneChild?.meta?.locale as string : onlyOneChild?.meta?.title ?? '') }}</span>
+      <span>{{ onlyOneChild?.meta?.locale ? $t(onlyOneChild?.meta?.locale as string) : onlyOneChild?.meta?.title ?? '' }}</span>
     </a-menu-item>
 
-    <a-sub-menu v-else v-bind="attrs" :key="item.path" :title="$t(item?.meta?.locale ? item?.meta?.locale as string : item?.meta?.title ?? '')">
+    <a-sub-menu v-else v-bind="attrs" :key="item.path" :title="item?.meta?.locale ? $t(item?.meta?.locale as string) : item?.meta?.title ?? ''">
       <template #icon>
         <MenuIcon :icon="item?.meta?.icon" />
       </template>

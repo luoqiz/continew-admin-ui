@@ -16,7 +16,7 @@
         <IconDown v-if="expanded" />
         <IconRight v-else />
       </template>
-      <template #toolbar-left>
+      <!-- <template #toolbar-left>
         <a-input v-model="title" placeholder="请输入菜单标题" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input>
@@ -24,7 +24,7 @@
           <template #icon><icon-refresh /></template>
           <template #default>重置</template>
         </a-button>
-      </template>
+      </template> -->
       <template #toolbar-right>
         <a-button v-permission="['system:menu:add']" type="primary" @click="onAdd()">
           <template #icon><icon-plus /></template>
@@ -41,7 +41,7 @@
       </template>
       <template #title="{ record }">
         <GiSvgIcon :name="record.icon" :size="15" />
-        <span style="margin-left: 5px; vertical-align: middle">{{ $t(record.title) }}</span>
+        <span style="margin-left: 5px; vertical-align: middle">{{ record.locale ? $t(record.locale) : record.title }}</span>
       </template>
       <template #type="{ record }">
         <a-tag v-if="record.type === 1" color="arcoblue">目录</a-tag>

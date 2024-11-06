@@ -36,6 +36,9 @@
       <a-form-item label="菜单标题" field="title">
         <a-input v-model.trim="form.title" placeholder="请输入菜单标题" allow-clear />
       </a-form-item>
+      <a-form-item label="多语言key" field="locale">
+        <a-input v-model.trim="form.locale" placeholder="请输入多语言key" allow-clear />
+      </a-form-item>
       <a-form-item v-if="[1, 2].includes(form.type)" label="路由地址" field="path">
         <a-input v-model.trim="form.path" placeholder="请输入路由地址" allow-clear />
       </a-form-item>
