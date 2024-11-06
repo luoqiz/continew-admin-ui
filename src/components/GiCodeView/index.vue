@@ -29,7 +29,7 @@ const isDark = computed(() => appStore.theme === 'dark')
 interface Props {
   type?: 'javascript' | 'vue' | 'yaml'
   codeJson: string
-  config: any
+  config?: any
 }
 const defaultConfig = {
   tabSize: 2,
