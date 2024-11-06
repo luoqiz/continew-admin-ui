@@ -1,12 +1,13 @@
 <template>
-  <CodeMirror
+    <CodeMirror
     :model-value="codeValue"
     :tab-size="config.tabSize"
     :basic="config.basic"
     :dark="config.dark"
     :readonly="config.readonly"
     :extensions="extensions"
-  />
+    style="height: 100%; border-width:1px; border-style:solid;"
+    />
 </template>
 
 <script lang="ts" setup>
@@ -15,6 +16,7 @@ import { javascript } from '@codemirror/lang-javascript'
 import { vue } from '@codemirror/lang-vue'
 import { githubLight } from '@ddietr/codemirror-themes/github-light'
 import { oneDark } from '@codemirror/theme-one-dark'
+import { yaml } from '@codemirror/lang-yaml'
 import { useAppStore } from '@/stores'
 
 const props = withDefaults(defineProps<Props>(), {
@@ -25,8 +27,9 @@ const appStore = useAppStore()
 const isDark = computed(() => appStore.theme === 'dark')
 
 interface Props {
-  type?: 'javascript' | 'vue'
+  type?: 'javascript' | 'vue' | 'yaml'
   codeJson: string
+  config: any
 }
 const defaultConfig = {
   tabSize: 2,
@@ -34,7 +37,7 @@ const defaultConfig = {
   dark: true,
   readonly: true
 }
-const config = defaultConfig
+const config = Object.assign({}, defaultConfig, props.config)
 
 const codeValue = computed(() => props.codeJson)
 
@@ -45,6 +48,9 @@ const extensions = computed(() => {
   }
   if (props.type === 'vue') {
     arr.push(vue())
+  }
+  if (props.type === 'yaml') {
+    arr.push(yaml())
   }
   return arr
 })

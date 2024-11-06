@@ -41,7 +41,7 @@
       </template>
       <template #title="{ record }">
         <GiSvgIcon :name="record.icon" :size="15" />
-        <span style="margin-left: 5px; vertical-align: middle">{{ record.title }}</span>
+        <span style="margin-left: 5px; vertical-align: middle">{{ $t(record.title) }}</span>
       </template>
       <template #type="{ record }">
         <a-tag v-if="record.type === 1" color="arcoblue">目录</a-tag>

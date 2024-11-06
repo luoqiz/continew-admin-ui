@@ -43,5 +43,8 @@
     "gql",
     "graphql",
     "astro"
+  ],
+  "i18n-ally.localesPaths": [
+    "src/views/system/language"
   ]
 }

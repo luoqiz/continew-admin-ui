@@ -38,7 +38,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     name: 'Dashboard',
     component: Layout,
     redirect: '/dashboard/workplace',
-    meta: { title: '仪表盘', icon: 'dashboard', hidden: false },
+    meta: { locale: 'menu.dashboard.workplace', title: '仪表盘', icon: 'dashboard', hidden: false },
     children: [
       {
         path: '/dashboard/workplace',

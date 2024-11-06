@@ -25,7 +25,9 @@ import 'virtual:svg-icons-register'
 
 // 自定义指令
 import directives from './directives'
+import { loadI18n } from './config/i18n'
 import pinia from '@/stores'
+import 'virtual:uno.css'
 
 // 对特定组件进行默认配置
 Card.props.bordered = false
@@ -39,5 +41,6 @@ app.use(pinia)
 app.use(ArcoVue)
 app.use(ArcoVueIcon)
 app.use(directives)
+loadI18n(app)
 
 app.mount('#app')

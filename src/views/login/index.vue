@@ -1,3 +1,34 @@
+<script setup lang="ts">
+import Background from './components/background/index.vue'
+import AccountLogin from './components/account/index.vue'
+import PhoneLogin from './components/phone/index.vue'
+import EmailLogin from './components/email/index.vue'
+import { socialAuth } from '@/apis/auth'
+import { useAppStore } from '@/stores'
+import { useDevice } from '@/hooks'
+import { useLanguageStore } from '@/stores/modules/language'
+
+defineOptions({ name: 'Login' })
+
+const { isDesktop } = useDevice()
+const appStore = useAppStore()
+const languageStore = useLanguageStore()
+const title = computed(() => appStore.getTitle())
+const logo = computed(() => appStore.getLogo())
+
+const isEmailLogin = ref(false)
+// 切换登录模式
+const toggleLoginMode = () => {
+  isEmailLogin.value = !isEmailLogin.value
+}
+
+// 第三方登录授权
+const onOauth = async (source: string) => {
+  const { data } = await socialAuth(source)
+  window.location.href = data.authorizeUrl
+}
+</script>
+
 <template>
   <div class="login pc">
     <h3 class="login-logo">
@@ -28,7 +59,7 @@
             <a-divider orientation="center">其他登录方式</a-divider>
             <div class="list">
               <div v-if="isEmailLogin" class="mode item" @click="toggleLoginMode"><icon-user /> 账号/手机号登录</div>
-              <div v-else class="mode item" @click="toggleLoginMode"><icon-email /> 邮箱登录</div>
+              <div v-else class="mode item" @click="toggleLoginMode"><icon-email /> {{ $t("login.email") }}</div>
               <a class="item" title="使用 Gitee 账号登录" @click="onOauth('gitee')">
                 <GiSvgIcon name="gitee" :size="24" />
               </a>
@@ -46,8 +77,12 @@
         <div class="below text">{{ appStore.getCopyright() }}{{ appStore.getForRecord() ? ` · ${appStore.getForRecord()}` : '' }}</div>
       </div>
     </div>
-
-    <GiThemeBtn class="theme-btn" />
+    <div class="theme-btn">
+      <a-select v-model="languageStore.currentLanguage" class="m-r-4 w-200px" @change="languageStore.changeTranslation">
+        <a-option v-for="item of languageStore.languageTypeList" :key="item.value" :value="item">{{ item.label }}</a-option>
+      </a-select>
+      <GiThemeBtn />
+    </div>
     <Background />
   </div>
   <div class="login h5">
@@ -87,35 +122,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import Background from './components/background/index.vue'
-import AccountLogin from './components/account/index.vue'
-import PhoneLogin from './components/phone/index.vue'
-import EmailLogin from './components/email/index.vue'
-import { socialAuth } from '@/apis/auth'
-import { useAppStore } from '@/stores'
-import { useDevice } from '@/hooks'
-
-defineOptions({ name: 'Login' })
-
-const { isDesktop } = useDevice()
-const appStore = useAppStore()
-const title = computed(() => appStore.getTitle())
-const logo = computed(() => appStore.getLogo())
-
-const isEmailLogin = ref(false)
-// 切换登录模式
-const toggleLoginMode = () => {
-  isEmailLogin.value = !isEmailLogin.value
-}
-
-// 第三方登录授权
-const onOauth = async (source: string) => {
-  const { data } = await socialAuth(source)
-  window.location.href = data.authorizeUrl
-}
-</script>
 
 <style lang="scss" scoped>
 @media screen and (max-width: 570px) {

@@ -16,13 +16,17 @@
 </template>
 
 <script setup lang="ts">
-import { useAppStore, useUserStore } from '@/stores'
+import { useAppStore, useLanguageStore, useUserStore } from '@/stores'
 
 defineOptions({ name: 'App' })
 const userStore = useUserStore()
 const appStore = useAppStore()
+const languageStore = useLanguageStore()
 appStore.initTheme()
 appStore.initSiteConfig()
+onMounted(async () => {
+  await languageStore.initLanguageConfig()
+})
 </script>
 
 <style lang="scss" scoped>
