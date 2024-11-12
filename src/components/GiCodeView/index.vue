@@ -1,6 +1,6 @@
 <template>
   <CodeMirror
-    :model-value="codeValue"
+    v-model="modelProps"
     :tab-size="config.tabSize"
     :basic="config.basic"
     :dark="config.dark"
@@ -17,18 +17,21 @@ import { vue } from '@codemirror/lang-vue'
 import { githubLight } from '@ddietr/codemirror-themes/github-light'
 import { oneDark } from '@codemirror/theme-one-dark'
 import { yaml } from '@codemirror/lang-yaml'
+import { StreamLanguage } from '@codemirror/language'
+import { properties } from '@codemirror/legacy-modes/mode/properties'
 import { useAppStore } from '@/stores'
 
 const props = withDefaults(defineProps<Props>(), {
   type: 'javascript',
-  codeJson: '',
+  modelValue: '',
 })
+const emits = defineEmits(['update:modelValue'])
 const appStore = useAppStore()
 const isDark = computed(() => appStore.theme === 'dark')
 
 interface Props {
-  type?: 'javascript' | 'vue' | 'yaml'
-  codeJson: string
+  type?: 'javascript' | 'vue' | 'yaml' | 'properties'
+  modelValue?: string
   config?: any
 }
 const defaultConfig = {
@@ -37,9 +40,8 @@ const defaultConfig = {
   dark: true,
   readonly: true,
 }
-const config = Object.assign({}, defaultConfig, props.config)
 
-const codeValue = computed(() => props.codeJson)
+const config = Object.assign({}, defaultConfig, props.config)
 
 const extensions = computed(() => {
   const arr = [isDark.value ? oneDark : githubLight]
@@ -52,8 +54,23 @@ const extensions = computed(() => {
   if (props.type === 'yaml') {
     arr.push(yaml())
   }
+  if (props.type === 'properties') {
+    arr.push(StreamLanguage.define(properties))
+  }
   return arr
 })
+
+const modelProps = ref()
+
+watchEffect(() => {
+  modelProps.value = props.modelValue ?? ''
+})
+watch(
+  () => modelProps.value,
+  () => {
+    emits('update:modelValue', modelProps.value)
+  },
+)
 </script>
 
 <style lang="scss" scoped>

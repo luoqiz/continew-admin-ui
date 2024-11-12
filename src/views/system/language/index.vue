@@ -135,28 +135,18 @@ onMounted(() => { search() })
         <div v-if="currentModule" class="w-full h-full">
           <a-row>
             <p class="text-slate-950">
-              {{ currentModule.moduleName }} -- {{ currentModule.dictItem }}
+              <!-- {{ currentModule.moduleName }} -- {{ currentModule.dictItem }} -->
             </p>
-            <button
+            <a-button
               @click="saveContent"
             >
               保存
-            </button>
+            </a-button>
           </a-row>
-          <a-row class="h-full">
+          <a-row class="h-full m-t-32px">
             <div class="w-full h-full">
-              <!-- <Codemirror
-                ref="cmRef"
-                v-model:value="currentModule.content"
-                :options="cmOptions"
-                border
-                height="calc(100% - 24px)"
-                width="100%"
-                >
-              </Codemirror>
-              -->
-              <div style="height: calc(100% - 24px); width: 100%;">
-                <GiCodeView :code-json="currentModule.content" type="yaml" :config="{ readonly: false, tabSize: 2 }"></GiCodeView>
+              <div style="height: calc(100% - 64px); width: 100%;">
+                <GiCodeView v-model="currentModule.content" type="properties" :config="{ readonly: false, tabSize: 2 }"></GiCodeView>
               </div>
             </div>
           </a-row>
