@@ -35,6 +35,7 @@ interface Props {
   config?: any
 }
 const defaultConfig = {
+  tab: true,
   tabSize: 2,
   basic: true,
   dark: true,

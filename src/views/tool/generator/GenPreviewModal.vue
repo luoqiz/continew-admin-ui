@@ -57,8 +57,10 @@
                 复制
               </a-link>
               <GiCodeView
+                v-if="currentPreview?.content"
+                v-model="currentPreview.content"
                 :type="'vue' === currentPreview?.fileName.split('.')[1] ? 'vue' : 'javascript'"
-                :code-json="currentPreview?.content"
+                :config="{ readonly: false, tabSize: 2 }"
               />
             </a-scrollbar>
           </a-card>

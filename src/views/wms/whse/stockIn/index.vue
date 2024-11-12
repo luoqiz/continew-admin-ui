@@ -2,7 +2,7 @@
   <div class="table-page">
     <GiTable
       row-key="id"
-      :title="$t('wms.stock.in.title')"
+      :title="$t('wms.whse.stock.in.table')"
       :data="dataList"
       :columns="columns"
       :loading="loading"
@@ -37,33 +37,31 @@
         />
         <a-button @click="reset">
           <template #icon><icon-refresh /></template>
-          <template #default>重置</template>
+          <template #default>{{ $t('page.common.button.reset') }}</template>
         </a-button>
       </template>
       <template #toolbar-right>
         <a-button v-permission="['wms:whseStockIn:add']" type="primary" @click="onAdd">
           <template #icon><icon-plus /></template>
-          <template #default>新增</template>
+          <template #default>{{ $t('page.common.button.add') }}</template>
         </a-button>
         <a-button v-permission="['wms:whseStockIn:export']" @click="onExport">
           <template #icon><icon-download /></template>
-          <template #default>导出</template>
+          <template #default>{{ $t('page.common.button.export') }}</template>
         </a-button>
       </template>
       <template #action="{ record }">
         <a-space>
-          <a-link v-permission="['wms:whseStockIn:list']" title="查看" @click="onDetail(record)">查看</a-link>
-          <span v-if="record.status === 1">
-            <a-link v-permission="['wms:whseStockIn:update']" title="修改" @click="onUpdate(record)">修改</a-link>
-          </span>
+          <a-link v-permission="['wms:whseStockIn:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
+          <a-link v-permission="['wms:whseStockIn:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
           <a-link
             v-permission="['wms:whseStockIn:delete']"
             status="danger"
             :disabled="record.disabled"
-            title="删除"
+            :title="$t('page.common.button.delete')"
             @click="onDelete(record)"
           >
-            删除
+            {{ $t('page.common.button.delete') }}
           </a-link>
         </a-space>
       </template>
@@ -119,28 +117,27 @@ const status_enum = computed(() => [{
   label: t('wms.whse.stock.in.state.s3'),
   other: 'extra',
 }])
-const columns: ComputedRef<TableInstanceColumns[]> = computed(() =>
-  [
-  // { title: 'id编号', dataIndex: 'id', slotName: 'id' },
-    { title: t('wms.whse.stock.in.table.filed.name'), dataIndex: 'name', slotName: 'name' },
-    { title: '入库单号', dataIndex: 'stockInNo', slotName: 'stockInNo' },
-    { title: '仓库名称', dataIndex: 'whseName', slotName: 'whseName' },
-    { title: '关联移库单号', dataIndex: 'stockMoveId', slotName: 'stockMoveId' },
-    { title: '入库时间', dataIndex: 'inTime', slotName: 'inTime' },
-    { title: '状态', dataIndex: 'status', slotName: 'status' },
-    { title: '备注信息', dataIndex: 'memo', slotName: 'memo' },
-    { title: '创建人', dataIndex: 'createUserString', slotName: 'createUser' },
-    { title: '创建时间', dataIndex: 'createTime', slotName: 'createTime' },
-    {
-      title: '操作',
-      slotName: 'action',
-      width: 260,
-      align: 'center',
-      fixed: !isMobile() ? 'right' : undefined,
-      show: has.hasPermOr(['wms:whseStockIn:update', 'wms:whseStockIn:delete']),
-    },
-  ],
-)
+const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
+  // { title: t('wms.whse.stock.in.field.id'), dataIndex: 'id', slotName: 'id' },
+  { title: t('wms.whse.stock.in.field.name'), dataIndex: 'name', slotName: 'name' },
+  { title: t('wms.whse.stock.in.field.stockInNo'), dataIndex: 'stockInNo', slotName: 'stockInNo' },
+  // { title: t('wms.whse.stock.in.field.whseId'), dataIndex: 'whseId', slotName: 'whseId' },
+  { title: t('wms.whse.stock.in.field.whseName'), dataIndex: 'whseName', slotName: 'whseName' },
+  { title: t('wms.whse.stock.in.field.stockMoveId'), dataIndex: 'stockMoveId', slotName: 'stockMoveId' },
+  { title: t('wms.whse.stock.in.field.inTime'), dataIndex: 'inTime', slotName: 'inTime' },
+  { title: t('wms.whse.stock.in.field.status'), dataIndex: 'status', slotName: 'status' },
+  { title: t('wms.whse.stock.in.field.memo'), dataIndex: 'memo', slotName: 'memo' },
+  { title: t('wms.whse.stock.in.field.createUser'), dataIndex: 'createUser', slotName: 'createUser' },
+  { title: t('wms.whse.stock.in.field.createTime'), dataIndex: 'createTime', slotName: 'createTime' },
+  {
+    title: t('page.common.button.operator'),
+    slotName: 'action',
+    width: 130,
+    align: 'center',
+    fixed: !isMobile() ? 'right' : undefined,
+    show: has.hasPermOr(['wms:whseStockIn:update', 'wms:whseStockIn:delete']),
+  },
+])
 
 // 重置
 const reset = () => {
@@ -154,7 +151,7 @@ const reset = () => {
 // 删除
 const onDelete = (record: WhseStockInResp) => {
   return handleDelete(() => deleteWhseStockIn(record.id), {
-    content: `是否确定删除该条数据？`,
+    content: t('page.common.message.delete'),
     showModal: true,
   })
 }

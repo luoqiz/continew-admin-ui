@@ -14,6 +14,7 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { Message } from '@arco-design/web-vue'
 import { addWhseStockIn, getWhseStockIn, updateWhseStockIn } from '@/apis/wms/whseStockIn'
 import { type Columns, GiForm, type Options } from '@/components/GiForm'
@@ -24,9 +25,11 @@ const emit = defineEmits<{
   (e: 'save-success'): void
 }>()
 
+const { t } = useI18n()
+
 const dataId = ref('')
 const isUpdate = computed(() => !!dataId.value)
-const title = computed(() => (isUpdate.value ? '修改仓库入库' : '新增仓库入库'))
+const title = computed(() => (isUpdate.value ? t('wms.whse.stock.in.page.modify.title') : t('wms.whse.stock.in.page.add.title')))
 const formRef = ref<InstanceType<typeof GiForm>>()
 
 const options: Options = {
@@ -40,22 +43,22 @@ const { form, resetForm } = useForm({
 
 const columns = computed<Columns<typeof form>>(() => [
   {
-    label: '入库名称',
+    label: t('wms.whse.stock.in.field.name'),
     field: 'name',
     type: 'input',
-    rules: [{ required: true, message: '请输入入库名称' }],
+    rules: [{ required: true, message: t('wms.whse.stock.in.field.name_placeholder') }],
   },
   {
-    label: '入库单号',
+    label: t('wms.whse.stock.in.field.stockInNo'),
     field: 'stockInNo',
     type: 'input',
-    rules: [{ required: true, message: '请输入入库单号' }],
+    rules: [{ required: true, message: t('wms.whse.stock.in.field.stockInNo_placeholder') }],
   },
   {
-    label: '仓库id编号',
+    label: t('wms.whse.stock.in.field.whseId'),
     field: 'whseId',
     type: 'input',
-    rules: [{ required: true, message: '请输入仓库id编号' }],
+    rules: [{ required: true, message: t('wms.whse.stock.in.field.whseId_placeholder') }],
   },
 ])
 
@@ -89,10 +92,10 @@ const save = async () => {
     if (isInvalid) return false
     if (isUpdate.value) {
       await updateWhseStockIn(form, dataId.value)
-      Message.success('修改成功')
+      Message.success(t('page.common.message.modify.success'))
     } else {
       await addWhseStockIn(form)
-      Message.success('新增成功')
+      Message.success(t('page.common.message.add.success'))
     }
     emit('save-success')
     return true
