@@ -1,13 +1,14 @@
 <template>
-  <CodeMirror
-    v-model="modelProps"
-    :tab-size="config.tabSize"
-    :basic="config.basic"
-    :dark="config.dark"
-    :readonly="config.readonly"
-    :extensions="extensions"
-    style="height: 100%; border-width:1px; border-style:solid;"
-  />
+  <div class="codeView">
+    <CodeMirror
+      v-model="modelProps"
+      :tab-size="config.tabSize"
+      :basic="config.basic"
+      :dark="config.dark"
+      :readonly="config.readonly"
+      :extensions="extensions"
+    />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -40,6 +41,8 @@ const defaultConfig = {
   basic: true,
   dark: true,
   readonly: true,
+  lineNumbers: true,
+  lineCount: 50,
 }
 
 const config = Object.assign({}, defaultConfig, props.config)
@@ -77,5 +80,11 @@ watch(
 <style lang="scss" scoped>
 :deep(.ͼ1 .cm-scroller) {
   font-family: source-code-pro, Menlo, Monaco, Consolas, Courier New, monospace;
+}
+
+.codeView{
+  height: 100%;
+  overflow: scroll;
+  border: 1px solid;
 }
 </style>

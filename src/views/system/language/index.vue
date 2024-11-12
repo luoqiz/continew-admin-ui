@@ -143,11 +143,9 @@ onMounted(() => { search() })
               保存
             </a-button>
           </a-row>
-          <a-row class="h-full m-t-32px">
-            <div class="w-full h-full">
-              <div style="height: calc(100% - 64px); width: 100%;">
-                <GiCodeView v-model="currentModule.content" type="properties" :config="{ readonly: false, tabSize: 2 }"></GiCodeView>
-              </div>
+          <a-row class="h-full">
+            <div style="height: calc(100% - 84px); width: 100%; margin-top: 32px;">
+              <GiCodeView v-model="currentModule.content" type="properties" :config="{ readonly: false, tabSize: 2 }"></GiCodeView>
             </div>
           </a-row>
         </div>
