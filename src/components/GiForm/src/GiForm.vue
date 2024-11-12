@@ -25,6 +25,7 @@
                 :is="`a-${item.type}`" v-else v-bind="getComponentBindProps(item)"
                 :model-value="modelValue[item.field as keyof typeof modelValue]"
                 @update:model-value="valueChange($event, item.field)"
+                v-on="item.events ?? {}"
               ></component>
             </slot>
             <slot v-else name="group-title">

@@ -51,14 +51,15 @@ export type ColumnsItemPropsKey =
 export type ColumnsItemHide<F> = boolean | ((form: F) => boolean)
 export type ColumnsItemDisabled<F> = boolean | ((form: F) => boolean)
 export type ColumnsItemRequest<F = any> = (form: F) => Promise<any>
+export type ColumnsItemEvents<F = any> = (form: F) => Promise<any>
 export type ColumnsItemFormat<T = any> = (
   res: T
 ) =>
-| A.SelectInstance['$props']['options']
-| A.RadioGroupInstance['$props']['options']
-| A.CheckboxGroupInstance['$props']['options']
-| A.CascaderInstance['$props']['options']
-| A.TreeSelectInstance['$props']['data']
+  | A.SelectInstance['$props']['options']
+  | A.RadioGroupInstance['$props']['options']
+  | A.CheckboxGroupInstance['$props']['options']
+  | A.CascaderInstance['$props']['options']
+  | A.TreeSelectInstance['$props']['data']
 
 export type ColumnsItemOptionsOrData =
   | A.SelectInstance['$props']['options']
@@ -106,6 +107,7 @@ export interface ColumnsItem<F = any> {
   resultFormat?: ColumnsItemFormat // 结果集格式化
   init?: boolean // 初始化请求
   cascader?: string[] // 级联的field字段列表
+  events?: ColumnsItemEvents[]
 }
 
 export interface Options {
