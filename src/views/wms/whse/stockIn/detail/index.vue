@@ -3,7 +3,7 @@ import { useI18n } from 'vue-i18n'
 import { Message } from '@arco-design/web-vue'
 import WhseStockInDetailAddModal from './WhseStockInDetailAddModal.vue'
 import WhseStockInDetailDetailDrawer from './WhseStockInDetailDetailDrawer.vue'
-import { type WhseStockInDetailDetailResp, type WhseStockInDetailQuery, type WhseStockInDetailResp, deleteWhseStockInDetail, exportWhseStockInDetail, getWhseStockInDetail, getWhseStockInInfo, listWhseStockInDetail, updateWhseStockInDetail, updateWhseStockInStatus } from '@/apis/wms'
+import { type WhseStockInDetailDetailResp, type WhseStockInDetailQuery, type WhseStockInDetailResp, type WhseStockInInfoResp, deleteWhseStockInDetail, getWhseStockInInfo, listWhseStockInDetail, updateWhseStockInDetail, updateWhseStockInStatus } from '@/apis/wms'
 
 import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { useDownload, useTable } from '@/hooks'
@@ -15,7 +15,7 @@ defineOptions({ name: 'WmsWhseStockInDetail' })
 
 const route = useRoute()
 const stockInId = ref<string>()
-const stockInDetail = ref<WhseStockInDetailResp>()
+const stockInDetail = ref<WhseStockInInfoResp>()
 
 const { t } = useI18n()
 
@@ -94,11 +94,11 @@ const onDelete = (record: WhseStockInDetailResp) => {
 const WhseStockInDetailAddModalRef = ref<InstanceType<typeof WhseStockInDetailAddModal>>()
 // 新增
 const onAdd = () => {
-  WhseStockInDetailAddModalRef.value?.onAdd(stockInId.value)
+  WhseStockInDetailAddModalRef.value?.onAdd(stockInId.value!)
 }
 
 // 修改
-const onUpdate = (record: WhseStockInDetailResp) => {
+const onUpdate = (record: WhseStockInInfoResp) => {
   WhseStockInDetailAddModalRef.value?.onUpdate(record.id)
 }
 
@@ -118,7 +118,7 @@ const onAudit = async (record: WhseStockInDetailDetailResp) => {
   Message.success(t('page.common.message.modify.success'))
 }
 
-const onCancelAudit = async (record: WhseStockInDetailResp) => {
+const onCancelAudit = async (record: WhseStockInInfoResp) => {
   record.status = 1
   await updateWhseStockInDetail(record, record.id)
   Message.success(t('page.common.message.modify.success'))

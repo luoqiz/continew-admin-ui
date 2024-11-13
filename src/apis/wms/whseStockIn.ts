@@ -16,7 +16,7 @@ export interface WhseStockInResp {
   createUserString: string
   updateUserString: string
 }
-export interface WhseStockInDetailResp {
+export interface WhseStockInInfoResp {
   id: string
   name: string
   stockInNo: string
@@ -51,12 +51,12 @@ export function listWhseStockIn(query: WhseStockInPageQuery) {
 
 /** @desc 查询仓库入库详情 */
 export function getWhseStockIn(id: string) {
-  return http.get<WhseStockInDetailResp>(`${BASE_URL}/${id}`)
+  return http.get<WhseStockInInfoResp>(`${BASE_URL}/${id}`)
 }
 
 /** @desc 查询仓库入库详情 */
 export function getWhseStockInInfo(id: string) {
-  return http.get<WhseStockInDetailResp>(`${BASE_URL}/detail/${id}`)
+  return http.get<WhseStockInInfoResp>(`${BASE_URL}/detail/${id}`)
 }
 
 /** @desc 新增仓库入库 */

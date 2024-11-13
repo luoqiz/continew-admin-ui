@@ -62,7 +62,7 @@
 <script setup lang="ts">
 import WhseStockInDetailAddModal from './WhseStockInDetailAddModal.vue'
 import WhseStockInDetailDetailDrawer from './WhseStockInDeatilDetailDrawer.vue'
-import { type WhseStockInDetailQuery, type WhseStockInDetailResp, deleteWhseStockInDetail, exportWhseStockInDetail, listWhseStockInDetail } from '@/apis/wms'
+import { type WhseStockInDetailQuery, type WhseStockInInfoResp, deleteWhseStockInDetail, exportWhseStockInDetail, listWhseStockInDetail } from '@/apis/wms'
 import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { useDownload, useTable } from '@/hooks'
 import { isMobile } from '@/utils'
@@ -117,7 +117,7 @@ const reset = () => {
 }
 
 // 删除
-const onDelete = (record: WhseStockInDetailResp) => {
+const onDelete = (record: WhseStockInInfoResp) => {
   return handleDelete(() => deleteWhseStockInDetail(record.id), {
     content: `是否确定删除该条数据？`,
     showModal: true,
@@ -136,13 +136,13 @@ const onAdd = () => {
 }
 
 // 修改
-const onUpdate = (record: WhseStockInDetailResp) => {
+const onUpdate = (record: WhseStockInInfoResp) => {
   WhseStockInDetailAddModalRef.value?.onUpdate(record.id)
 }
 
 const WhseStockInDetailDetailDrawerRef = ref<InstanceType<typeof WhseStockInDetailDetailDrawer>>()
 // 详情
-const onDetail = (record: WhseStockInDetailResp) => {
+const onDetail = (record: WhseStockInInfoResp) => {
   WhseStockInDetailDetailDrawerRef.value?.onDetail(record.id)
 }
 </script>

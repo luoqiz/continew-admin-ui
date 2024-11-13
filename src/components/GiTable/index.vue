@@ -174,7 +174,7 @@ const resetSettingColumns = () => {
     const arr = attrs.columns as TableColumnData[]
     arr.forEach((item) => {
       settingColumnList.value.push({
-        key: item.dataIndex || (typeof item.title === 'string' ? item.title : ''),
+        key: item.dataIndex || item.slotName || (typeof item.title === 'string' ? item.title : ''),
         title: typeof item.title === 'string' ? item.title : '',
         show: item.show ?? true,
         disabled: props.disabledColumnKeys.includes(
@@ -203,12 +203,12 @@ const _columns = computed(() => {
     .map((i) => i.key || (typeof i.title === 'string' ? i.title : ''))
   // 显示的columns数据
   const filterColumns = arr.filter((i) =>
-    showDataIndexs.includes(i.dataIndex || (typeof i.title === 'string' ? i.title : '')),
+    showDataIndexs.includes(i.dataIndex || i.slotName || (typeof i.title === 'string' ? i.title : '')),
   )
   const sortedColumns: TableColumnData[] = []
   settingColumnList.value.forEach((i) => {
     filterColumns.forEach((j) => {
-      if (i.key === (j.dataIndex || j.title)) {
+      if (i.key === (j.dataIndex || j.slotName || j.title)) {
         sortedColumns.push(j)
       }
     })
