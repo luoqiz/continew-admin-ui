@@ -25,7 +25,7 @@ export interface WhseStockInDetailResp {
   whseAreaId: string
   stockMoveId: string
   inTime: string
-  status: string
+  status: number
   memo: string
   createUser: string
   createTime: string
@@ -33,6 +33,7 @@ export interface WhseStockInDetailResp {
   updateTime: string
   createUserString: string
   updateUserString: string
+  goodsList: []
 }
 export interface WhseStockInQuery {
   name: string | undefined
@@ -54,7 +55,7 @@ export function getWhseStockIn(id: string) {
 }
 
 /** @desc 查询仓库入库详情 */
-export function getWhseStockInDetail(id: string) {
+export function getWhseStockInInfo(id: string) {
   return http.get<WhseStockInDetailResp>(`${BASE_URL}/detail/${id}`)
 }
 
@@ -76,4 +77,9 @@ export function deleteWhseStockIn(id: string) {
 /** @desc 导出仓库入库 */
 export function exportWhseStockIn(query: WhseStockInQuery) {
   return http.download<any>(`${BASE_URL}/export`, query)
+}
+
+/** @desc 更新仓库入库状态 */
+export function updateWhseStockInStatus(id: string, status: number) {
+  return http.put(`${BASE_URL}/status/${id}/${status}`)
 }

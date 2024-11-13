@@ -12,6 +12,7 @@ export interface WhseStockInDetailResp {
   planNum: string
   realNum: string
   memo: string
+  status: number
   createUser: string
   createTime: string
   createUserString: string
@@ -27,6 +28,7 @@ export interface WhseStockInDetailDetailResp {
   planNum: string
   realNum: string
   memo: string
+  status: number
   createUser: string
   createTime: string
   updateUser: string
@@ -35,9 +37,9 @@ export interface WhseStockInDetailDetailResp {
   updateUserString: string
 }
 export interface WhseStockInDetailQuery {
-  stockInId: string
-  goodsSku: string
-  goodsName: string
+  stockInId: string | undefined
+  goodsSku: string | undefined
+  goodsName: string | undefined
   sort: Array<string>
 }
 export interface WhseStockInDetailPageQuery extends WhseStockInDetailQuery, PageQuery {}

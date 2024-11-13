@@ -1,3 +1,119 @@
+<script setup lang="ts">
+import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { Message } from '@arco-design/web-vue'
+import WhseStockInAddModal from './WhseStockInAddModal.vue'
+import { type WhseStockInQuery, type WhseStockInResp, deleteWhseStockIn, exportWhseStockIn, listWhseStockIn, updateWhseStockIn, updateWhseStockInStatus } from '@/apis/wms'
+import type { TableInstanceColumns } from '@/components/GiTable/type'
+import { useDownload, useTable } from '@/hooks'
+import { isMobile } from '@/utils'
+import has from '@/utils/has'
+import { useDict } from '@/hooks/app'
+
+defineOptions({ name: 'WmsWhseStockIn' })
+
+const { t } = useI18n()
+
+const router = useRouter()
+
+const queryForm = reactive<WhseStockInQuery>({
+  name: undefined,
+  stockInNo: undefined,
+  whseId: undefined,
+  status: undefined,
+  sort: ['createTime,desc'],
+})
+
+const {
+  tableData: dataList,
+  loading,
+  pagination,
+  search,
+  handleDelete,
+} = useTable((page) => listWhseStockIn({ ...queryForm, ...page }), { immediate: true })
+
+const status_enum = computed(() => [{
+  value: '1',
+  label: t('wms.whse.stock.in.state.s1'),
+  other: 'extra',
+}, {
+  value: '2',
+  label: t('wms.whse.stock.in.state.s2'),
+  other: 'extra',
+}, {
+  value: '3',
+  label: t('wms.whse.stock.in.state.s3'),
+  other: 'extra',
+}])
+const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
+  // { title: t('wms.whse.stock.in.field.id'), dataIndex: 'id', slotName: 'id' },
+  { title: t('wms.whse.stock.in.field.name'), dataIndex: 'name', slotName: 'name' },
+  { title: t('wms.whse.stock.in.field.stockInNo'), dataIndex: 'stockInNo', slotName: 'stockInNo' },
+  // { title: t('wms.whse.stock.in.field.whseId'), dataIndex: 'whseId', slotName: 'whseId' },
+  { title: t('wms.whse.stock.in.field.whseName'), dataIndex: 'whseName', slotName: 'whseName' },
+  { title: t('wms.whse.stock.in.field.stockMoveId'), dataIndex: 'stockMoveId', slotName: 'stockMoveId' },
+  { title: t('wms.whse.stock.in.field.inTime'), dataIndex: 'inTime', slotName: 'inTime' },
+  { title: t('wms.whse.stock.in.field.status'), dataIndex: 'status', slotName: 'status' },
+  { title: t('wms.whse.stock.in.field.memo'), dataIndex: 'memo', slotName: 'memo' },
+  { title: t('wms.whse.stock.in.field.createUser'), dataIndex: 'createUserString', slotName: 'createUser' },
+  { title: t('wms.whse.stock.in.field.createTime'), dataIndex: 'createTime', slotName: 'createTime' },
+  {
+    title: t('page.common.button.operator'),
+    slotName: 'action',
+    width: 180,
+    align: 'center',
+    fixed: !isMobile() ? 'right' : undefined,
+    show: has.hasPermOr(['wms:whseStockIn:update', 'wms:whseStockIn:delete']),
+  },
+])
+
+// 重置
+const reset = () => {
+  queryForm.name = undefined
+  queryForm.stockInNo = undefined
+  queryForm.whseId = undefined
+  queryForm.status = undefined
+  search()
+}
+
+// 删除
+const onDelete = (record: WhseStockInResp) => {
+  return handleDelete(() => deleteWhseStockIn(record.id), {
+    content: t('page.common.message.delete'),
+    showModal: true,
+  })
+}
+
+// 导出
+const onExport = () => {
+  useDownload(() => exportWhseStockIn(queryForm))
+}
+
+const WhseStockInAddModalRef = ref<InstanceType<typeof WhseStockInAddModal>>()
+// 新增
+const onAdd = () => {
+  WhseStockInAddModalRef.value?.onAdd()
+}
+
+// 修改
+const onUpdate = (record: WhseStockInResp) => {
+  WhseStockInAddModalRef.value?.onUpdate(record.id)
+}
+
+// 查看，跳转到详情页
+const onDetail = (record: WhseStockInResp) => {
+  router.push({ path: '/wms/whse/stockIn/detail', query: { id: record.id } })
+}
+// 审核通过
+const auditEvent = async (record: WhseStockInResp) => {
+  const res = await updateWhseStockInStatus(record.id, 2)
+  if (res.success) {
+    Message.success(t('page.common.message.modify.success'))
+    search()
+  }
+}
+</script>
+
 <template>
   <div class="table-page">
     <GiTable
@@ -52,17 +168,23 @@
       </template>
       <template #action="{ record }">
         <a-space>
-          <a-link v-permission="['wms:whseStockIn:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
-          <a-link v-permission="['wms:whseStockIn:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
-          <a-link
-            v-permission="['wms:whseStockIn:delete']"
-            status="danger"
-            :disabled="record.disabled"
-            :title="$t('page.common.button.delete')"
-            @click="onDelete(record)"
-          >
-            {{ $t('page.common.button.delete') }}
-          </a-link>
+          <div v-if="record.status === 1">
+            <a-link v-permission="['wms:whseStockIn:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
+            <a-link v-permission="['wms:whseStockIn:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
+            <a-link v-permission="['wms:whseStockIn:update']" :title="$t('page.common.button.audit')" @click="auditEvent(record)">{{ $t('page.common.button.audit') }}</a-link>
+            <a-link
+              v-permission="['wms:whseStockIn:delete']"
+              status="danger"
+              :disabled="record.disabled"
+              :title="$t('page.common.button.delete')"
+              @click="onDelete(record)"
+            >
+              {{ $t('page.common.button.delete') }}
+            </a-link>
+          </div>
+          <div v-if="record.status === 2 || record.status === 3">
+            <a-link v-permission="['wms:whseStockIn:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
+          </div>
         </a-space>
       </template>
     </GiTable>
@@ -70,111 +192,5 @@
     <WhseStockInAddModal ref="WhseStockInAddModalRef" @save-success="search" />
   </div>
 </template>
-
-<script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { useI18n } from 'vue-i18n'
-import WhseStockInAddModal from './WhseStockInAddModal.vue'
-import { type WhseStockInQuery, type WhseStockInResp, deleteWhseStockIn, exportWhseStockIn, listWhseStockIn } from '@/apis/wms'
-import type { TableInstanceColumns } from '@/components/GiTable/type'
-import { useDownload, useTable } from '@/hooks'
-import { isMobile } from '@/utils'
-import has from '@/utils/has'
-import { useDict } from '@/hooks/app'
-
-defineOptions({ name: 'WmsWhseStockIn' })
-
-const { t } = useI18n()
-
-const router = useRouter()
-
-const queryForm = reactive<WhseStockInQuery>({
-  name: undefined,
-  stockInNo: undefined,
-  whseId: undefined,
-  status: undefined,
-  sort: ['createTime,desc'],
-})
-
-const {
-  tableData: dataList,
-  loading,
-  pagination,
-  search,
-  handleDelete,
-} = useTable((page) => listWhseStockIn({ ...queryForm, ...page }), { immediate: true })
-
-const status_enum = computed(() => [{
-  value: '1',
-  label: t('wms.whse.stock.in.state.s1'),
-  other: 'extra',
-}, {
-  value: '2',
-  label: t('wms.whse.stock.in.state.s2'),
-  other: 'extra',
-}, {
-  value: '3',
-  label: t('wms.whse.stock.in.state.s3'),
-  other: 'extra',
-}])
-const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
-  // { title: t('wms.whse.stock.in.field.id'), dataIndex: 'id', slotName: 'id' },
-  { title: t('wms.whse.stock.in.field.name'), dataIndex: 'name', slotName: 'name' },
-  { title: t('wms.whse.stock.in.field.stockInNo'), dataIndex: 'stockInNo', slotName: 'stockInNo' },
-  // { title: t('wms.whse.stock.in.field.whseId'), dataIndex: 'whseId', slotName: 'whseId' },
-  { title: t('wms.whse.stock.in.field.whseName'), dataIndex: 'whseName', slotName: 'whseName' },
-  { title: t('wms.whse.stock.in.field.stockMoveId'), dataIndex: 'stockMoveId', slotName: 'stockMoveId' },
-  { title: t('wms.whse.stock.in.field.inTime'), dataIndex: 'inTime', slotName: 'inTime' },
-  { title: t('wms.whse.stock.in.field.status'), dataIndex: 'status', slotName: 'status' },
-  { title: t('wms.whse.stock.in.field.memo'), dataIndex: 'memo', slotName: 'memo' },
-  { title: t('wms.whse.stock.in.field.createUser'), dataIndex: 'createUser', slotName: 'createUser' },
-  { title: t('wms.whse.stock.in.field.createTime'), dataIndex: 'createTime', slotName: 'createTime' },
-  {
-    title: t('page.common.button.operator'),
-    slotName: 'action',
-    width: 130,
-    align: 'center',
-    fixed: !isMobile() ? 'right' : undefined,
-    show: has.hasPermOr(['wms:whseStockIn:update', 'wms:whseStockIn:delete']),
-  },
-])
-
-// 重置
-const reset = () => {
-  queryForm.name = undefined
-  queryForm.stockInNo = undefined
-  queryForm.whseId = undefined
-  queryForm.status = undefined
-  search()
-}
-
-// 删除
-const onDelete = (record: WhseStockInResp) => {
-  return handleDelete(() => deleteWhseStockIn(record.id), {
-    content: t('page.common.message.delete'),
-    showModal: true,
-  })
-}
-
-// 导出
-const onExport = () => {
-  useDownload(() => exportWhseStockIn(queryForm))
-}
-
-const WhseStockInAddModalRef = ref<InstanceType<typeof WhseStockInAddModal>>()
-// 新增
-const onAdd = () => {
-  WhseStockInAddModalRef.value?.onAdd()
-}
-
-// 修改
-const onUpdate = (record: WhseStockInResp) => {
-  WhseStockInAddModalRef.value?.onUpdate(record.id)
-}
-
-const onDetail = (record: WhseStockInResp) => {
-  router.push({ path: '/wms/whse/stockIn/detail', query: { id: record.id } })
-}
-</script>
 
 <style lang="scss" scoped></style>

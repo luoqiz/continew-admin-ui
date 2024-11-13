@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import WhseStockInDetailAddModal from './WhseStockInDeatilAddModal.vue'
+import WhseStockInDetailAddModal from './WhseStockInDetailAddModal.vue'
 import WhseStockInDetailDetailDrawer from './WhseStockInDeatilDetailDrawer.vue'
 import { type WhseStockInDetailQuery, type WhseStockInDetailResp, deleteWhseStockInDetail, exportWhseStockInDetail, listWhseStockInDetail } from '@/apis/wms'
 import type { TableInstanceColumns } from '@/components/GiTable/type'

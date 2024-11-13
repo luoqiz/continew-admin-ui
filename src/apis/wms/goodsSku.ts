@@ -68,6 +68,11 @@ export function getGoodsSku(id: string) {
   return http.get<GoodsSkuDetailResp>(`${BASE_URL}/${id}`)
 }
 
+/** @desc 查询商品规格(sku)详情 */
+export function getGoodsSkuBySkuNo(skuNo: string) {
+  return http.get<GoodsSkuDetailResp>(`${BASE_URL}/sku/${skuNo}`)
+}
+
 /** @desc 新增商品规格(sku) */
 export function addGoodsSku(data: any) {
   return http.post(`${BASE_URL}`, data)
