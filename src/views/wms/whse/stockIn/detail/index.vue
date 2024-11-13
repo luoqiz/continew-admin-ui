@@ -30,9 +30,9 @@ const {
   tableData: dataList,
   loading,
   pagination,
-  search,
+  // search,
   handleDelete,
-} = useTable((page) => listWhseStockInDetail({ ...queryForm, ...page }), { immediate: true })
+} = useTable((page) => listWhseStockInDetail({ ...queryForm, ...page }), { immediate: false })
 
 const getStockInInfo = async () => {
   stockInId.value = route.query.id as string // 获取query参数
@@ -172,7 +172,7 @@ const stockInDone = async () => {
       :pagination="pagination"
       :disabled-tools="['size']"
       :disabled-column-keys="['name']"
-      @refresh="search"
+      @refresh="getStockInInfo"
     >
       <!-- <template #toolbar-left>
 	    <a-input v-model="queryForm.stockInId" placeholder="请输入入库id编号" allow-clear @change="search">
@@ -227,7 +227,7 @@ const stockInDone = async () => {
       </template>
     </GiTable>
 
-    <WhseStockInDetailAddModal ref="WhseStockInDetailAddModalRef" @save-success="search" />
+    <WhseStockInDetailAddModal ref="WhseStockInDetailAddModalRef" @save-success="getStockInInfo" />
     <WhseStockInDetailDetailDrawer ref="WhseStockInDetailDetailDrawerRef" />
   </div>
 </template>
