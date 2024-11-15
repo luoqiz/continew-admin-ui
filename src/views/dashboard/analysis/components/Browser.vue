@@ -8,11 +8,12 @@
   </a-spin>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import type { EChartsOption } from 'echarts'
 import { useChart } from '@/hooks'
 import { type DashboardChartCommonResp, getAnalysisBrowser as getData } from '@/apis/common'
 
+const Chart = defineAsyncComponent(() => import('@/components/Chart/index.vue'))
 const xAxis = ref<string[]>([])
 const chartData = ref([])
 const { chartOption } = useChart((isDark: EChartsOption) => {

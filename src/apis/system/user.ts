@@ -9,6 +9,8 @@ const BASE_URL = '/system/user'
 export function listUser(query: T.UserPageQuery) {
   return http.get<PageRes<T.UserResp[]>>(`${BASE_URL}`, query)
 }
+
+/** @desc 查询所有用户列表 */
 export function listAllUser(query: Partial<T.UserPageQuery>) {
   return http.get<T.UserResp[]>(`${BASE_URL}/list`, query)
 }
@@ -38,11 +40,6 @@ export function exportUser(query: T.UserQuery) {
   return http.download(`${BASE_URL}/export`, query)
 }
 
-/** @desc 重置密码 */
-export function resetUserPwd(data: any, id: string) {
-  return http.patch(`${BASE_URL}/${id}/password`, data)
-}
-
 /** @desc 下载用户导入模板 */
 export function downloadUserImportTemplate() {
   return http.download(`${BASE_URL}/import/template`)
@@ -56,4 +53,14 @@ export function parseImportUser(data: FormData) {
 /** @desc 导入用户 */
 export function importUser(data: any) {
   return http.post(`${BASE_URL}/import`, data)
+}
+
+/** @desc 重置密码 */
+export function resetUserPwd(data: any, id: string) {
+  return http.patch(`${BASE_URL}/${id}/password`, data)
+}
+
+/** @desc 分配角色 */
+export function updateUserRole(data: { roleIds: string[] }, id: string) {
+  return http.patch(`${BASE_URL}/${id}/role`, data)
 }
