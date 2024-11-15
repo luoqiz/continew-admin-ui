@@ -22,13 +22,13 @@
 
 <script lang="ts" setup>
 import { useWindowSize } from '@vueuse/core'
-import { type WhseStockOutDetailResp, getWhseStockOut } from '@/apis/wms/whseStockOut'
+import { type WhseStockOutInfoResp, getWhseStockOut } from '@/apis/wms/whseStockOut'
 
 const { width } = useWindowSize()
 
 const visible = ref(false)
 const dataId = ref('')
-const dataDetail = ref<WhseStockOutDetailResp>()
+const dataDetail = ref<WhseStockOutInfoResp>()
 // 查询详情
 const getDataDetail = async () => {
   const res = await getWhseStockOut(dataId.value)

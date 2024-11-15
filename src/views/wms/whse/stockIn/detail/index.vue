@@ -29,7 +29,7 @@ const queryForm = reactive<WhseStockInDetailQuery>({
 const {
   tableData: dataList,
   loading,
-  pagination,
+  // pagination,
   // search,
   handleDelete,
 } = useTable((page) => listWhseStockInDetail({ ...queryForm, ...page }), { immediate: false })
@@ -169,7 +169,6 @@ const stockInDone = async () => {
       :columns="columns"
       :loading="loading"
       :scroll="{ x: '100%', y: '100%', minWidth: 1000 }"
-      :pagination="pagination"
       :disabled-tools="['size']"
       :disabled-column-keys="['name']"
       @refresh="getStockInInfo"

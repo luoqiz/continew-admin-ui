@@ -11,28 +11,30 @@ export interface WhseStockOutResp {
   whseAreaId: string
   stockMoveId: string
   outTime: string
-  status: string
+  status: number
   createUser: string
   createTime: string
   createUserString: string
   updateUserString: string
 }
-export interface WhseStockOutDetailResp {
+export interface WhseStockOutInfoResp {
   id: string
   name: string
   stockOutNo: string
   stockOutType: string
   whseId: string
+  whseName: string
   whseAreaId: string
   stockMoveId: string
   outTime: string
-  status: string
+  status: number
   createUser: string
   createTime: string
   updateUser: string
   updateTime: string
   createUserString: string
   updateUserString: string
+  goodsList: []
 }
 export interface WhseStockOutQuery {
   name: string | undefined
@@ -50,7 +52,12 @@ export function listWhseStockOut(query: WhseStockOutPageQuery) {
 
 /** @desc 查询仓库出库详情 */
 export function getWhseStockOut(id: string) {
-  return http.get<WhseStockOutDetailResp>(`${BASE_URL}/${id}`)
+  return http.get<WhseStockOutInfoResp>(`${BASE_URL}/${id}`)
+}
+
+/** @desc 查询仓库出库明细详情 */
+export function getWhseStockOutInfo(id: string) {
+  return http.get<WhseStockOutInfoResp>(`${BASE_URL}/detail/${id}`)
 }
 
 /** @desc 新增仓库出库 */
@@ -71,4 +78,9 @@ export function deleteWhseStockOut(id: string) {
 /** @desc 导出仓库出库 */
 export function exportWhseStockOut(query: WhseStockOutQuery) {
   return http.download<any>(`${BASE_URL}/export`, query)
+}
+
+/** @desc 更新仓库出库状态 */
+export function updateWhseStockOutStatus(id: string, status: number) {
+  return http.put(`${BASE_URL}/status/${id}/${status}`)
 }

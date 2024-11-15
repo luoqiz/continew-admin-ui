@@ -59,7 +59,7 @@ const onOauth = async (source: string) => {
             <a-divider orientation="center">其他登录方式</a-divider>
             <div class="list">
               <div v-if="isEmailLogin" class="mode item" @click="toggleLoginMode"><icon-user /> 账号/手机号登录</div>
-              <div v-else class="mode item" @click="toggleLoginMode"><icon-email /> {{ $t("login.email") }}</div>
+              <div v-else class="mode item" @click="toggleLoginMode"><icon-email /> 邮箱登录</div>
               <a class="item" title="使用 Gitee 账号登录" @click="onOauth('gitee')">
                 <GiSvgIcon name="gitee" :size="24" />
               </a>
