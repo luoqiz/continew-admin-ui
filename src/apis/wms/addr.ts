@@ -97,3 +97,8 @@ export function deleteAddr(id: string) {
 export function exportAddr(query: AddrQuery) {
   return http.download<any>(`${BASE_URL}/export`, query)
 }
+
+// 获取当前用户可操作的仓库
+export function listAddrByUser() {
+  return http.get<AddrResp[]>(`${BASE_URL}/all`)
+}

@@ -57,7 +57,6 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   { title: t('wms.whse.stock.out.field.status'), dataIndex: 'status', slotName: 'status' },
   { title: t('wms.whse.stock.out.field.createUser'), dataIndex: 'createUser', slotName: 'createUser' },
   { title: t('wms.whse.stock.out.field.createTime'), dataIndex: 'createTime', slotName: 'createTime' },
-
   {
     title: t('page.common.button.operator'),
     slotName: 'action',

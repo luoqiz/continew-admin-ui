@@ -58,11 +58,11 @@
         </a-row>
         <template #content>
           <a-doption @click="router.push('/setting/profile')">
-            <span>{{ $t('page.menu.user.center') }}</span>
+            <span>{{ $t('menu.user.center') }}</span>
           </a-doption>
           <a-divider :margin="0" />
           <a-doption @click="logout">
-            <span>{{ $t('page.logout.button') }}</span>
+            <span>{{ $t('page.common.button.logout') }}</span>
           </a-doption>
         </template>
       </a-dropdown>

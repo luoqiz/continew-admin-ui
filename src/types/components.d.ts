@@ -55,6 +55,7 @@ declare module 'vue' {
     VerifyPoints: typeof import('./../components/Verify/Verify/VerifyPoints.vue')['default']
     VerifySlide: typeof import('./../components/Verify/Verify/VerifySlide.vue')['default']
     WeekForm: typeof import('./../components/GenCron/CronForm/component/week-form.vue')['default']
+    WhseSelect: typeof import('./../components/WhseSelect/index.vue')['default']
     YearForm: typeof import('./../components/GenCron/CronForm/component/year-form.vue')['default']
   }
 }
