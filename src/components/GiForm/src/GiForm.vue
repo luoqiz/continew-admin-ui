@@ -216,7 +216,7 @@ watch(cloneForm as any, (newVal, oldVal) => {
 })
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 :deep(.arco-form-item-layout-inline) {
   margin-right: 0;
 }

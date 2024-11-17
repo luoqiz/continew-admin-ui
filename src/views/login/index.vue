@@ -1,34 +1,3 @@
-<script setup lang="ts">
-import Background from './components/background/index.vue'
-import AccountLogin from './components/account/index.vue'
-import PhoneLogin from './components/phone/index.vue'
-import EmailLogin from './components/email/index.vue'
-import { socialAuth } from '@/apis/auth'
-import { useAppStore } from '@/stores'
-import { useDevice } from '@/hooks'
-import { useLanguageStore } from '@/stores/modules/language'
-
-defineOptions({ name: 'Login' })
-
-const { isDesktop } = useDevice()
-const appStore = useAppStore()
-const languageStore = useLanguageStore()
-const title = computed(() => appStore.getTitle())
-const logo = computed(() => appStore.getLogo())
-
-const isEmailLogin = ref(false)
-// 切换登录模式
-const toggleLoginMode = () => {
-  isEmailLogin.value = !isEmailLogin.value
-}
-
-// 第三方登录授权
-const onOauth = async (source: string) => {
-  const { data } = await socialAuth(source)
-  window.location.href = data.authorizeUrl
-}
-</script>
-
 <template>
   <div class="login pc">
     <h3 class="login-logo">
@@ -123,7 +92,39 @@ const onOauth = async (source: string) => {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<script setup lang="ts">
+import Background from './components/background/index.vue'
+import AccountLogin from './components/account/index.vue'
+import PhoneLogin from './components/phone/index.vue'
+import EmailLogin from './components/email/index.vue'
+import { socialAuth } from '@/apis/auth'
+import { useAppStore } from '@/stores'
+import { useDevice } from '@/hooks'
+import { useLanguageStore } from '@/stores/modules/language'
+
+defineOptions({ name: 'Login' })
+
+const { isDesktop } = useDevice()
+const appStore = useAppStore()
+const languageStore = useLanguageStore()
+
+const title = computed(() => appStore.getTitle())
+const logo = computed(() => appStore.getLogo())
+
+const isEmailLogin = ref(false)
+// 切换登录模式
+const toggleLoginMode = () => {
+  isEmailLogin.value = !isEmailLogin.value
+}
+
+// 第三方登录授权
+const onOauth = async (source: string) => {
+  const { data } = await socialAuth(source)
+  window.location.href = data.authorizeUrl
+}
+</script>
+
+<style scoped lang="scss">
 @media screen and (max-width: 570px) {
   .pc {
     display: none !important;
@@ -478,8 +479,7 @@ const onOauth = async (source: string) => {
           margin-right: 10px;
         }
 
-        .mode:hover,
-        .mode svg:hover {
+        .mode:hover {
           background: rgba(var(--primary-6), 0.05);
           border: 1px solid rgb(var(--primary-3));
           color: rgb(var(--arcoblue-6));

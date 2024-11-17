@@ -77,7 +77,7 @@ watch(
 )
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 :deep(.ͼ1 .cm-scroller) {
   font-family: source-code-pro, Menlo, Monaco, Consolas, Courier New, monospace;
 }

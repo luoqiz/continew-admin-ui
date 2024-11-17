@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
-import AiEditor from './components/detail/index.vue'
+import AiEditor from './detail/components/index.vue'
 import { type NoticeResp, getNotice } from '@/apis/system'
 
 const { width } = useWindowSize()
@@ -62,7 +62,7 @@ const reset = () => {
 defineExpose({ onDetail })
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .arco-link {
   color: rgb(var(--gray-8));
 }

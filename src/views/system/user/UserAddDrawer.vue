@@ -33,7 +33,6 @@ const dataId = ref('')
 const visible = ref(false)
 const isUpdate = computed(() => !!dataId.value)
 const title = computed(() => (isUpdate.value ? '修改用户' : '新增用户'))
-
 const formRef = ref<InstanceType<typeof GiForm>>()
 const { roleList, getRoleList } = useRole()
 const { deptList, getDeptList } = useDept()
@@ -227,4 +226,4 @@ const onUpdate = async (id: string) => {
 defineExpose({ onAdd, onUpdate })
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped lang="scss"></style>
