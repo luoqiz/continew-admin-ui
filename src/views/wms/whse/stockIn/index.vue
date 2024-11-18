@@ -9,6 +9,7 @@ import { useDownload, useTable } from '@/hooks'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
 import { useDict } from '@/hooks/app'
+import CustomWhseSelect from '@/components/WhseSelect/index.vue'
 
 defineOptions({ name: 'WmsWhseStockIn' })
 
@@ -140,9 +141,10 @@ const auditEvent = async (record: WhseStockInResp) => {
         <a-input v-model="queryForm.stockInNo" placeholder="请输入入库单号" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input>
-        <a-input v-model="queryForm.whseId" placeholder="请输入仓库id编号" allow-clear @change="search">
+        <!-- <a-input v-model="queryForm.whseId" placeholder="请输入仓库id编号" allow-clear @change="search">
           <template #prefix><icon-search /></template>
-        </a-input>
+        </a-input> -->
+        <CustomWhseSelect v-model="queryForm.whseId" style="width:240px" placeholder="请选择仓库" @change="search"></CustomWhseSelect>
         <a-select
           v-model="queryForm.status"
           :options="status_enum"

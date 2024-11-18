@@ -29,6 +29,8 @@ import { loadI18n } from './config/i18n'
 import pinia from '@/stores'
 import 'virtual:uno.css'
 
+import CustomWhseSelect from '@/components/WhseSelect/index.vue'
+
 // 对特定组件进行默认配置
 Card.props.bordered = false
 
@@ -42,5 +44,7 @@ app.use(ArcoVue)
 app.use(ArcoVueIcon)
 app.use(directives)
 loadI18n(app)
+
+app.component('CustomWhseSelect', CustomWhseSelect)
 
 app.mount('#app')

@@ -133,15 +133,17 @@ const auditEvent = async (record: WhseStockOutResp) => {
       @refresh="search"
     >
       <template #toolbar-left>
+        {{ queryForm.whseId }}
         <a-input v-model="queryForm.name" placeholder="请输入出库名称" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input>
         <a-input v-model="queryForm.stockOutNo" placeholder="请输入出库单号" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input>
-        <a-input v-model="queryForm.whseId" placeholder="请输入仓库id编号" allow-clear @change="search">
+        <!-- <a-input v-model="queryForm.whseId" placeholder="请输入仓库id编号" allow-clear @change="search">
           <template #prefix><icon-search /></template>
-        </a-input>
+        </a-input> -->
+        <CustomWhseSelect v-model="queryForm.whseId" style="width:240px" placeholder="请选择仓库" @change="search"></CustomWhseSelect>
         <a-select
           v-model="queryForm.status"
           :options="status_enum"

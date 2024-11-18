@@ -1,15 +1,12 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, useAttrs } from 'vue'
 import { listAddrByUser } from '@/apis/wms'
 
-interface Props {
-  modelValue?: string
-}
+defineOptions({ name: 'CustomWhseSelect' })
 
-const props = withDefaults(defineProps<Props>(), {
-  modelValue: '',
-})
-const emits = defineEmits(['update:modelValue'])
+const modelValue = defineModel()
+
+const attrs = useAttrs()
 
 const options = ref([
 ])
@@ -25,27 +22,20 @@ const getWhseList = async () => {
 onMounted(async () => {
   await getWhseList()
 })
-
-const modelProps = ref()
-
-watchEffect(() => {
-  modelProps.value = props.modelValue ?? ''
-})
-watch(
-  () => modelProps.value,
-  () => {
-    emits('update:modelValue', modelProps.value)
-  },
-)
 </script>
 
 <template>
-  <div class="">
-    <a-select v-model="modelProps" :style="{ width: '320px' }" placeholder="" allow-search :options="options">
+  <div class="w-full">
+    <a-select
+      v-model="modelValue"
+      v-bind="attrs" :style="{ width: '100%' }"
+      allow-clear
+      allow-search
+      :options="options"
+    >
     </a-select>
   </div>
 </template>
 
 <style lang="scss" scoped>
-
 </style>

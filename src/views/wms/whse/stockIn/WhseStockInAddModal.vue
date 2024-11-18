@@ -55,9 +55,9 @@ const columns = computed<Columns<typeof form>>(() => [
     rules: [{ required: true, message: t('wms.whse.stock.in.field.stockInNo_placeholder') }],
   },
   {
-    label: t('wms.whse.stock.in.field.whseId'),
+    label: t('wms.whse.stock.in.field.whseName'),
     field: 'whseId',
-    type: 'input',
+    type: 'CustomWhseSelect',
     rules: [{ required: true, message: t('wms.whse.stock.in.field.whseId_placeholder') }],
   },
 ])

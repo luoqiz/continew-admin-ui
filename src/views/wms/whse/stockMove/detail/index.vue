@@ -37,7 +37,7 @@ const {
   pagination,
   search,
   handleDelete,
-} = useTable((page) => listWhseStockMoveDetial({ ...queryForm, ...page }), { immediate: true })
+} = useTable((page) => listWhseStockMoveDetial({ ...queryForm, ...page }), { immediate: false })
 
 const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   { title: t('wms.whse.stock.move.detial.field.id'), dataIndex: 'id', slotName: 'id' },

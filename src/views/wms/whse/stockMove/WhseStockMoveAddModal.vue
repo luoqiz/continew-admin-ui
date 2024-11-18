@@ -8,9 +8,8 @@
     @before-ok="save"
     @close="reset"
   >
-    <GiForm ref="formRef" v-model="form" :options="options" :columns="columns" />
-    <WhseSelect v-model="whse"></WhseSelect>
-    {{ whse }}
+    <GiForm ref="formRef" v-model="form" :options="options" :columns="columns">
+    </GiForm>
   </a-modal>
 </template>
 
@@ -26,7 +25,7 @@ import { useDict } from '@/hooks/app'
 const emit = defineEmits<{
   (e: 'save-success'): void
 }>()
-const whse = ref()
+
 const { t } = useI18n()
 
 const { width } = useWindowSize()
@@ -62,16 +61,16 @@ const columns = computed<Columns<typeof form>>(() => [
   //   rules: [{ required: true, message: t('wms.whse.stock.move.field.stockMoveType_placeholder') }],
   // },
   {
-    label: t('wms.whse.stock.move.field.stockInWhseId'),
-    field: 'stockInWhseId',
-    type: 'input',
-    rules: [{ required: true, message: t('wms.whse.stock.move.field.stockInWhseId_placeholder') }],
+    label: t('wms.whse.stock.move.field.stockOutWhseName'),
+    field: 'stockOutWhseId',
+    type: 'CustomWhseSelect',
+    rules: [{ required: true, message: t('wms.whse.stock.move.field.stockOutWhseName_placeholder') }],
   },
   {
-    label: t('wms.whse.stock.move.field.stockOutWhseId'),
-    field: 'stockOutWhseId',
-    type: 'input',
-    rules: [{ required: true, message: t('wms.whse.stock.move.field.stockOutWhseId_placeholder') }],
+    label: t('wms.whse.stock.move.field.stockInWhseName'),
+    field: 'stockInWhseId',
+    type: 'CustomWhseSelect',
+    rules: [{ required: true, message: t('wms.whse.stock.move.field.stockInWhseName_placeholder') }],
   },
   // {
   //   label: t('wms.whse.stock.move.field.status'),

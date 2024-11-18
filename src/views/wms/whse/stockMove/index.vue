@@ -22,12 +22,14 @@
         <!-- <a-input v-model="queryForm.stockMoveType" placeholder="请输入出库类型" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input> -->
-        <a-input v-model="queryForm.stockInWhseId" placeholder="请输入入仓id编号" allow-clear @change="search">
+        <!-- <a-input v-model="queryForm.stockInWhseId" placeholder="请输入入仓id编号" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input>
         <a-input v-model="queryForm.stockOutWhseId" placeholder="请输入出仓id编号" allow-clear @change="search">
           <template #prefix><icon-search /></template>
-        </a-input>
+        </a-input> -->
+        <CustomWhseSelect v-model="queryForm.stockOutWhseId" style="width:240px" placeholder="请选择出仓仓库" @change="search"></CustomWhseSelect>
+        <CustomWhseSelect v-model="queryForm.stockInWhseId" style="width:240px" placeholder="请选择入仓仓库" @change="search"></CustomWhseSelect>
         <!-- <a-input v-model="queryForm.status" placeholder="请输入状态" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input> -->
@@ -106,8 +108,8 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   { title: t('wms.whse.stock.move.field.name'), dataIndex: 'name', slotName: 'name' },
   { title: t('wms.whse.stock.move.field.stockMoveNo'), dataIndex: 'stockMoveNo', slotName: 'stockMoveNo' },
   // { title: t('wms.whse.stock.move.field.stockMoveType'), dataIndex: 'stockMoveType', slotName: 'stockMoveType' },
-  { title: t('wms.whse.stock.move.field.stockInWhseId'), dataIndex: 'stockInWhseId', slotName: 'stockInWhseId' },
-  { title: t('wms.whse.stock.move.field.stockOutWhseId'), dataIndex: 'stockOutWhseId', slotName: 'stockOutWhseId' },
+  { title: t('wms.whse.stock.move.field.stockOutWhseName'), dataIndex: 'stockOutWhseName', slotName: 'stockOutWhseId' },
+  { title: t('wms.whse.stock.move.field.stockInWhseName'), dataIndex: 'stockInWhseName', slotName: 'stockInWhseId' },
   { title: t('wms.whse.stock.move.field.moveTime'), dataIndex: 'moveTime', slotName: 'moveTime' },
   { title: t('wms.whse.stock.move.field.status'), dataIndex: 'status', slotName: 'status' },
   { title: t('wms.whse.stock.move.field.stockInId'), dataIndex: 'stockInId', slotName: 'stockInId' },

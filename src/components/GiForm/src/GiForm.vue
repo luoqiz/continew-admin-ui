@@ -21,6 +21,14 @@
                   @update:model-value="valueChange($event, item.field)"
                 />
               </template>
+              <template v-else-if="item.type.startsWith('Custom') ">
+                <component
+                  :is="`${item.type}`" v-bind="getComponentBindProps(item)"
+                  :model-value="modelValue[item.field as keyof typeof modelValue]"
+                  @update:model-value="valueChange($event, item.field)"
+                  v-on="item.events ?? {}"
+                ></component>
+              </template>
               <component
                 :is="`a-${item.type}`" v-else v-bind="getComponentBindProps(item)"
                 :model-value="modelValue[item.field as keyof typeof modelValue]"
