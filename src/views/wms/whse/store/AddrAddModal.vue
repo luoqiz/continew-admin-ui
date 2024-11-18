@@ -18,11 +18,13 @@ import { Message } from '@arco-design/web-vue'
 import { addStore, getAddr, updateAddr } from '@/apis/wms/addr'
 import { type Columns, GiForm, type Options } from '@/components/GiForm'
 import { useForm } from '@/hooks'
-import { useDict } from '@/hooks/app'
+import { useDept, useDict } from '@/hooks/app'
 
 const emit = defineEmits<{
   (e: 'save-success'): void
 }>()
+
+const { deptList, getDeptList } = useDept()
 
 const dataId = ref('')
 const isUpdate = computed(() => !!dataId.value)
@@ -76,10 +78,29 @@ const columns = computed<Columns<typeof form>>(() => [
     field: 'memo',
     type: 'input',
   },
+  // {
+  //   label: '所属部门',
+  //   field: 'deptId',
+  //   type: 'tree-select',
+  // },
   {
     label: '所属部门',
     field: 'deptId',
     type: 'tree-select',
+    data: deptList,
+    props: {
+      placeholder: '请选择所属部门',
+      allowClear: true,
+      allowSearch: true,
+      fallbackOption: false,
+      filterTreeNode(searchKey: string, nodeData: TreeNodeData) {
+        if (nodeData.title) {
+          return nodeData.title.toLowerCase().includes(searchKey.toLowerCase())
+        }
+        return false
+      },
+    },
+    rules: [{ required: true, message: '请选择所属部门' }],
   },
 ])
 
@@ -91,8 +112,11 @@ const reset = () => {
 
 const visible = ref(false)
 // 新增
-const onAdd = () => {
+const onAdd = async () => {
   reset()
+  if (!deptList.value.length) {
+    await getDeptList()
+  }
   dataId.value = ''
   visible.value = true
 }
@@ -101,6 +125,9 @@ const onAdd = () => {
 const onUpdate = async (id: string) => {
   reset()
   dataId.value = id
+  if (!deptList.value.length) {
+    await getDeptList()
+  }
   const res = await getAddr(id)
   Object.assign(form, res.data)
   visible.value = true

@@ -98,7 +98,7 @@ const columns: TableInstanceColumns[] = [
   // { title: '仓库类型 (1国仓  2地仓  3店仓)', dataIndex: 'whseType', slotName: 'whseType' },
   { title: '状态', dataIndex: 'status', slotName: 'status' },
   { title: '备注信息', dataIndex: 'memo', slotName: 'memo' },
-  { title: '所属部门', dataIndex: 'deptId', slotName: 'deptId' },
+  { title: '所属部门', dataIndex: 'deptName', slotName: 'deptId' },
   { title: '创建人', dataIndex: 'createUserString', slotName: 'createUser' },
   { title: '创建时间', dataIndex: 'createTime', slotName: 'createTime' },
   // { title: '修改人', dataIndex: 'updateUser', slotName: 'updateUser' },
