@@ -16,6 +16,7 @@ defineOptions({ name: 'WmsWhseStockMoveDetail' })
 const { t } = useI18n()
 
 const route = useRoute()
+const router = useRouter()
 const stockMoveId = ref<string>()
 const stockMoveDetail = ref<WhseStockMoveDetailResp>()
 
@@ -40,9 +41,9 @@ const {
 } = useTable((page) => listWhseStockMoveDetial({ ...queryForm, ...page }), { immediate: false })
 
 const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
-  { title: t('wms.whse.stock.move.detial.field.id'), dataIndex: 'id', slotName: 'id' },
-  { title: t('wms.whse.stock.move.detial.field.stockMoveNo'), dataIndex: 'stockMoveNo', slotName: 'stockMoveNo' },
-  { title: t('wms.whse.stock.move.detial.field.goodsStockId'), dataIndex: 'goodsStockId', slotName: 'goodsStockId' },
+  // { title: t('wms.whse.stock.move.detial.field.id'), dataIndex: 'id', slotName: 'id' },
+  // { title: t('wms.whse.stock.move.detial.field.stockMoveNo'), dataIndex: 'stockMoveNo', slotName: 'stockMoveNo' },
+  // { title: t('wms.whse.stock.move.detial.field.goodsStockId'), dataIndex: 'goodsStockId', slotName: 'goodsStockId' },
   { title: t('wms.whse.stock.move.detial.field.goodsSku'), dataIndex: 'goodsSku', slotName: 'goodsSku' },
   { title: t('wms.whse.stock.move.detial.field.goodsName'), dataIndex: 'goodsName', slotName: 'goodsName' },
   { title: t('wms.whse.stock.move.detial.field.moveTime'), dataIndex: 'moveTime', slotName: 'moveTime' },
@@ -50,7 +51,7 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   { title: t('wms.whse.stock.move.detial.field.expiryTime'), dataIndex: 'expiryTime', slotName: 'expiryTime' },
   { title: t('wms.whse.stock.move.detial.field.planNum'), dataIndex: 'planNum', slotName: 'planNum' },
   { title: t('wms.whse.stock.move.detial.field.memo'), dataIndex: 'memo', slotName: 'memo' },
-  { title: t('wms.whse.stock.move.detial.field.createUser'), dataIndex: 'createUser', slotName: 'createUser' },
+  { title: t('wms.whse.stock.move.detial.field.createUser'), dataIndex: 'createUserString', slotName: 'createUser' },
   { title: t('wms.whse.stock.move.detial.field.createTime'), dataIndex: 'createTime', slotName: 'createTime' },
   {
     title: t('page.common.button.operator'),
@@ -84,9 +85,9 @@ const onDelete = (record: WhseStockMoveDetialResp) => {
 }
 
 // 导出
-const onExport = () => {
-  useDownload(() => exportWhseStockMoveDetial(queryForm))
-}
+// const onExport = () => {
+//   useDownload(() => exportWhseStockMoveDetial(queryForm))
+// }
 
 const goodsListModalRef = ref<InstanceType<typeof GoodsListModal>>()
 // 新增
@@ -100,28 +101,38 @@ const onDetail = (record: WhseStockMoveDetialResp) => {
   WhseStockMoveDetialDetailDrawerRef.value?.onOpen(record.id)
 }
 
-const stockMoveDone = async () => {
-  // for (const item of dataList.value ?? []) {
-  //   if (item.status !== 2) {
-  //     Message.error(t('wms.whse.stock.in.error.stockInDone'))
-  //     return
-  //   }
-  // }
+// const stockMoveDone = async () => {
+// for (const item of dataList.value ?? []) {
+//   if (item.status !== 2) {
+//     Message.error(t('wms.whse.stock.in.error.stockInDone'))
+//     return
+//   }
+// }
 
-  // const res = await updateWhseStockOutStatus(stockOutId.value!, 3)
-  // if (res.success) {
-  //   Message.success(t('page.common.message.modify.success'))
-  //   await getStockOutInfo()
-  // }
+// const res = await updateWhseStockOutStatus(stockOutId.value!, 3)
+// if (res.success) {
+//   Message.success(t('page.common.message.modify.success'))
+//   await getStockOutInfo()
+// }
+// }
+
+// 查看，跳转到详情页
+const to_stock_out_info = (stockOutId: string) => {
+  router.push({ path: '/wms/whse/stockOut/detail', query: { id: stockOutId } })
+}
+
+// 查看，跳转到详情页
+const to_stock_in_info = (stockInId: string) => {
+  router.push({ path: '/wms/whse/stockIn/detail', query: { id: stockInId } })
 }
 </script>
 
 <template>
   <div class="table-page">
     <a-card :title="$t('wms.whse.stock.in.detail.billInfo.title')">
-      <template #extra>
+      <!-- <template #extra>
         <a-button v-if="stockMoveDetail?.status === 2" @click="stockMoveDone()">全部完成</a-button>
-      </template>
+      </template> -->
       <a-row>
         <a-col :span="6">
           <span>移库单号: {{ stockMoveDetail?.stockMoveNo }}</span>
@@ -133,7 +144,7 @@ const stockMoveDone = async () => {
           <span>出库地址: {{ stockMoveDetail?.stockOutWhseName }}</span>
         </a-col>
         <a-col :span="6">
-          <span>出库单号: {{ stockMoveDetail?.stockOutNo }}</span>
+          <span>出库单号: <span @click="to_stock_out_info(stockMoveDetail?.stockOutId!)">{{ stockMoveDetail?.stockOutId }}</span></span>
         </a-col>
       </a-row>
       <a-row>
@@ -141,7 +152,7 @@ const stockMoveDone = async () => {
           <span>入库地址: {{ stockMoveDetail?.stockInWhseName }}</span>
         </a-col>
         <a-col :span="6">
-          <span>入库单号名称: {{ stockMoveDetail?.stockInNo }}</span>
+          <span>入库单号名称: <span @click="to_stock_in_info(stockMoveDetail?.stockInId!)">{{ stockMoveDetail?.stockInId }}</span></span>
         </a-col>
       </a-row>
     </a-card>
@@ -179,20 +190,21 @@ const stockMoveDone = async () => {
         </a-button>
       </template> -->
       <template #toolbar-right>
-        <a-button v-permission="['wms:whseStockMoveDetial:add']" type="primary" @click="onAdd">
+        <a-button v-if="stockMoveDetail?.status === 1" v-permission="['wms:whseStockMoveDetial:add']" type="primary" @click="onAdd">
           <template #icon><icon-plus /></template>
           <template #default>{{ $t('page.common.button.add') }}</template>
         </a-button>
-        <a-button v-permission="['wms:whseStockMoveDetial:export']" @click="onExport">
+        <!-- <a-button v-permission="['wms:whseStockMoveDetial:export']" @click="onExport">
           <template #icon><icon-download /></template>
           <template #default>{{ $t('page.common.button.export') }}</template>
-        </a-button>
+        </a-button> -->
       </template>
       <template #action="{ record }">
         <a-space>
           <a-link v-permission="['wms:whseStockMoveDetial:detail']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
           <!-- <a-link v-permission="['wms:whseStockMoveDetial:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link> -->
           <a-link
+            v-if="stockMoveDetail?.status === 1"
             v-permission="['wms:whseStockMoveDetial:delete']"
             status="danger"
             :disabled="record.disabled"

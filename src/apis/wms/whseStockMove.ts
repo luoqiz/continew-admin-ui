@@ -10,7 +10,7 @@ export interface WhseStockMoveResp {
   stockInWhseId: string
   stockOutWhseId: string
   moveTime: string
-  status: string
+  status: number
   stockInId: string
   stockOutId: string
   memo: string
@@ -82,4 +82,9 @@ export function deleteWhseStockMove(id: string) {
 /** @desc 导出仓库移库 */
 export function exportWhseStockMove(query: WhseStockMoveQuery) {
   return http.download(`${BASE_URL}/export`, query)
+}
+
+/** @desc 更新仓库移库状态 */
+export function updateWhseStockMoveStatus(id: string, status: number) {
+  return http.put(`${BASE_URL}/status/${id}/${status}`)
 }

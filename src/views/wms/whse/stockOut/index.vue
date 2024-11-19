@@ -132,6 +132,11 @@ const auditEvent = async (record: WhseStockOutResp) => {
       :disabled-column-keys="['name']"
       @refresh="search"
     >
+      <template #status="{ record }">
+        <span v-if="record.status === 1"> {{ $t('wms.whse.stock.out.state.s1') }}</span>
+        <span v-if="record.status === 2"> {{ $t('wms.whse.stock.out.state.s2') }}</span>
+        <span v-if="record.status === 3"> {{ $t('wms.whse.stock.out.state.s3') }}</span>
+      </template>
       <template #toolbar-left>
         {{ queryForm.whseId }}
         <a-input v-model="queryForm.name" placeholder="请输入出库名称" allow-clear @change="search">

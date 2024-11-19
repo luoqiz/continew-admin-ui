@@ -14,6 +14,7 @@ import { useDict } from '@/hooks/app'
 defineOptions({ name: 'WmsWhseStockInDetail' })
 
 const route = useRoute()
+const router = useRouter()
 const stockInId = ref<string>()
 const stockInDetail = ref<WhseStockInInfoResp>()
 
@@ -138,6 +139,11 @@ const stockInDone = async () => {
     await getStockInInfo()
   }
 }
+
+const to_stock_move_info = (moveId: string) => {
+  // WhseStockMoveDetailDrawerRef.value?.onOpen(record.id)
+  router.push({ path: '/wms/whse/stock/move/detail', query: { id: moveId } })
+}
 </script>
 
 <template>
@@ -157,7 +163,7 @@ const stockInDone = async () => {
           <span>仓库地址: {{ stockInDetail?.whseName }}</span>
         </a-col>
         <a-col :span="6">
-          <span>关联移库单号: {{ stockInDetail?.stockMoveId }}</span>
+          <span>关联移库单号: <span @click="to_stock_move_info(stockInDetail?.stockMoveId!)">{{ stockInDetail?.stockMoveId }}</span></span>
         </a-col>
       </a-row>
     </a-card>

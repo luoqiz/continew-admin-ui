@@ -15,6 +15,7 @@ defineOptions({ name: 'WhseStockOutDetail' })
 const { t } = useI18n()
 
 const route = useRoute()
+const router = useRouter()
 const stockOutId = ref<string>()
 const stockOutDetail = ref<WhseStockOutInfoResp>()
 
@@ -135,6 +136,11 @@ const onCancelAudit = async (record: WhseStockOutInfoResp) => {
   await getStockOutInfo()
   Message.success(t('page.common.message.modify.success'))
 }
+
+const to_stock_move_info = (moveId: string) => {
+  // WhseStockMoveDetailDrawerRef.value?.onOpen(record.id)
+  router.push({ path: '/wms/whse/stock/move/detail', query: { id: moveId } })
+}
 </script>
 
 <template>
@@ -154,7 +160,7 @@ const onCancelAudit = async (record: WhseStockOutInfoResp) => {
           <span>仓库地址: {{ stockOutDetail?.whseName }}</span>
         </a-col>
         <a-col :span="6">
-          <span>关联移库单号: {{ stockOutDetail?.stockMoveId }}</span>
+          <span>关联移库单号: <span @click="to_stock_move_info(stockOutDetail?.stockMoveId!)">{{ stockOutDetail?.stockMoveId }} </span></span>
         </a-col>
       </a-row>
     </a-card>
