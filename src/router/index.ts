@@ -43,15 +43,15 @@ export const constantRoutes: RouteRecordRaw[] = [
       {
         path: '/dashboard/workplace',
         name: 'Workplace',
-        component: () => import('@/views/dashboard/workplace/index.vue'),
+        component: () => import('@/views/dashboard/analysis/index.vue'),
         meta: { locale: 'menu.dashboard.workplace', title: '工作台', icon: 'desktop', hidden: false, affix: true },
       },
-      {
-        path: '/dashboard/analysis',
-        name: 'Analysis',
-        component: () => import('@/views/dashboard/analysis/index.vue'),
-        meta: { locale: 'menu.dashboard.dashboard', title: '分析页', icon: 'insert-chart', hidden: false },
-      },
+      // {
+      //   path: '/dashboard/analysis',
+      //   name: 'Analysis',
+      //   component: () => import('@/views/dashboard/analysis/index.vue'),
+      //   meta: { locale: 'menu.dashboard.dashboard', title: '分析页', icon: 'insert-chart', hidden: false },
+      // },
     ],
   },
   {

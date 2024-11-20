@@ -1,6 +1,6 @@
 <template>
   <div class="gi_page container">
-    <div class="left-side">
+    <!-- <div class="left-side">
       <div class="panel">
         <Welcome />
       </div>
@@ -32,7 +32,7 @@
           <Docs />
         </a-grid-item>
       </a-grid>
-    </div>
+   </div> -->
   </div>
 </template>
 
