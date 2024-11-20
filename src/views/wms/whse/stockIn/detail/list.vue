@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import WhseStockInDetailAddModal from './WhseStockInDetailAddModal.vue'
-import WhseStockInDetailDetailDrawer from './WhseStockInDeatilDetailDrawer.vue'
+import WhseStockInDetailDetailDrawer from './WhseStockInDetailDetailDrawer.vue'
 import { type WhseStockInDetailQuery, type WhseStockInInfoResp, deleteWhseStockInDetail, exportWhseStockInDetail, listWhseStockInDetail } from '@/apis/wms'
 import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { useDownload, useTable } from '@/hooks'
@@ -132,7 +132,7 @@ const onExport = () => {
 const WhseStockInDetailAddModalRef = ref<InstanceType<typeof WhseStockInDetailAddModal>>()
 // 新增
 const onAdd = () => {
-  WhseStockInDetailAddModalRef.value?.onAdd()
+  WhseStockInDetailAddModalRef.value?.onAdd(queryForm.stockInId!)
 }
 
 // 修改

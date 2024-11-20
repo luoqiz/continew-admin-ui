@@ -141,6 +141,22 @@ const onDetail = (record: GoodsStockResp) => {
       :disabled-column-keys="['name']"
       @refresh="search"
     >
+      <template #initNum="{ record }">
+        <span v-if="record.whseType === 1">
+          {{ record.initNum }}  {{ record.goodsUnit }}
+        </span>
+        <span v-else>
+          {{ record.initNum }}  {{ record.goodsPackUnit }}
+        </span>
+      </template>
+      <template #realNum="{ record }">
+        <span v-if="record.whseType === 1">
+          {{ record.realNum }}  {{ record.goodsUnit }}
+        </span>
+        <span v-else>
+          {{ record.realNum }}  {{ record.goodsPackUnit }}
+        </span>
+      </template>
       <template #toolbar-left>
         <!-- <a-input v-model="queryForm.stockInId" placeholder="请输入入库单编号" allow-clear @change="search">
           <template #prefix><icon-search /></template>
@@ -158,17 +174,18 @@ const onDetail = (record: GoodsStockResp) => {
           <template #prefix><icon-search /></template>
         </a-input>
         <!-- <a-radio-group v-model="queryForm.whseType" :options="" @change="search" /> -->
-        <a-input v-model="queryForm.whseId" placeholder="请输入仓库id" allow-clear @change="search">
+        <!-- <a-input v-model="queryForm.whseId" placeholder="请输入仓库id" allow-clear @change="search">
           <template #prefix><icon-search /></template>
-        </a-input>
-        <a-select
+        </a-input> -->
+        <CustomWhseSelect v-model="queryForm.whseId" style="width:240px" placeholder="请选择仓库" @change="search"></CustomWhseSelect>
+        <!-- <a-select
           v-model="queryForm.status"
           :options="status_enum"
           placeholder="请选择状态 1待出库 2已出库 3部分出库"
           allow-clear
           style="width: 150px"
           @change="search"
-        />
+        /> -->
         <DateRangePicker v-model="queryForm.prodTime" @change="search" />
         <DateRangePicker v-model="queryForm.expiryTime" @change="search" />
         <a-button @click="reset">

@@ -11,7 +11,7 @@ export interface GoodsStockResp {
   goodsSku: string
   initNum: string
   realNum: string
-  whseType: string
+  whseType: number
   whseId: string
   status: string
   prodTime: string
