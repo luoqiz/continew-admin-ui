@@ -91,3 +91,18 @@ export function deleteGoodsStock(id: string) {
 export function exportGoodsStock(query: GoodsStockQuery) {
   return http.download<any>(`${BASE_URL}/export`, query)
 }
+
+/** @desc 获取指定库的今日入库信息 */
+export function staticsStockInToday(whseId: string) {
+  return http.get(`${BASE_URL}/statics/${whseId}`)
+}
+
+/** @desc 获取指定库的库存信息 */
+export function staticsStock(whseId: string) {
+  return http.get(`${BASE_URL}/statics/stock/${whseId}`)
+}
+
+/** @desc 统计临时 */
+export function staticsExpired(whseId: string, day: number) {
+  return http.get(`${BASE_URL}/statics/expired/${whseId}?day=${day}`)
+}

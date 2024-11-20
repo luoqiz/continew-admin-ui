@@ -43,7 +43,7 @@ export const constantRoutes: RouteRecordRaw[] = [
       {
         path: '/dashboard/workplace',
         name: 'Workplace',
-        component: () => import('@/views/dashboard/analysis/index.vue'),
+        component: () => import('@/views/dashboard/goodsAnalysis/index.vue'),
         meta: { locale: 'menu.dashboard.workplace', title: '工作台', icon: 'desktop', hidden: false, affix: true },
       },
       // {
