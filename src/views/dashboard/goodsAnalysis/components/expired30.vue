@@ -5,15 +5,15 @@ import { staticsExpired } from '@/apis/wms/goodsStock'
 
 const columns = ref([
   {
-    title: 'goodsSku',
+    title: '物料条码',
     dataIndex: 'goodsSku',
   },
   {
-    title: 'goodsName',
+    title: '物料名称',
     dataIndex: 'goodsName',
   },
   {
-    title: 'realNum',
+    title: '数量',
     dataIndex: 'realNum',
   },
 ])
