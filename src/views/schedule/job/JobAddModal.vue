@@ -4,7 +4,8 @@
     :title="title"
     :mask-closable="false"
     :esc-to-close="false"
-    :width="width >= 600 ? 600 : '100%'"
+    :body-style="{ maxHeight: width >= 700 ? '76vh' : '100vh' }"
+    :width="width >= 700 ? 700 : '100%'"
     @before-ok="save"
     @close="reset"
   >
@@ -182,6 +183,7 @@ import { addJob, listGroup, updateJob } from '@/apis/schedule/job'
 import { useForm } from '@/hooks'
 import { useDict } from '@/hooks/app'
 import CronGeneratorModal from '@/components/GenCron/CronModel/index.vue'
+import type { LabelValueState } from '@/types/global'
 
 const emit = defineEmits<{
   (e: 'save-success'): void
@@ -196,7 +198,7 @@ const visible = ref(false)
 const isUpdate = computed(() => !!dataId.value)
 const title = computed(() => (isUpdate.value ? '修改任务' : '新增任务'))
 const formRef = ref<FormInstance>()
-const groupList = ref()
+const groupList = ref<LabelValueState[]>([])
 const genModal = ref()
 const { job_trigger_type_enum, job_task_type_enum, job_route_strategy_enum, job_block_strategy_enum } = useDict(
   'job_trigger_type_enum',

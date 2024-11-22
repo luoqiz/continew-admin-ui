@@ -1,8 +1,18 @@
 import { Button, Message, Notification, Space } from '@arco-design/web-vue'
+import NProgress from 'nprogress'
 import router from '@/router'
 import { useRouteStore, useUserStore } from '@/stores'
 import { getToken } from '@/utils/auth'
 import { isHttp } from '@/utils/validate'
+import 'nprogress/nprogress.css'
+
+NProgress.configure({
+  easing: 'ease', // 动画方式
+  speed: 500, // 递增进度条的速度
+  showSpinner: false, // 是否显示圆圈加载
+  trickleSpeed: 200, // 自动递增间隔
+  minimum: 0.3, // 初始化时的最小百分比
+})
 
 // 版本更新
 let versionTag: string | null = null // 版本标识
@@ -66,9 +76,9 @@ export const resetHasRouteFlag = () => {
 }
 
 router.beforeEach(async (to, from, next) => {
+  NProgress.start()
   const userStore = useUserStore()
   const routeStore = useRouteStore()
-
   // 判断该用户是否登录
   if (getToken()) {
     if (to.path === '/login') {
@@ -117,4 +127,12 @@ router.beforeEach(async (to, from, next) => {
   if (isProd) {
     await compareTag()
   }
+})
+
+router.onError(() => {
+  NProgress.done()
+})
+
+router.afterEach(() => {
+  NProgress.done()
 })
