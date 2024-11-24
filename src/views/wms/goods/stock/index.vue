@@ -48,7 +48,7 @@ const {
   pagination,
   search,
   handleDelete,
-} = useTable((page) => listGoodsStock({ ...queryForm, ...page }), { immediate: true })
+} = useTable((page) => listGoodsStock({ ...queryForm, ...page }), { immediate: false })
 
 const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   // { title: t('wms.goods.stock.field.id'), dataIndex: 'id', slotName: 'id' },
@@ -76,7 +76,7 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
     title: t('page.common.button.operator'),
     slotName: 'action',
     dataIndex: 'action',
-    width: 180,
+    width: 240,
     // align: 'center',
     // fixed: !isMobile() ? 'right' : undefined,
     // show: has.hasPermOr(['wms:goodsStock:update', 'wms:goodsStock:delete']),
@@ -237,14 +237,14 @@ const onDetail = (record: GoodsStockResp) => {
         </a-button>
       </template>
       <template #toolbar-right>
-        <a-button v-permission="['wms:goodsStock:add']" type="primary" @click="onAdd">
+        <!-- <a-button v-permission="['wms:goodsStock:add']" type="primary" @click="onAdd">
           <template #icon><icon-plus /></template>
           <template #default>{{ $t('page.common.button.add') }}</template>
-        </a-button>
-        <a-button v-permission="['wms:goodsStock:export']" @click="onExport">
+        </a-button> -->
+        <!-- <a-button v-permission="['wms:goodsStock:export']" @click="onExport">
           <template #icon><icon-download /></template>
           <template #default>{{ $t('page.common.button.export') }}</template>
-        </a-button>
+        </a-button> -->
       </template>
       <template #action="{ record }">
         <a-space>

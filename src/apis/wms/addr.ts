@@ -23,7 +23,7 @@ export interface AddrDetailResp {
   whseNo: string
   name: string
   addr: string
-  whseType: string
+  whseType: number
   status: string
   memo: string
   deptId: string
@@ -38,6 +38,7 @@ export interface AddrQuery {
   whseNo: string
   name: string
   status: string
+  whseType: number
   createUser: string
   createTime: string
   updateUser: string
@@ -99,6 +100,6 @@ export function exportAddr(query: AddrQuery) {
 }
 
 // 获取当前用户可操作的仓库
-export function listAddrByUser() {
-  return http.get<AddrResp[]>(`${BASE_URL}/all`)
+export function listAddrByUser(query?: AddrQuery) {
+  return http.get<AddrResp[]>(`${BASE_URL}/all`, query)
 }
