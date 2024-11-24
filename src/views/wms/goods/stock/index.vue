@@ -4,7 +4,7 @@ import GoodsStockAddModal from './GoodsStockAddModal.vue'
 import GoodsStockDetailDrawer from './GoodsStockDetailDrawer.vue'
 import { type GoodsStockQuery, type GoodsStockResp, deleteGoodsStock, exportGoodsStock, listGoodsStock } from '@/apis/wms'
 import type { TableInstanceColumns } from '@/components/GiTable/type'
-import { useDownload, useTable } from '@/hooks'
+import { useDownload, useTable, useWhseAddr } from '@/hooks'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
 import { useDict } from '@/hooks/app'
@@ -12,16 +12,18 @@ import { useDict } from '@/hooks/app'
 defineOptions({ name: 'WmsGoodsStock' })
 const { t } = useI18n()
 
+const { whseAddrOptions, loaded } = useWhseAddr()
+
 const status_enum = computed(() => [{
-  value: '1',
+  value: 1,
   label: t('wms.whse.stock.in.state.s1'),
   other: 'extra',
 }, {
-  value: '2',
+  value: 2,
   label: t('wms.whse.stock.in.state.s2'),
   other: 'extra',
 }, {
-  value: '3',
+  value: 3,
   label: t('wms.whse.stock.in.state.s3'),
   other: 'extra',
 }])
@@ -62,7 +64,7 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   { title: t('wms.goods.stock.field.whseType'), dataIndex: 'whseType', slotName: 'whseType' },
   // { title: t('wms.goods.stock.field.whseId'), dataIndex: 'whseId', slotName: 'whseId' },
   { title: t('wms.goods.stock.field.whseName'), dataIndex: 'whseName', slotName: 'whseId' },
-  { title: t('wms.goods.stock.field.status'), dataIndex: 'status', slotName: 'status' },
+  // { title: t('wms.goods.stock.field.status'), dataIndex: 'status', slotName: 'status' },
   { title: t('wms.goods.stock.field.prodTime'), dataIndex: 'prodTime', slotName: 'prodTime' },
   { title: t('wms.goods.stock.field.expiryTime'), dataIndex: 'expiryTime', slotName: 'expiryTime' },
   { title: t('wms.goods.stock.field.info'), dataIndex: 'info', slotName: 'info' },
@@ -81,6 +83,21 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   },
 ])
 
+// 仓库变更
+const loadData = () => {
+  if (!queryForm.whseId || queryForm.whseId?.length < 1) {
+    const values = whseAddrOptions.value.map((item) => { return item.value })
+    queryForm.whseId = values[0]
+  }
+  search()
+}
+
+watch(loaded, () => {
+  if (loaded.value) {
+    loadData()
+  }
+}, { immediate: true })
+
 // 重置
 const reset = () => {
   queryForm.stockInId = undefined
@@ -93,7 +110,7 @@ const reset = () => {
   queryForm.status = undefined
   queryForm.prodTime = undefined
   queryForm.expiryTime = undefined
-  search()
+  loadData()
 }
 
 // 删除
@@ -139,8 +156,30 @@ const onDetail = (record: GoodsStockResp) => {
       :pagination="pagination"
       :disabled-tools="['size']"
       :disabled-column-keys="['name']"
-      @refresh="search"
+      @refresh="loadData"
     >
+      <template #whseType="{ record }">
+        <span v-if="record.whseType === 1">
+          {{ $t('wms.whse.type.t1') }}
+        </span>
+        <span v-if="record.whseType === 2">
+          {{ $t('wms.whse.type.t2') }}
+        </span>
+        <span v-if="record.whseType === 3">
+          {{ $t('wms.whse.type.t3') }}
+        </span>
+      </template>
+      <!-- <template #status="{ record }">
+            <span v-if="record.status === 1">
+              {{ $t('wms.whse.stock.in.state.s1') }}
+            </span>
+            <span v-if="record.status === 2">
+              {{ $t('wms.whse.stock.in.state.s2') }}
+            </span>
+            <span v-if="record.status === 3">
+              {{ $t('wms.whse.stock.in.state.s3') }}
+            </span>
+          </template> -->
       <template #initNum="{ record }">
         <span v-if="record.whseType === 1">
           {{ record.initNum }}  {{ record.goodsUnit }}
@@ -161,7 +200,7 @@ const onDetail = (record: GoodsStockResp) => {
         <!-- <a-input v-model="queryForm.stockInId" placeholder="请输入入库单编号" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input> -->
-        <a-input v-model="queryForm.stockInNo" placeholder="请输入入库单号" allow-clear @change="search">
+        <a-input v-model="queryForm.stockInNo" placeholder="请输入入库单号" allow-clear @change="loadData">
           <template #prefix><icon-search /></template>
         </a-input>
         <!-- <a-input v-model="queryForm.stockInDetailId" placeholder="请输入入库单明细编号" allow-clear @change="search">
@@ -170,14 +209,18 @@ const onDetail = (record: GoodsStockResp) => {
         <!-- <a-input v-model="queryForm.goodsId" placeholder="请输入物料编号" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input> -->
-        <a-input v-model="queryForm.goodsSku" placeholder="请输入物料sku条码" allow-clear @change="search">
+        <a-input v-model="queryForm.goodsSku" placeholder="请输入物料sku条码" allow-clear @change="loadData">
           <template #prefix><icon-search /></template>
         </a-input>
         <!-- <a-radio-group v-model="queryForm.whseType" :options="" @change="search" /> -->
         <!-- <a-input v-model="queryForm.whseId" placeholder="请输入仓库id" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input> -->
-        <CustomWhseSelect v-model="queryForm.whseId" style="width:240px" placeholder="请选择仓库" @change="search"></CustomWhseSelect>
+        <CustomWhseSelect
+          v-model="queryForm.whseId" style="width:240px"
+          :options="whseAddrOptions"
+          placeholder="请选择仓库" @change="loadData"
+        ></CustomWhseSelect>
         <!-- <a-select
           v-model="queryForm.status"
           :options="status_enum"
@@ -186,8 +229,8 @@ const onDetail = (record: GoodsStockResp) => {
           style="width: 150px"
           @change="search"
         /> -->
-        <DateRangePicker v-model="queryForm.prodTime" @change="search" />
-        <DateRangePicker v-model="queryForm.expiryTime" @change="search" />
+        <DateRangePicker v-model="queryForm.prodTime" @change="loadData" />
+        <DateRangePicker v-model="queryForm.expiryTime" @change="loadData" />
         <a-button @click="reset">
           <template #icon><icon-refresh /></template>
           <template #default>{{ $t('page.common.button.reset') }}</template>
@@ -220,7 +263,7 @@ const onDetail = (record: GoodsStockResp) => {
       </template>
     </GiTable>
 
-    <GoodsStockAddModal ref="GoodsStockAddModalRef" @save-success="search" />
+    <GoodsStockAddModal ref="GoodsStockAddModalRef" @save-success="loadData" />
     <GoodsStockDetailDrawer ref="GoodsStockDetailDrawerRef" />
   </div>
 </template>

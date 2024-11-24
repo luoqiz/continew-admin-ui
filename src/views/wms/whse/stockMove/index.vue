@@ -5,7 +5,7 @@ import WhseStockMoveAddModal from './WhseStockMoveAddModal.vue'
 import WhseStockMoveDetailDrawer from './WhseStockMoveDetailDrawer.vue'
 import { type WhseStockMoveQuery, type WhseStockMoveResp, deleteWhseStockMove, exportWhseStockMove, listWhseStockMove, updateWhseStockMoveStatus } from '@/apis/wms/whseStockMove'
 import type { TableInstanceColumns } from '@/components/GiTable/type'
-import { useDownload, useTable } from '@/hooks'
+import { useDownload, useTable, useWhseAddr } from '@/hooks'
 import { useDict } from '@/hooks/app'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
@@ -13,6 +13,8 @@ import has from '@/utils/has'
 defineOptions({ name: 'WmsWhseStockMove' })
 const { t } = useI18n()
 const router = useRouter()
+
+const { whseAddrOptions, loaded } = useWhseAddr()
 
 const queryForm = reactive<WhseStockMoveQuery>({
   name: undefined,
@@ -30,7 +32,7 @@ const {
   pagination,
   search,
   handleDelete,
-} = useTable((page) => listWhseStockMove({ ...queryForm, ...page }), { immediate: true })
+} = useTable((page) => listWhseStockMove({ ...queryForm, ...page }), { immediate: false })
 
 const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   // { title: t('wms.whse.stock.move.field.id'), dataIndex: 'id', slotName: 'id' },
@@ -57,6 +59,21 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   },
 ])
 
+// 仓库变更
+const loadData = () => {
+  if (!queryForm.stockOutWhseId || queryForm.stockOutWhseId?.length < 1) {
+    const values = whseAddrOptions.value.map((item) => { return item.value })
+    queryForm.stockOutWhseId = values[0]
+  }
+  search()
+}
+
+watch(loaded, () => {
+  if (loaded.value) {
+    loadData()
+  }
+}, { immediate: true })
+
 // 重置
 const reset = () => {
   queryForm.name = undefined
@@ -65,7 +82,7 @@ const reset = () => {
   queryForm.stockInWhseId = undefined
   queryForm.stockOutWhseId = undefined
   queryForm.status = undefined
-  search()
+  loadData()
 }
 
 // 删除
@@ -105,7 +122,7 @@ const auditEvent = async (record: WhseStockMoveResp) => {
   if (res.code === 0) {
     Message.success(t('page.common.message.modify.success'))
   }
-  search()
+  loadData()
 }
 </script>
 
@@ -121,7 +138,7 @@ const auditEvent = async (record: WhseStockMoveResp) => {
       :pagination="pagination"
       :disabled-tools="['size']"
       :disabled-column-keys="['name']"
-      @refresh="search"
+      @refresh="loadData"
     >
       <template #status="{ record }">
         <span v-if="record.status === 1"> {{ $t('wms.whse.stock.move.state.s1') }}</span>
@@ -129,10 +146,10 @@ const auditEvent = async (record: WhseStockMoveResp) => {
         <span v-if="record.status === 3"> {{ $t('wms.whse.stock.move.state.s3') }}</span>
       </template>
       <template #toolbar-left>
-        <a-input v-model="queryForm.name" placeholder="请输入移库名称" allow-clear @change="search">
+        <a-input v-model="queryForm.name" placeholder="请输入移库名称" allow-clear @change="loadData">
           <template #prefix><icon-search /></template>
         </a-input>
-        <a-input v-model="queryForm.stockMoveNo" placeholder="请输入移库单号" allow-clear @change="search">
+        <a-input v-model="queryForm.stockMoveNo" placeholder="请输入移库单号" allow-clear @change="loadData">
           <template #prefix><icon-search /></template>
         </a-input>
         <!-- <a-input v-model="queryForm.stockMoveType" placeholder="请输入出库类型" allow-clear @change="search">
@@ -144,8 +161,8 @@ const auditEvent = async (record: WhseStockMoveResp) => {
         <a-input v-model="queryForm.stockOutWhseId" placeholder="请输入出仓id编号" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input> -->
-        <CustomWhseSelect v-model="queryForm.stockOutWhseId" style="width:240px" placeholder="请选择出仓仓库" @change="search"></CustomWhseSelect>
-        <CustomWhseSelect v-model="queryForm.stockInWhseId" style="width:240px" placeholder="请选择入仓仓库" @change="search"></CustomWhseSelect>
+        <CustomWhseSelect v-model="queryForm.stockOutWhseId" style="width:240px" placeholder="请选择出仓仓库" :options="whseAddrOptions" @change="loadData"></CustomWhseSelect>
+        <CustomWhseSelect v-model="queryForm.stockInWhseId" style="width:240px" placeholder="请选择入仓仓库" :options="whseAddrOptions" @change="loadData"></CustomWhseSelect>
         <!-- <a-input v-model="queryForm.status" placeholder="请输入状态" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input> -->
@@ -168,7 +185,7 @@ const auditEvent = async (record: WhseStockMoveResp) => {
         <a-space>
           <a-link v-permission="['wms:whseStockMove:detail']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
           <a-link v-if="record.status === 1" v-permission="['wms:whseStockMove:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
-          <a-link v-if="record.status === 1" v-permission="['wms:whseStockIn:update']" :title="$t('page.common.button.audit')" @click="auditEvent(record)">{{ $t('page.common.button.audit') }}</a-link>
+          <a-link v-if="record.status === 1" v-permission="['wms:whseStockMove:adult']" :title="$t('page.common.button.audit')" @click="auditEvent(record)">{{ $t('page.common.button.audit') }}</a-link>
           <a-link
             v-if="record.status === 1"
             v-permission="['wms:whseStockMove:delete']"
@@ -183,7 +200,7 @@ const auditEvent = async (record: WhseStockMoveResp) => {
       </template>
     </GiTable>
 
-    <WhseStockMoveAddModal ref="WhseStockMoveAddModalRef" @save-success="search" />
+    <WhseStockMoveAddModal ref="WhseStockMoveAddModalRef" @save-success="loadData" />
     <WhseStockMoveDetailDrawer ref="WhseStockMoveDetailDrawerRef" />
   </div>
 </template>

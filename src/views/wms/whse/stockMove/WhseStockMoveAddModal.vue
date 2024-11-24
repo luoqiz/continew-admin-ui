@@ -19,7 +19,7 @@ import { Message } from '@arco-design/web-vue'
 import { useWindowSize } from '@vueuse/core'
 import { addWhseStockMove, getWhseStockMove, updateWhseStockMove } from '@/apis/wms/whseStockMove'
 import { type Columns, GiForm, type Options } from '@/components/GiForm'
-import { useForm } from '@/hooks'
+import { useForm, useWhseAddr } from '@/hooks'
 import { useDict } from '@/hooks/app'
 
 const emit = defineEmits<{
@@ -29,6 +29,7 @@ const emit = defineEmits<{
 const { t } = useI18n()
 
 const { width } = useWindowSize()
+const { whseAddrOptions } = useWhseAddr()
 
 const dataId = ref('')
 const visible = ref(false)
@@ -64,12 +65,18 @@ const columns = computed<Columns<typeof form>>(() => [
     label: t('wms.whse.stock.move.field.stockOutWhseName'),
     field: 'stockOutWhseId',
     type: 'CustomWhseSelect',
+    props: {
+      options: whseAddrOptions.value,
+    },
     rules: [{ required: true, message: t('wms.whse.stock.move.field.stockOutWhseName_placeholder') }],
   },
   {
     label: t('wms.whse.stock.move.field.stockInWhseName'),
     field: 'stockInWhseId',
     type: 'CustomWhseSelect',
+    props: {
+      options: whseAddrOptions.value,
+    },
     rules: [{ required: true, message: t('wms.whse.stock.move.field.stockInWhseName_placeholder') }],
   },
   // {
@@ -95,6 +102,10 @@ const save = async () => {
   try {
     const isInvalid = await formRef.value?.formRef?.validate()
     if (isInvalid) return false
+    if (form.stockInWhseId === form.stockOutWhseId) {
+      Message.error(t('wms.whse.stock.move.msg.inEqOutError'))
+      return false
+    }
     if (isUpdate.value) {
       await updateWhseStockMove(form, dataId.value)
       Message.success(t('page.common.message.modify.success'))

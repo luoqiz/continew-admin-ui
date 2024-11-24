@@ -47,8 +47,8 @@ export interface WhseStockMoveQuery {
   name: string | undefined
   stockMoveNo: string | undefined
   stockMoveType: string | undefined
-  stockInWhseId: string | undefined
-  stockOutWhseId: string | undefined
+  stockInWhseId: string | Array<string> | undefined
+  stockOutWhseId: string | Array<string> | undefined
   status: string | undefined
   sort: Array<string>
 }

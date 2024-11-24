@@ -12,6 +12,14 @@
       :disabled-column-keys="['name']"
       @refresh="search"
     >
+      <template #unpacking="{ record }">
+        <sapn v-if="record.unpacking">
+          {{ $t('page.common.field.true') }}
+        </sapn>
+        <sapn v-else>
+          {{ $t('page.common.field.false') }}
+        </sapn>
+      </template>
       <template #toolbar-left>
         <a-input v-model="queryForm.barcode" placeholder="请输入条形码" allow-clear @change="search">
           <template #prefix><icon-search /></template>

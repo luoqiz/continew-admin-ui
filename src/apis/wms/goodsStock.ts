@@ -13,7 +13,7 @@ export interface GoodsStockResp {
   realNum: string
   whseType: number
   whseId: string
-  status: string
+  status: number
   prodTime: string
   expiryTime: string
   info: string
@@ -36,7 +36,7 @@ export interface GoodsStockDetailResp {
   whseType: string
   whseId: string
   whseAreaId: string
-  status: string
+  status: number
   prodTime: string
   expiryTime: string
   info: string

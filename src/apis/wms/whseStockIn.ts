@@ -38,7 +38,7 @@ export interface WhseStockInInfoResp {
 export interface WhseStockInQuery {
   name: string | undefined
   stockInNo: string | undefined
-  whseId: string | undefined
+  whseId: Array<string> | undefined
   status: string | undefined
   sort: Array<string>
 }

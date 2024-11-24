@@ -18,7 +18,7 @@ import { useI18n } from 'vue-i18n'
 import { Message } from '@arco-design/web-vue'
 import { addWhseStockOut, getWhseStockOut, updateWhseStockOut } from '@/apis/wms/whseStockOut'
 import { type Columns, GiForm, type Options } from '@/components/GiForm'
-import { useForm } from '@/hooks'
+import { useForm, useWhseAddr } from '@/hooks'
 import { useDict } from '@/hooks/app'
 
 const emit = defineEmits<{
@@ -26,6 +26,7 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const { whseAddrOptions } = useWhseAddr()
 
 const dataId = ref('')
 const isUpdate = computed(() => !!dataId.value)
@@ -58,6 +59,9 @@ const columns = computed<Columns<typeof form>>(() => [
     label: t('wms.whse.stock.out.field.whseName'),
     field: 'whseId',
     type: 'CustomWhseSelect',
+    props: {
+      options: whseAddrOptions.value,
+    },
     rules: [{ required: true, message: t('wms.whse.stock.out.field.whseName_placeholder') }],
   },
   // {

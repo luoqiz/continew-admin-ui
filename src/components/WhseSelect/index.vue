@@ -1,27 +1,12 @@
 <script setup lang="ts">
-import { onMounted, ref, useAttrs } from 'vue'
-import { listAddrByUser } from '@/apis/wms'
+import { useAttrs } from 'vue'
 
 defineOptions({ name: 'CustomWhseSelect' })
 
-const modelValue = defineModel()
+const { options } = defineProps({ options: { type: Array<any>, default: [] } })
+const modelValue = defineModel({ type: String || Array<any> })
 
 const attrs = useAttrs()
-
-const options = ref([
-])
-const getWhseList = async () => {
-  const res = await listAddrByUser()
-  const temp = []
-  for (const item of res.data) {
-    temp.push({ label: item.name, value: item.id })
-  }
-  options.value = temp
-}
-
-onMounted(async () => {
-  await getWhseList()
-})
 </script>
 
 <template>
