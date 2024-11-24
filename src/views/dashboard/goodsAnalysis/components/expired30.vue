@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { inject, reactive, ref } from 'vue'
 import Expired from './Expired.vue'
 import { staticsExpired } from '@/apis/wms/goodsStock'
 
@@ -19,14 +19,18 @@ const columns = ref([
 ])
 const data = ref([])
 
+const whseId = inject<Ref<string>>('whseId')
+
 const getExpiredGoods = async () => {
-  const res = await staticsExpired('644614200840159246', 30)
+  const res = await staticsExpired(whseId!.value, 30)
   data.value = res.data
 }
 
-onMounted(() => {
-  getExpiredGoods()
-})
+watch(whseId, () => {
+  if (whseId?.value) {
+    getExpiredGoods()
+  }
+}, { immediate: true })
 </script>
 
 <template>

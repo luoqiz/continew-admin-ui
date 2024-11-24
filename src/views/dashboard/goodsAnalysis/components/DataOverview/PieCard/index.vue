@@ -51,7 +51,17 @@ const { chartOption } = useChart(() => {
       top: 0,
       bottom: 0,
     },
+    // title: {
+    //   text: 'Traffic Sources',
+    //   left: 'center',
+    // },
+    tooltip: {
+      trigger: 'item',
+      formatter: '{a} <br/>{b} : {c} ({d}%)',
+      show: true,
+    },
     legend: {
+      left: 'left',
       show: true,
       top: 'center',
       right: '20%',
@@ -64,46 +74,29 @@ const { chartOption } = useChart(() => {
       },
       data: chartData.map((item) => item.name),
     },
-    tooltip: {
-      show: true,
-    },
     series: [
       {
         name: '总计',
         type: 'pie',
+        // radius: '55%',
+        // center: ['50%', '60%'],
         radius: ['50%', '70%'],
         center: ['30%', '50%'],
         label: {
           show: false,
         },
         data: chartData,
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)',
+          },
+        },
       },
     ],
   }
 })
-
-// const loading = ref(false)
-// // 查询图表数据
-// const getChartData = async () => {
-//   try {
-//     loading.value = true
-//     count.value = 88888
-//     const data = [30, 20, 10]
-//     data.forEach((item, index) => {
-//       // eslint-disable-next-line vue/no-mutating-props
-//       chartData.push({
-//         name: `示例${index + 1}`,
-//         value: item,
-//       })
-//     })
-//   } finally {
-//     loading.value = false
-//   }
-// }
-
-// onMounted(() => {
-//   getChartData()
-// })
 </script>
 
 <style scoped lang="less">

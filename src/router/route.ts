@@ -21,15 +21,21 @@ export const systemRoutes: RouteRecordRaw[] = [
       {
         path: '/dashboard/workplace',
         name: 'Workplace',
-        component: () => import('@/views/dashboard/workplace/index.vue'),
+        component: () => import('@/views/dashboard/goodsAnalysis/index.vue'),
         meta: { title: '工作台', icon: 'desktop', hidden: false, affix: true },
       },
-      {
-        path: '/dashboard/analysis',
-        name: 'Analysis',
-        component: () => import('@/views/dashboard/analysis/index.vue'),
-        meta: { title: '分析页', icon: 'insert-chart', hidden: false },
-      },
+      // {
+      //   path: '/dashboard/workplace',
+      //   name: 'Workplace',
+      //   component: () => import('@/views/dashboard/workplace/index.vue'),
+      //   meta: { title: '工作台', icon: 'desktop', hidden: false, affix: true },
+      // },
+      // {
+      //   path: '/dashboard/analysis',
+      //   name: 'Analysis',
+      //   component: () => import('@/views/dashboard/analysis/index.vue'),
+      //   meta: { title: '分析页', icon: 'insert-chart', hidden: false },
+      // },
     ],
   },
   {

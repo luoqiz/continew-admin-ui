@@ -1,6 +1,13 @@
 <template>
   <div class="gi_page container">
     <a-space direction="vertical" :size="14" fill>
+      <CustomWhseSelect
+        v-model="whseId"
+        style="width:240px"
+        :options="whseAddrOptions"
+        placeholder="请选择仓库"
+        @change="changeWhseSelect"
+      ></CustomWhseSelect>
       <div>
         <DataOverview />
       </div>
@@ -23,13 +30,28 @@
 </template>
 
 <script setup lang="ts">
+import { provide } from 'vue'
 import DataOverview from './components/DataOverview/index.vue'
 import Expired15 from './components/expired15.vue'
 import Expired30 from './components/expired30.vue'
 import Expired45 from './components/expired45.vue'
-import AccessTimeslot from '@/views/dashboard/analysis/components/AccessTimeslot.vue'
+import { useWhseAddr } from '@/hooks'
+import CustomWhseSelect from '@/components/WhseSelect/index.vue'
 
 defineOptions({ name: 'Analysis' })
+const { whseAddrOptions, loaded } = useWhseAddr()
+
+const whseId = ref()
+provide('whseId', whseId)
+const changeWhseSelect = () => {
+  console.log('changeWhseSelect', whseId.value)
+}
+
+watch(loaded, () => {
+  if (loaded.value) {
+    whseId.value = whseAddrOptions.value.map((item) => item.value)[0]
+  }
+}, { immediate: true })
 </script>
 
 <style scoped lang="scss"></style>

@@ -5,28 +5,30 @@
 </template>
 
 <script setup lang="ts">
+import { inject } from 'vue'
 import PieCard from './PieCard/index.vue'
 import { staticsStockInToday } from '@/apis/wms/goodsStock'
 
-const chartData = ref([])
+const whseId = inject<Ref<string>>('whseId')
+const chartData = ref<{ name: string, value: any }[]>([])
 const loading = ref(false)
 const getTodayStockIn = async () => {
   loading.value = true
   try {
-    const res = await staticsStockInToday('644614200840159246')
+    const res = await staticsStockInToday(whseId!.value)
     for (const item of res.data) {
       chartData.value.push({ name: item.goodsName, value: item.realNum })
     }
-  } catch (_err) {
-
   } finally {
     loading.value = false
   }
 }
 
-onMounted(() => {
-  getTodayStockIn()
-})
+watch(whseId, () => {
+  if (whseId?.value) {
+    getTodayStockIn()
+  }
+}, { immediate: true })
 </script>
 
 <style scoped lang="less">
