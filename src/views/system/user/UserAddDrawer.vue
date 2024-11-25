@@ -15,6 +15,7 @@
 <script setup lang="ts">
 import { Message, type TreeNodeData } from '@arco-design/web-vue'
 import { useWindowSize } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
 import { addUser, getUser, updateUser } from '@/apis/system/user'
 import { type Columns, GiForm, type Options } from '@/components/GiForm'
 import type { Gender, Status } from '@/types/global'
@@ -28,11 +29,12 @@ const emit = defineEmits<{
 }>()
 
 const { width } = useWindowSize()
+const { t } = useI18n()
 
 const dataId = ref('')
 const visible = ref(false)
 const isUpdate = computed(() => !!dataId.value)
-const title = computed(() => (isUpdate.value ? '修改用户' : '新增用户'))
+const title = computed(() => (isUpdate.value ? t('sys.user.page.modify.title') : t('sys.user.page.add.title')))
 const formRef = ref<InstanceType<typeof GiForm>>()
 const { roleList, getRoleList } = useRole()
 const { deptList, getDeptList } = useDept()
@@ -47,74 +49,74 @@ const { form, resetForm } = useForm({
   status: 1 as Status,
 })
 
-const columns: Columns = reactive([
+const columns = computed(() => [
   {
-    label: '用户名',
+    label: t('sys.user.field.username'),
     field: 'username',
     type: 'input',
     props: {
-      placeholder: '请输入用户名',
+      placeholder: t('sys.user.field.username_placeholder'),
       maxLength: 64,
       showWordLimit: true,
     },
-    rules: [{ required: true, message: '请输入用户名' }],
+    rules: [{ required: true, message: t('sys.user.field.username_placeholder') }],
   },
   {
-    label: '昵称',
+    label: t('sys.user.field.nickname'),
     field: 'nickname',
     type: 'input',
     props: {
-      placeholder: '请输入昵称',
+      placeholder: t('sys.user.field.nickname_placeholder'),
       maxLength: 30,
       showWordLimit: true,
     },
-    rules: [{ required: true, message: '请输入昵称' }],
+    rules: [{ required: true, message: t('sys.user.field.nickname_placeholder') }],
   },
   {
-    label: '密码',
+    label: t('sys.user.field.password'),
     field: 'password',
     type: 'input-password',
     props: {
-      placeholder: '请输入密码',
+      placeholder: t('sys.user.field.password_placeholder'),
       maxLength: 32,
       showWordLimit: true,
     },
-    rules: [{ required: true, message: '请输入密码' }],
+    rules: [{ required: true, message: t('sys.user.field.password_placeholder') }],
     hide: () => {
       return isUpdate.value
     },
   },
   {
-    label: '手机号码',
+    label: t('sys.user.field.phone'),
     field: 'phone',
     type: 'input',
     props: {
-      placeholder: '请输入手机号码',
+      placeholder: t('sys.user.field.phone_placeholder'),
       maxLength: 11,
     },
   },
   {
-    label: '邮箱',
+    label: t('sys.user.field.email'),
     field: 'email',
     type: 'input',
     props: {
-      placeholder: '请输入邮箱',
+      placeholder: t('sys.user.field.email_placeholder'),
       maxLength: 255,
     },
   },
   {
-    label: '性别',
+    label: t('sys.user.field.gender'),
     field: 'gender',
     type: 'radio-group',
     options: GenderList,
   },
   {
-    label: '所属部门',
+    label: t('sys.user.field.deptId'),
     field: 'deptId',
     type: 'tree-select',
     data: deptList,
     props: {
-      placeholder: '请选择所属部门',
+      placeholder: t('sys.user.field.deptId_placeholder'),
       allowClear: true,
       allowSearch: true,
       fallbackOption: false,
@@ -125,42 +127,42 @@ const columns: Columns = reactive([
         return false
       },
     },
-    rules: [{ required: true, message: '请选择所属部门' }],
+    rules: [{ required: true, message: t('sys.user.field.deptId_placeholder') }],
   },
   {
-    label: '角色',
+    label: t('sys.user.field.role'),
     field: 'roleIds',
     type: 'select',
     options: roleList,
     props: {
-      placeholder: '请选择角色',
+      placeholder: t('sys.user.field.role_placeholder'),
       multiple: true,
       allowClear: true,
       allowSearch: true,
     },
-    rules: [{ required: true, message: '请选择角色' }],
+    rules: [{ required: true, message: t('sys.user.field.role_placeholder') }],
   },
   {
-    label: '描述',
+    label: t('sys.user.field.description'),
     field: 'description',
     type: 'textarea',
     props: {
-      placeholder: '请输入描述',
+      placeholder: t('sys.user.field.description_placeholder'),
       maxLength: 200,
       showWordLimit: true,
       autoSize: { minRows: 3, maxRows: 5 },
     },
   },
   {
-    label: '状态',
+    label: t('sys.user.field.status'),
     field: 'status',
     type: 'switch',
     props: {
       type: 'round',
       checkedValue: 1,
       uncheckedValue: 2,
-      checkedText: '启用',
-      uncheckedText: '禁用',
+      checkedText: t('page.common.tips.enable'),
+      uncheckedText: t('page.common.tips.disable'),
     },
   },
 ])
@@ -179,13 +181,13 @@ const save = async () => {
     if (isInvalid) return false
     if (isUpdate.value) {
       await updateUser(form, dataId.value)
-      Message.success('修改成功')
+      Message.success(t('page.common.message.modify.success'))
     } else {
       if (rawPassword) {
         form.password = encryptByRsa(rawPassword) || ''
       }
       await addUser(form)
-      Message.success('新增成功')
+      Message.success(t('page.common.message.add.success'))
     }
     emit('save-success')
     return true

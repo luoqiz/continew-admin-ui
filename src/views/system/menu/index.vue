@@ -2,7 +2,7 @@
   <div class="table-page">
     <GiTable
       ref="tableRef"
-      title="菜单管理"
+      :title="$t('sys.menu.table')"
       row-key="id"
       :data="dataList"
       :columns="columns"
@@ -17,20 +17,20 @@
         <IconRight v-else />
       </template>
       <template #toolbar-left>
-        <a-input v-model="title" placeholder="请输入菜单标题" allow-clear>
+        <!-- <a-input v-model="title" placeholder="请输入菜单标题" allow-clear>
           <template #prefix><icon-search /></template>
         </a-input>
         <a-button @click="reset">
           <template #icon><icon-refresh /></template>
-          <template #default>重置</template>
-        </a-button>
+          <template #default>{{ $t('page.common.button.reset') }}</template>
+        </a-button> -->
       </template>
       <template #toolbar-right>
         <a-button v-permission="['system:menu:add']" type="primary" @click="onAdd()">
           <template #icon><icon-plus /></template>
-          <template #default>新增</template>
+          <template #default>{{ $t('page.common.button.add') }}</template>
         </a-button>
-        <a-tooltip content="展开/折叠">
+        <a-tooltip :content="`${$t('page.common.button.expand')}/${$t('page.common.button.collapsed')}`">
           <a-button @click="onExpanded">
             <template #icon>
               <icon-list v-if="!isExpanded" />
@@ -44,36 +44,36 @@
         <span style="margin-left: 5px; vertical-align: middle">{{ record.locale ? $t(record.locale) : record.title }}</span>
       </template>
       <template #type="{ record }">
-        <a-tag v-if="record.type === 1" color="arcoblue">目录</a-tag>
-        <a-tag v-if="record.type === 2" color="green">菜单</a-tag>
-        <a-tag v-if="record.type === 3">按钮</a-tag>
+        <a-tag v-if="record.type === 1" color="arcoblue">{{ $t('sys.menu.type.t1') }}</a-tag>
+        <a-tag v-if="record.type === 2" color="green">{{ $t('sys.menu.type.t2') }}</a-tag>
+        <a-tag v-if="record.type === 3">{{ $t('sys.menu.type.t3') }}</a-tag>
       </template>
       <template #status="{ record }">
         <GiCellStatus :status="record.status" />
       </template>
       <template #isExternal="{ record }">
-        <a-tag v-if="record.isExternal" color="arcoblue" size="small">是</a-tag>
-        <a-tag v-else color="red" size="small">否</a-tag>
+        <a-tag v-if="record.isExternal" color="arcoblue" size="small">{{ $t('page.common.field.true') }}</a-tag>
+        <a-tag v-else color="red" size="small">{{ $t('page.common.field.false') }}</a-tag>
       </template>
       <template #isHidden="{ record }">
-        <a-tag v-if="record.isHidden" color="arcoblue" size="small">是</a-tag>
-        <a-tag v-else color="red" size="small">否</a-tag>
+        <a-tag v-if="record.isHidden" color="arcoblue" size="small">{{ $t('page.common.field.true') }}</a-tag>
+        <a-tag v-else color="red" size="small">{{ $t('page.common.field.false') }}</a-tag>
       </template>
       <template #isCache="{ record }">
-        <a-tag v-if="record.isCache" color="arcoblue" size="small">是</a-tag>
-        <a-tag v-else color="red" size="small">否</a-tag>
+        <a-tag v-if="record.isCache" color="arcoblue" size="small">{{ $t('page.common.field.true') }}</a-tag>
+        <a-tag v-else color="red" size="small">{{ $t('page.common.field.false') }}</a-tag>
       </template>
       <template #action="{ record }">
         <a-space>
-          <a-link v-permission="['system:menu:update']" title="修改" @click="onUpdate(record)">修改</a-link>
-          <a-link v-permission="['system:menu:delete']" status="danger" title="删除" @click="onDelete(record)">删除</a-link>
+          <a-link v-permission="['system:menu:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
+          <a-link v-permission="['system:menu:delete']" status="danger" :title="$t('page.common.button.delete')" @click="onDelete(record)">{{ $t('page.common.button.delete') }}</a-link>
           <a-link
             v-permission="['system:menu:add']"
             :disabled="![1, 2].includes(record.type)"
-            :title="![1, 2].includes(record.type) ? '不可添加下级菜单' : '新增'"
+            :title="![1, 2].includes(record.type) ? $t('sys.menu.tips.notAdd') : $t('page.common.button.add')"
             @click="onAdd(record.id)"
           >
-            新增
+            {{ $t('page.common.button.add') }}
           </a-link>
         </a-space>
       </template>
@@ -84,6 +84,7 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import MenuAddModal from './MenuAddModal.vue'
 import { type MenuQuery, type MenuResp, deleteMenu, listMenu } from '@/apis/system/menu'
 import type { TableInstanceColumns } from '@/components/GiTable/type'
@@ -93,7 +94,7 @@ import { isMobile } from '@/utils'
 import has from '@/utils/has'
 
 defineOptions({ name: 'SystemMenu' })
-
+const { t } = useI18n()
 const queryForm = reactive<MenuQuery>({})
 
 const {
@@ -131,24 +132,24 @@ const dataList = computed(() => {
   return searchData(title.value)
 })
 
-const columns: TableInstanceColumns[] = [
-  { title: '菜单标题', dataIndex: 'title', slotName: 'title', width: 170, fixed: !isMobile() ? 'left' : undefined },
-  { title: '类型', dataIndex: 'type', slotName: 'type', align: 'center' },
-  { title: '状态', dataIndex: 'status', slotName: 'status', align: 'center' },
-  { title: '排序', dataIndex: 'sort', align: 'center', show: false },
-  { title: '路由地址', dataIndex: 'path', ellipsis: true, tooltip: true },
-  { title: '组件名称', dataIndex: 'name', ellipsis: true, tooltip: true },
-  { title: '组件路径', dataIndex: 'component', minWidth: 180, ellipsis: true, tooltip: true },
-  { title: '权限标识', dataIndex: 'permission', minWidth: 180, ellipsis: true, tooltip: true },
-  { title: '外链', dataIndex: 'isExternal', slotName: 'isExternal', align: 'center' },
-  { title: '隐藏', dataIndex: 'isHidden', slotName: 'isHidden', align: 'center' },
-  { title: '缓存', dataIndex: 'isCache', slotName: 'isCache', align: 'center' },
-  { title: '创建人', dataIndex: 'createUserString', ellipsis: true, tooltip: true, show: false },
-  { title: '创建时间', dataIndex: 'createTime', width: 180 },
-  { title: '修改人', dataIndex: 'updateUserString', ellipsis: true, tooltip: true, show: false },
-  { title: '修改时间', dataIndex: 'updateTime', width: 180, show: false },
+const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
+  { title: t('sys.menu.field.title'), dataIndex: 'title', slotName: 'title', width: 170, fixed: !isMobile() ? 'left' : undefined },
+  { title: t('sys.menu.field.type'), dataIndex: 'type', slotName: 'type', align: 'center' },
+  { title: t('sys.menu.field.status'), dataIndex: 'status', slotName: 'status', align: 'center' },
+  { title: t('sys.menu.field.sort'), dataIndex: 'sort', align: 'center', show: false },
+  { title: t('sys.menu.field.path'), dataIndex: 'path', ellipsis: true, tooltip: true },
+  { title: t('sys.menu.field.name'), dataIndex: 'name', ellipsis: true, tooltip: true },
+  { title: t('sys.menu.field.component'), dataIndex: 'component', minWidth: 180, ellipsis: true, tooltip: true },
+  { title: t('sys.menu.field.permission'), dataIndex: 'permission', minWidth: 180, ellipsis: true, tooltip: true },
+  { title: t('sys.menu.field.isExternal'), dataIndex: 'isExternal', slotName: 'isExternal', align: 'center' },
+  { title: t('sys.menu.field.isHidden'), dataIndex: 'isHidden', slotName: 'isHidden', align: 'center' },
+  { title: t('sys.menu.field.isCache'), dataIndex: 'isCache', slotName: 'isCache', align: 'center' },
+  { title: t('sys.menu.field.createUser'), dataIndex: 'createUserString', ellipsis: true, tooltip: true, show: false },
+  { title: t('sys.menu.field.createTime'), dataIndex: 'createTime', width: 180 },
+  { title: t('sys.menu.field.updateUser'), dataIndex: 'updateUserString', ellipsis: true, tooltip: true, show: false },
+  { title: t('sys.menu.field.updateTime'), dataIndex: 'updateTime', width: 180, show: false },
   {
-    title: '操作',
+    title: t('page.common.button.operator'),
     dataIndex: 'action',
     slotName: 'action',
     width: 160,
@@ -156,7 +157,7 @@ const columns: TableInstanceColumns[] = [
     fixed: !isMobile() ? 'right' : undefined,
     show: has.hasPermOr(['system:menu:update', 'system:menu:delete', 'system:menu:add']),
   },
-]
+])
 
 // 重置
 const reset = () => {
@@ -166,7 +167,7 @@ const reset = () => {
 // 删除
 const onDelete = (record: MenuResp) => {
   return handleDelete(() => deleteMenu(record.id), {
-    content: `是否确定菜单「${record.title}」？`,
+    content: `${t('sys.menu.tips.delete')}「${record.title}」？`,
     showModal: true,
   })
 }

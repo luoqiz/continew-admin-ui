@@ -1,29 +1,29 @@
 <template>
-  <a-drawer v-model:visible="visible" title="用户详情" :width="width >= 600 ? 600 : '100%'" :footer="false">
+  <a-drawer v-model:visible="visible" :title="$t('sys.user.page.detail.title')" :width="width >= 600 ? 600 : '100%'" :footer="false">
     <a-descriptions :column="2" size="large" class="general-description">
-      <a-descriptions-item label="ID" :span="2">
+      <a-descriptions-item :label="$t('sys.user.field.id')" :span="2">
         <a-typography-paragraph copyable>{{ dataDetail?.id }}</a-typography-paragraph>
       </a-descriptions-item>
-      <a-descriptions-item label="用户名">{{ dataDetail?.username }}</a-descriptions-item>
-      <a-descriptions-item label="昵称">{{ dataDetail?.nickname }}</a-descriptions-item>
-      <a-descriptions-item label="性别">
-        <span v-if="dataDetail?.gender === 1">男</span>
-        <span v-else-if="dataDetail?.gender === 2">女</span>
-        <span v-else>未知</span>
+      <a-descriptions-item :label="$t('sys.user.field.username')">{{ dataDetail?.username }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.user.field.nickname')">{{ dataDetail?.nickname }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.user.field.gender')">
+        <span v-if="dataDetail?.gender === 1">{{ $t('page.common.tips.sex.man') }}</span>
+        <span v-else-if="dataDetail?.gender === 2">{{ $t('page.common.tips.sex.woman') }}</span>
+        <span v-else>{{ $t('page.common.tips.sex.unknow') }}</span>
       </a-descriptions-item>
-      <a-descriptions-item label="状态">
-        <a-tag v-if="dataDetail?.status === 1" color="green">启用</a-tag>
-        <a-tag v-else color="red">禁用</a-tag>
+      <a-descriptions-item :label="$t('sys.user.field.status')">
+        <a-tag v-if="dataDetail?.status === 1" color="green">{{ $t('page.common.tips.enable') }}</a-tag>
+        <a-tag v-else color="red">{{ $t('page.common.tips.disable') }}</a-tag>
       </a-descriptions-item>
-      <a-descriptions-item label="手机号">{{ dataDetail?.phone || '暂无' }}</a-descriptions-item>
-      <a-descriptions-item label="邮箱">{{ dataDetail?.email || '暂无' }}</a-descriptions-item>
-      <a-descriptions-item label="所属部门">{{ dataDetail?.deptName }}</a-descriptions-item>
-      <a-descriptions-item label="角色"><GiCellTags :data="dataDetail?.roleNames" /></a-descriptions-item>
-      <a-descriptions-item label="创建人">{{ dataDetail?.createUserString }}</a-descriptions-item>
-      <a-descriptions-item label="创建时间">{{ dataDetail?.createTime }}</a-descriptions-item>
-      <a-descriptions-item label="修改人">{{ dataDetail?.updateUserString }}</a-descriptions-item>
-      <a-descriptions-item label="修改时间">{{ dataDetail?.updateTime }}</a-descriptions-item>
-      <a-descriptions-item label="描述" :span="2">{{ dataDetail?.description }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.user.field.phone')">{{ dataDetail?.phone || '暂无' }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.user.field.email')">{{ dataDetail?.email || '暂无' }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.user.field.deptName')">{{ dataDetail?.deptName }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.user.field.role')"><GiCellTags :data="dataDetail?.roleNames" /></a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.user.field.createUser')">{{ dataDetail?.createUserString }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.user.field.createTime')">{{ dataDetail?.createTime }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.user.field.updateUser')">{{ dataDetail?.updateUserString }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.user.field.updateTime')">{{ dataDetail?.updateTime }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.user.field.description')" :span="2">{{ dataDetail?.description }}</a-descriptions-item>
     </a-descriptions>
   </a-drawer>
 </template>

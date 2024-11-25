@@ -1,7 +1,7 @@
 <template>
   <a-drawer
     v-model:visible="visible"
-    title="修改角色"
+    :title="$t('sys.role.page.modify.title')"
     :mask-closable="false"
     :esc-to-close="false"
     :width="width >= 600 ? 600 : '100%'"
@@ -10,20 +10,20 @@
   >
     <a-form ref="formRef" :model="form" :rules="rules" size="large" auto-label-width>
       <fieldset>
-        <legend>基础信息</legend>
-        <a-form-item label="名称" field="name">
-          <a-input v-model.trim="form.name" placeholder="请输入名称" />
+        <legend>{{ $t('sys.role.add.step1') }}</legend>
+        <a-form-item :label="$t('sys.role.field.name')" field="name">
+          <a-input v-model.trim="form.name" :placeholder="$t('sys.role.field.name_placeholder')" />
         </a-form-item>
-        <a-form-item label="编码" field="code">
-          <a-input v-model.trim="form.code" placeholder="请输入编码" :disabled="isUpdate" />
+        <a-form-item :label="$t('sys.role.field.code')" field="code">
+          <a-input v-model.trim="form.code" :placeholder="$t('sys.role.field.code_placeholder')" :disabled="isUpdate" />
         </a-form-item>
-        <a-form-item label="排序" field="sort">
-          <a-input-number v-model="form.sort" placeholder="请输入排序" :min="1" mode="button" />
+        <a-form-item :label="$t('sys.role.field.sort')" field="sort">
+          <a-input-number v-model="form.sort" :placeholder="$t('sys.role.field.sort_placeholder')" :min="1" mode="button" />
         </a-form-item>
-        <a-form-item label="描述" field="description">
+        <a-form-item :label="$t('sys.role.field.description')" field="description">
           <a-textarea
             v-model.trim="form.description"
-            placeholder="请输入描述"
+            :placeholder="$t('sys.role.field.description_placeholder')"
             show-word-limit
             :max-length="200"
             :auto-size="{ minRows: 3, maxRows: 5 }"
@@ -31,12 +31,12 @@
         </a-form-item>
       </fieldset>
       <fieldset>
-        <legend>功能权限</legend>
+        <legend>{{ $t('sys.role.add.step2') }}</legend>
         <a-form-item hide-label :disabled="form.isSystem">
           <a-space>
-            <a-checkbox v-model="isMenuExpanded" @change="onExpanded('menu')">展开/折叠</a-checkbox>
-            <a-checkbox v-model="isMenuCheckAll" @change="onCheckAll('menu')">全选/全不选</a-checkbox>
-            <a-checkbox v-model="form.menuCheckStrictly">父子联动</a-checkbox>
+            <a-checkbox v-model="isMenuExpanded" @change="onExpanded('menu')">{{ $t('page.common.tips.collapsed') }}</a-checkbox>
+            <a-checkbox v-model="isMenuCheckAll" @change="onCheckAll('menu')">{{ $t('page.common.tips.selectAll') }}</a-checkbox>
+            <a-checkbox v-model="form.menuCheckStrictly">{{ $t('page.common.tips.parentSub') }}</a-checkbox>
           </a-space>
           <template #extra>
             <a-tree
@@ -50,20 +50,20 @@
         </a-form-item>
       </fieldset>
       <fieldset>
-        <legend>数据权限</legend>
+        <legend>{{ $t('sys.role.add.step3') }}</legend>
         <a-form-item hide-label field="dataScope">
           <a-select
             v-model.trim="form.dataScope"
             :options="data_scope_enum"
-            placeholder="请选择数据权限"
+            :placeholder="$t('sys.role.field.dataScope_placeholder')"
             :disabled="form.isSystem"
           />
         </a-form-item>
         <a-form-item v-if="form.dataScope === 5" hide-label :disabled="form.isSystem">
           <a-space>
-            <a-checkbox v-model="isDeptExpanded" @change="onExpanded('dept')">展开/折叠</a-checkbox>
-            <a-checkbox v-model="isDeptCheckAll" @change="onCheckAll('dept')">全选/全不选</a-checkbox>
-            <a-checkbox v-model="form.deptCheckStrictly">父子联动</a-checkbox>
+            <a-checkbox v-model="isDeptExpanded" @change="onExpanded('dept')">{{ $t('page.common.tips.collapsed') }}</a-checkbox>
+            <a-checkbox v-model="isDeptCheckAll" @change="onCheckAll('dept')">{{ $t('page.common.tips.selectAll') }}</a-checkbox>
+            <a-checkbox v-model="form.deptCheckStrictly">{{ $t('page.common.tips.parentSub') }}</a-checkbox>
           </a-space>
           <template #extra>
             <a-tree
@@ -83,6 +83,7 @@
 <script setup lang="ts">
 import { type FormInstance, Message, type TreeNodeData } from '@arco-design/web-vue'
 import { useWindowSize } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
 import { getRole, updateRole } from '@/apis/system/role'
 import { useForm } from '@/hooks'
 import { useDept, useDict, useMenu } from '@/hooks/app'
@@ -92,7 +93,7 @@ const emit = defineEmits<{
 }>()
 
 const { width } = useWindowSize()
-
+const { t } = useI18n()
 const dataId = ref('')
 const visible = ref(false)
 const formRef = ref<FormInstance>()
@@ -101,9 +102,9 @@ const { deptList, getDeptList } = useDept()
 const { menuList, getMenuList } = useMenu()
 
 const rules: FormInstance['rules'] = {
-  name: [{ required: true, message: '请输入名称' }],
-  code: [{ required: true, message: '请输入编码' }],
-  dataScope: [{ required: true, message: '请选择数据权限' }],
+  name: [{ required: true, message: t('sys.role.field.name_placeholder') }],
+  code: [{ required: true, message: t('sys.role.field.code_placeholder') }],
+  dataScope: [{ required: true, message: t('sys.role.field.dataScope_placeholder') }],
 }
 
 const { form, resetForm } = useForm({
@@ -186,7 +187,7 @@ const save = async () => {
     form.menuIds = getMenuAllCheckedKeys()
     form.deptIds = getDeptAllCheckedKeys()
     await updateRole(form, dataId.value)
-    Message.success('修改成功')
+    Message.success(t('page.common.message.modify.success'))
     emit('save-success')
     return true
   } catch (error) {

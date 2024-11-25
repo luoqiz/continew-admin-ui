@@ -43,7 +43,7 @@ const { form, resetForm } = useForm({
   // todo 待补充
 })
 
-const columns = computed<Columns<typeof form>>(() => [
+const columns = computed(() => [
   {
     label: t('wms.whse.stock.in.field.name'),
     field: 'name',

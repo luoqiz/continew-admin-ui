@@ -1,20 +1,20 @@
 <template>
-  <a-drawer v-model:visible="visible" title="角色详情" :width="width >= 600 ? 600 : '100%'" :footer="false">
-    <a-descriptions title="基础信息" :column="2" size="large" class="general-description">
-      <a-descriptions-item label="ID">{{ dataDetail?.id }}</a-descriptions-item>
-      <a-descriptions-item label="数据权限">
+  <a-drawer v-model:visible="visible" :title="$t('sys.role.page.detail.title')" :width="width >= 600 ? 600 : '100%'" :footer="false">
+    <a-descriptions :title="$t('sys.role.add.step1')" :column="2" size="large" class="general-description">
+      <a-descriptions-item :label="$t('sys.role.field.id')">{{ dataDetail?.id }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.role.field.dataScope')">
         <GiCellTag :value="dataDetail?.dataScope" :dict="data_scope_enum" />
       </a-descriptions-item>
-      <a-descriptions-item label="名称">{{ dataDetail?.name }}</a-descriptions-item>
-      <a-descriptions-item label="编码">{{ dataDetail?.code }}</a-descriptions-item>
-      <a-descriptions-item label="创建人">{{ dataDetail?.createUserString }}</a-descriptions-item>
-      <a-descriptions-item label="创建时间">{{ dataDetail?.createTime }}</a-descriptions-item>
-      <a-descriptions-item label="修改人">{{ dataDetail?.updateUserString }}</a-descriptions-item>
-      <a-descriptions-item label="修改时间">{{ dataDetail?.updateTime }}</a-descriptions-item>
-      <a-descriptions-item label="描述" :span="2">{{ dataDetail?.description }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.role.field.name')">{{ dataDetail?.name }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.role.field.code')">{{ dataDetail?.code }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.role.field.createUser')">{{ dataDetail?.createUserString }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.role.field.createTime')">{{ dataDetail?.createTime }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.role.field.updateUser')">{{ dataDetail?.updateUserString }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.role.field.updateTime')">{{ dataDetail?.updateTime }}</a-descriptions-item>
+      <a-descriptions-item :label="$t('sys.role.field.description')" :span="2">{{ dataDetail?.description }}</a-descriptions-item>
     </a-descriptions>
     <a-descriptions
-      title="功能权限"
+      :title="$t('sys.role.add.step2')"
       :column="2"
       size="large"
       class="permission general-description"
@@ -32,7 +32,7 @@
     </a-descriptions>
     <a-descriptions
       v-if="dataDetail?.dataScope === 5"
-      title="数据权限"
+      :title="$t('sys.role.add.step3')"
       :column="2"
       size="large"
       class="general-description"

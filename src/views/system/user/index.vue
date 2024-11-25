@@ -29,10 +29,10 @@
               <template #icon><icon-plus /></template>
               <template #default>{{ $t('page.common.button.add') }}</template>
             </a-button>
-            <a-button v-permission="['system:user:import']" @click="onImport">
+            <!-- <a-button v-permission="['system:user:import']" @click="onImport">
               <template #icon><icon-upload /></template>
               <template #default>{{ $t('page.common.button.import') }}</template>
-            </a-button>
+            </a-button> -->
           </template>
           <template #toolbar-right>
             <a-button v-permission="['system:user:export']" @click="onExport">

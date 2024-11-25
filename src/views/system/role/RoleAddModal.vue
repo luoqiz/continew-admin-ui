@@ -1,7 +1,7 @@
 <template>
   <a-modal
     v-model:visible="visible"
-    title="新增角色"
+    :title="$t('sys.role.page.add.title')"
     :mask-closable="false"
     :esc-to-close="true"
     draggable
@@ -9,25 +9,25 @@
     @close="reset"
   >
     <a-steps :current="current" class="mb-15" @change="onChangeCurrent">
-      <a-step>基础信息</a-step>
-      <a-step>功能权限</a-step>
-      <a-step>数据权限</a-step>
+      <a-step>{{ $t('sys.role.add.step1') }}</a-step>
+      <a-step>{{ $t('sys.role.add.step2') }}</a-step>
+      <a-step>{{ $t('sys.role.add.step3') }}</a-step>
     </a-steps>
     <a-form ref="formRef" :model="form" :rules="rules" size="large" auto-label-width>
       <fieldset v-show="current === 1">
-        <a-form-item label="名称" field="name">
-          <a-input v-model.trim="form.name" placeholder="请输入名称" />
+        <a-form-item :label="$t('sys.role.field.name')" field="name">
+          <a-input v-model.trim="form.name" :placeholder="$t('sys.role.field.name_placeholder')" />
         </a-form-item>
-        <a-form-item label="编码" field="code">
-          <a-input v-model.trim="form.code" placeholder="请输入编码" />
+        <a-form-item :label="$t('sys.role.field.code')" field="code">
+          <a-input v-model.trim="form.code" :placeholder="$t('sys.role.field.code_placeholder')" />
         </a-form-item>
-        <a-form-item label="排序" field="sort">
-          <a-input-number v-model="form.sort" placeholder="请输入排序" :min="1" mode="button" />
+        <a-form-item :label="$t('sys.role.field.sort')" field="sort">
+          <a-input-number v-model="form.sort" :placeholder="$t('sys.role.field.sort_placeholder')" :min="1" mode="button" />
         </a-form-item>
-        <a-form-item label="描述" field="description">
+        <a-form-item :label="$t('sys.role.field.description')" field="description">
           <a-textarea
             v-model.trim="form.description"
-            placeholder="请输入描述"
+            :placeholder="$t('sys.role.field.description_placeholder')"
             show-word-limit
             :max-length="200"
             :auto-size="{ minRows: 3, maxRows: 5 }"
@@ -37,9 +37,9 @@
       <fieldset v-show="current === 2">
         <a-form-item hide-label :disabled="form.isSystem" class="w-full">
           <a-space>
-            <a-checkbox v-model="isMenuExpanded" @change="onExpanded('menu')">展开/折叠</a-checkbox>
-            <a-checkbox v-model="isMenuCheckAll" @change="onCheckAll('menu')">全选/全不选</a-checkbox>
-            <a-checkbox v-model="form.menuCheckStrictly">父子联动</a-checkbox>
+            <a-checkbox v-model="isMenuExpanded" @change="onExpanded('menu')">{{ $t('page.common.tips.collapsed') }}</a-checkbox>
+            <a-checkbox v-model="isMenuCheckAll" @change="onCheckAll('menu')">{{ $t('page.common.tips.selectAll') }}</a-checkbox>
+            <a-checkbox v-model="form.menuCheckStrictly">{{ $t('page.common.tips.parentSub') }}</a-checkbox>
           </a-space>
           <template #extra>
             <a-tree
@@ -60,15 +60,15 @@
           <a-select
             v-model.trim="form.dataScope"
             :options="data_scope_enum"
-            placeholder="请选择数据权限"
+            :placeholder="$t('sys.role.field.dataScope_placeholder')"
             :disabled="form.isSystem"
           />
         </a-form-item>
         <a-form-item v-if="form.dataScope === 5" hide-label :disabled="form.isSystem">
           <a-space>
-            <a-checkbox v-model="isDeptExpanded" @change="onExpanded('dept')">展开/折叠</a-checkbox>
-            <a-checkbox v-model="isDeptCheckAll" @change="onCheckAll('dept')">全选/全不选</a-checkbox>
-            <a-checkbox v-model="form.deptCheckStrictly">父子联动</a-checkbox>
+            <a-checkbox v-model="isDeptExpanded" @change="onExpanded('dept')">{{ $t('page.common.tips.collapsed') }}</a-checkbox>
+            <a-checkbox v-model="isDeptCheckAll" @change="onCheckAll('dept')">{{ $t('page.common.tips.selectAll') }}</a-checkbox>
+            <a-checkbox v-model="form.deptCheckStrictly">{{ $t('page.common.tips.parentSub') }}</a-checkbox>
           </a-space>
           <template #extra>
             <a-tree
@@ -89,13 +89,13 @@
       <a-space size="large">
         <a-button :disabled="current === 1" type="secondary" @click="onPrev">
           <IconLeft />
-          上一步
+          {{ $t('page.common.tips.step.previous') }}
         </a-button>
         <a-button v-if="current !== 3" :disabled="current === 3" type="primary" @click="onNext">
-          下一步
+          {{ $t('page.common.tips.step.next') }}
           <IconRight />
         </a-button>
-        <a-button v-if="current === 3" type="primary" @click="onClickOk">确定</a-button>
+        <a-button v-if="current === 3" type="primary" @click="onClickOk">{{ $t('page.common.button.confirm') }}</a-button>
       </a-space>
     </template>
   </a-modal>
@@ -104,6 +104,7 @@
 <script setup lang="ts">
 import { type FormInstance, Message, type TreeNodeData } from '@arco-design/web-vue'
 import { useWindowSize } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
 import { addRole } from '@/apis/system/role'
 import { useForm } from '@/hooks'
 import { useDept, useDict, useMenu } from '@/hooks/app'
@@ -113,7 +114,7 @@ const emit = defineEmits<{
 }>()
 
 const { width } = useWindowSize()
-
+const { t } = useI18n()
 const dataId = ref('')
 const visible = ref(false)
 const formRef = ref<FormInstance>()
@@ -122,9 +123,9 @@ const { deptList, getDeptList } = useDept()
 const { menuList, getMenuList } = useMenu()
 
 const rules: FormInstance['rules'] = {
-  name: [{ required: true, message: '请输入名称' }],
-  code: [{ required: true, message: '请输入编码' }],
-  dataScope: [{ required: true, message: '请选择数据权限' }],
+  name: [{ required: true, message: t('sys.role.field.name_placeholder') }],
+  code: [{ required: true, message: t('sys.role.field.code_placeholder') }],
+  dataScope: [{ required: true, message: t('sys.role.field.dataScope_placeholder') }],
 }
 
 const { form, resetForm } = useForm({
@@ -228,7 +229,7 @@ const save = async () => {
     form.menuIds = getMenuAllCheckedKeys()
     form.deptIds = getDeptAllCheckedKeys()
     await addRole(form)
-    Message.success('新增成功')
+    Message.success(t('page.common.message.add.success'))
     emit('save-success')
     return true
   } catch (error) {

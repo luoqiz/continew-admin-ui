@@ -1,7 +1,7 @@
 <template>
   <a-modal
     v-model:visible="visible"
-    title="重置密码"
+    :title="$t('page.common.button.resetPwd')"
     :mask-closable="false"
     :esc-to-close="false"
     :modal-style="{ maxWidth: '520px' }"
@@ -16,6 +16,7 @@
 
 <script setup lang="ts">
 import { Message } from '@arco-design/web-vue'
+import { useI18n } from 'vue-i18n'
 import { resetUserPwd } from '@/apis/system'
 import { type Columns, GiForm } from '@/components/GiForm'
 import { useForm } from '@/hooks'
@@ -24,6 +25,8 @@ import { encryptByRsa } from '@/utils/encrypt'
 const emit = defineEmits<{
   (e: 'save-success'): void
 }>()
+
+const { t } = useI18n()
 
 const dataId = ref('')
 const visible = ref(false)
@@ -36,8 +39,8 @@ const options: Options = {
 
 const { form, resetForm } = useForm({})
 
-const columns: Columns = reactive([
-  { label: '密码', field: 'newPassword', type: 'input-password', rules: [{ required: true, message: '请输入密码' }] },
+const columns: Columns = computed(() => [
+  { label: t('sys.user.field.password'), field: 'newPassword', type: 'input-password', rules: [{ required: true, message: t('sys.user.field.password_placeholder') }] },
 ])
 
 // 重置
@@ -52,7 +55,7 @@ const save = async () => {
     const isInvalid = await formRef.value?.formRef?.validate()
     if (isInvalid) return false
     await resetUserPwd({ newPassword: encryptByRsa(form.newPassword) || '' }, dataId.value)
-    Message.success('重置成功')
+    Message.success(t('sys.user.tips.pwdResetSuccess'))
     emit('save-success')
     return true
   } catch (error) {

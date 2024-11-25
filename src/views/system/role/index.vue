@@ -1,7 +1,7 @@
 <template>
   <div class="table-page">
     <GiTable
-      title="角色管理"
+      :title="$t('menu.system.role')"
       row-key="id"
       :data="dataList"
       :columns="columns"
@@ -13,40 +13,40 @@
       @refresh="search"
     >
       <template #toolbar-left>
-        <a-input v-model="queryForm.description" placeholder="请输入名称/编码/描述" allow-clear @change="search">
+        <a-input v-model="queryForm.description" :placeholder="$t('sys.role.search.form.description')" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input>
         <a-button @click="reset">
           <template #icon><icon-refresh /></template>
-          <template #default>重置</template>
+          <template #default>{{ $t('page.common.button.reset') }}</template>
         </a-button>
       </template>
       <template #toolbar-right>
         <a-button v-permission="['system:role:add']" type="primary" @click="onAdd">
           <template #icon><icon-plus /></template>
-          <template #default>新增</template>
+          <template #default>{{ $t('page.common.button.add') }}</template>
         </a-button>
       </template>
       <template #dataScope="{ record }">
         <GiCellTag :value="record.dataScope" :dict="data_scope_enum" />
       </template>
       <template #isSystem="{ record }">
-        <a-tag v-if="record.isSystem" color="red" size="small">是</a-tag>
-        <a-tag v-else color="arcoblue" size="small">否</a-tag>
+        <a-tag v-if="record.isSystem" color="red" size="small">{{ $t('page.common.field.true') }}</a-tag>
+        <a-tag v-else color="arcoblue" size="small">{{ $t('page.common.field.false') }}</a-tag>
       </template>
       <template #action="{ record }">
         <a-space>
-          <a-link v-permission="['system:role:detail']" title="详情" @click="onDetail(record)">详情</a-link>
-          <a-link v-permission="['system:role:update']" title="修改" @click="onUpdate(record)">修改</a-link>
-          <a-link v-permission="['system:role:assign']" title="分配" @click="onAssign(record)">分配</a-link>
+          <a-link v-permission="['system:role:detail']" :title="$t('page.common.button.detail')" @click="onDetail(record)">{{ $t('page.common.button.detail') }}</a-link>
+          <a-link v-permission="['system:role:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
+          <!-- <a-link v-permission="['system:role:assign']" :title="$t('page.common.button.assign')" @click="onAssign(record)">{{ $t('page.common.button.assign') }}</a-link> -->
           <a-link
             v-permission="['system:role:delete']"
             status="danger"
             :disabled="record.isSystem"
-            :title="record.isSystem ? '系统内置数据不能删除' : '删除'"
+            :title="record.isSystem ? $t('page.common.tips.data.notDelete') : $t('page.common.button.delete')"
             @click="onDelete(record)"
           >
-            删除
+            {{ $t('page.common.button.delete') }}
           </a-link>
         </a-space>
       </template>
@@ -60,6 +60,7 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import RoleAddModal from './RoleAddModal.vue'
 import RoleUpdateDrawer from './RoleUpdateDrawer.vue'
 import RoleDetailDrawer from './RoleDetailDrawer.vue'
@@ -72,7 +73,7 @@ import { isMobile } from '@/utils'
 import has from '@/utils/has'
 
 defineOptions({ name: 'SystemRole' })
-
+const { t } = useI18n()
 const { data_scope_enum } = useDict('data_scope_enum')
 
 const queryForm = reactive<RoleQuery>({
@@ -86,25 +87,25 @@ const {
   search,
   handleDelete,
 } = useTable((page) => listRole({ ...queryForm, ...page }), { immediate: true })
-const columns: TableInstanceColumns[] = [
+const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   {
-    title: '序号',
+    title: t('page.common.field.sn'),
     width: 66,
     align: 'center',
     render: ({ rowIndex }) => h('span', {}, rowIndex + 1 + (pagination.current - 1) * pagination.pageSize),
   },
-  { title: '名称', dataIndex: 'name', slotName: 'name', ellipsis: true, tooltip: true },
-  { title: '编码', dataIndex: 'code', ellipsis: true, tooltip: true },
-  { title: '数据权限', dataIndex: 'dataScope', slotName: 'dataScope', ellipsis: true, tooltip: true },
-  { title: '排序', dataIndex: 'sort', align: 'center', show: false },
-  { title: '系统内置', dataIndex: 'isSystem', slotName: 'isSystem', align: 'center', show: false },
-  { title: '描述', dataIndex: 'description', ellipsis: true, tooltip: true },
-  { title: '创建人', dataIndex: 'createUserString', ellipsis: true, tooltip: true, show: false },
-  { title: '创建时间', dataIndex: 'createTime', width: 180 },
-  { title: '修改人', dataIndex: 'updateUserString', ellipsis: true, tooltip: true, show: false },
-  { title: '修改时间', dataIndex: 'updateTime', width: 180, show: false },
+  { title: t('sys.role.field.name'), dataIndex: 'name', slotName: 'name', ellipsis: true, tooltip: true },
+  { title: t('sys.role.field.code'), dataIndex: 'code', ellipsis: true, tooltip: true },
+  { title: t('sys.role.field.dataScope'), dataIndex: 'dataScope', slotName: 'dataScope', ellipsis: true, tooltip: true },
+  { title: t('sys.role.field.sort'), dataIndex: 'sort', align: 'center', show: false },
+  { title: t('sys.role.field.isSystem'), dataIndex: 'isSystem', slotName: 'isSystem', align: 'center', show: false },
+  { title: t('sys.role.field.description'), dataIndex: 'description', ellipsis: true, tooltip: true },
+  { title: t('sys.role.field.createUser'), dataIndex: 'createUserString', ellipsis: true, tooltip: true, show: false },
+  { title: t('sys.role.field.createTime'), dataIndex: 'createTime', width: 180 },
+  { title: t('sys.role.field.updateUser'), dataIndex: 'updateUserString', ellipsis: true, tooltip: true, show: false },
+  { title: t('sys.role.field.updateTime'), dataIndex: 'updateTime', width: 180, show: false },
   {
-    title: '操作',
+    title: t('page.common.button.operator'),
     dataIndex: 'action',
     slotName: 'action',
     width: 200,
@@ -117,7 +118,7 @@ const columns: TableInstanceColumns[] = [
       'system:role:assign',
     ]),
   },
-]
+])
 
 // 重置
 const reset = () => {
@@ -128,7 +129,7 @@ const reset = () => {
 // 删除
 const onDelete = (record: RoleResp) => {
   return handleDelete(() => deleteRole(record.id), {
-    content: `是否确定删除角色「${record.name}(${record.code})」？`,
+    content: `${t('sys.role.tips.delete')}「${record.name}(${record.code})」？`,
     showModal: true,
   })
 }
