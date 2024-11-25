@@ -81,7 +81,7 @@ const { chartOption } = useChart(() => {
         // radius: '55%',
         // center: ['50%', '60%'],
         radius: ['50%', '70%'],
-        center: ['30%', '50%'],
+        center: ['50%', '50%'],
         label: {
           show: false,
         },

@@ -12,13 +12,13 @@
       <a-tab-pane
         v-for="item of tabsStore.tabList"
         :key="item.path"
-        :title="(item.meta?.title as string)"
+        :title="item?.meta?.locale ? $t(item?.meta?.locale as string) : item?.meta?.title ?? ''"
         :closable="Boolean(!item.meta?.affix)"
       >
         <template #title>
           <a-dropdown trigger="contextMenu">
             <span @contextmenu="(e) => handleContextMenu(e, item.path)">
-              {{ item.meta?.title }}
+              {{ item?.meta?.locale ? $t(item?.meta?.locale as string) : item?.meta?.title ?? '' }}
             </span>
 
             <template #content>
@@ -26,25 +26,25 @@
                 <template #icon>
                   <icon-close />
                 </template>
-                <template #default>关闭当前</template>
+                <template #default>{{ $t('page.common.tab.closeCurrent') }}</template>
               </a-doption>
               <a-doption @click="tabsStore.closeRight(currentContextPath)">
                 <template #icon>
                   <icon-close />
                 </template>
-                <template #default>关闭右侧</template>
+                <template #default>{{ $t('page.common.tab.closeRight') }}</template>
               </a-doption>
               <a-doption @click="tabsStore.closeOther(currentContextPath)">
                 <template #icon>
                   <icon-eraser />
                 </template>
-                <template #default>关闭其他</template>
+                <template #default>{{ $t('page.common.tab.closeOther') }}</template>
               </a-doption>
               <a-doption @click="tabsStore.closeAll">
                 <template #icon>
                   <icon-minus />
                 </template>
-                <template #default>关闭全部</template>
+                <template #default>{{ $t('page.common.tab.closeCAll') }}</template>
               </a-doption>
             </template>
           </a-dropdown>
@@ -62,25 +62,25 @@
               <template #icon>
                 <icon-close />
               </template>
-              <template #default>关闭当前</template>
+              <template #default>{{ $t('page.common.tab.closeCurrent') }}</template>
             </a-doption>
             <a-doption @click="tabsStore.closeRight(route.path)">
               <template #icon>
                 <icon-close />
               </template>
-              <template #default>关闭右侧</template>
+              <template #default>{{ $t('page.common.tab.closeRight') }}</template>
             </a-doption>
             <a-doption @click="tabsStore.closeOther(route.path)">
               <template #icon>
                 <icon-eraser />
               </template>
-              <template #default>关闭其他</template>
+              <template #default>{{ $t('page.common.tab.closeOther') }}</template>
             </a-doption>
             <a-doption @click="tabsStore.closeAll">
               <template #icon>
                 <icon-minus />
               </template>
-              <template #default>关闭全部</template>
+              <template #default>{{ $t('page.common.tab.closeCAll') }}</template>
             </a-doption>
           </template>
         </a-dropdown>

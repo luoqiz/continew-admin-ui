@@ -6,7 +6,7 @@
         <a-option v-for="item of languageStore.languageTypeList" :key="item.value" :value="item">{{ item.label }}</a-option>
       </a-select>
       <!-- 项目配置 -->
-      <a-tooltip content="项目配置" position="bl">
+      <a-tooltip :content="$t('page.common.tips.projectSetting')" position="bl">
         <a-button size="mini" class="gi_hover_btn" @click="SettingDrawerRef?.open">
           <template #icon>
             <icon-settings :size="18" />
@@ -15,7 +15,7 @@
       </a-tooltip>
 
       <!-- 消息通知 -->
-      <a-popover
+      <!-- <a-popover
         position="bottom"
         trigger="click"
         :content-style="{ marginTop: '-5px', padding: 0, border: 'none' }"
@@ -31,10 +31,10 @@
         <template #content>
           <Message @readall-success="getMessageCount" />
         </template>
-      </a-popover>
+      </a-popover> -->
 
       <!-- 全屏切换组件 -->
-      <a-tooltip v-if="!isMobile()" content="全屏切换" position="bottom">
+      <a-tooltip v-if="!isMobile()" :content="$t('page.common.tips.fullScreen')" position="bottom">
         <a-button size="mini" class="gi_hover_btn" @click="toggle">
           <template #icon>
             <icon-fullscreen v-if="!isFullscreen" :size="18" />
@@ -44,7 +44,7 @@
       </a-tooltip>
 
       <!-- 暗黑模式切换 -->
-      <a-tooltip content="主题切换" position="bottom">
+      <a-tooltip :content="$t('page.common.tips.themeSwitch')" position="bottom">
         <GiThemeBtn></GiThemeBtn>
       </a-tooltip>
 
