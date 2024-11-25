@@ -47,11 +47,11 @@
           <slot name="suffix">
             <a-button type="primary" @click="emit('search')">
               <template #icon><icon-search /></template>
-              <template #default>{{ options.btns?.searchBtnText || '查询' }}</template>
+              <template #default>{{ options.btns?.searchBtnText || $t('page.common.button.search') }}</template>
             </a-button>
             <a-button @click="emit('reset')">
               <template #icon><icon-refresh /></template>
-              <template #default>重置</template>
+              <template #default>{{ $t('page.common.button.reset') }}</template>
             </a-button>
             <a-button
               v-if="options.fold?.enable" class="gi-form__fold-btn" type="text" size="mini"
@@ -61,7 +61,7 @@
                 <icon-up v-if="!collapsed" />
                 <icon-down v-else />
               </template>
-              <template #default>{{ collapsed ? '展开' : '收起' }}</template>
+              <template #default>{{ collapsed ? $t('page.common.button.expand') : $t('page.common.button.collapsed') }}</template>
             </a-button>
           </slot>
         </a-space>
@@ -111,33 +111,33 @@ const getComponentBindProps = (item: ColumnsItem) => {
   const obj: Partial<ColumnsItem['props'] & { placeholder: string }> = {}
   if (item.type === 'input') {
     obj.allowClear = true
-    obj.placeholder = `请输入${item.label}`
+    obj.placeholder = `${item.label}`
   }
   if (item.type === 'input-password') {
     obj.allowClear = true
-    obj.placeholder = `请输入${item.label}`
+    obj.placeholder = `${item.label}`
   }
   if (item.type === 'input-number') {
     obj.allowClear = true
-    obj.placeholder = `请输入${item.label}`
+    obj.placeholder = `${item.label}`
   }
   if (item.type === 'textarea') {
-    obj.placeholder = `请输入${item.label}`
+    obj.placeholder = `${item.label}`
     obj.maxLength = 200
   }
   if (item.type === 'select') {
     obj.allowClear = true
-    obj.placeholder = `请选择${item.label}`
+    obj.placeholder = `${item.label}`
     obj.options = dicData[item.field] || item.options
   }
   if (item.type === 'cascader') {
     obj.allowClear = true
-    obj.placeholder = `请选择${item.label}`
+    obj.placeholder = `${item.label}`
     obj.options = dicData[item.field] || item.options
   }
   if (item.type === 'tree-select') {
     obj.allowClear = true
-    obj.placeholder = `请选择${item.label}`
+    obj.placeholder = `${item.label}`
     obj.data = dicData[item.field] || item.data
   }
   if (item.type === 'radio-group') {
@@ -147,11 +147,11 @@ const getComponentBindProps = (item: ColumnsItem) => {
     obj.options = dicData[item.field] || item.options
   }
   if (item.type === 'date-picker') {
-    obj.placeholder = '请选择日期'
+    obj.placeholder = '日期'
   }
   if (item.type === 'time-picker') {
     obj.allowClear = true
-    obj.placeholder = `请选择时间`
+    obj.placeholder = `时间`
   }
   return { ...obj, ...item.props }
 }

@@ -2,7 +2,7 @@
   <div class="table-page">
     <a-row justify="space-between" align="center" class="header page_header">
       <a-space wrap>
-        <div class="title">用户管理</div>
+        <div class="title">{{ $t('menu.system.user') }}</div>
       </a-space>
     </a-row>
     <a-row align="stretch" :gutter="14" class="h-full page_content">
@@ -27,17 +27,17 @@
           <template #toolbar-left>
             <a-button v-permission="['system:user:add']" type="primary" @click="onAdd">
               <template #icon><icon-plus /></template>
-              <template #default>新增</template>
+              <template #default>{{ $t('page.common.button.add') }}</template>
             </a-button>
             <a-button v-permission="['system:user:import']" @click="onImport">
               <template #icon><icon-upload /></template>
-              <template #default>导入</template>
+              <template #default>{{ $t('page.common.button.import') }}</template>
             </a-button>
           </template>
           <template #toolbar-right>
             <a-button v-permission="['system:user:export']" @click="onExport">
               <template #icon><icon-download /></template>
-              <template #default>导出</template>
+              <template #default>{{ $t('page.common.button.export') }}</template>
             </a-button>
           </template>
           <template #nickname="{ record }">
@@ -53,21 +53,21 @@
             <GiCellStatus :status="record.status" />
           </template>
           <template #isSystem="{ record }">
-            <a-tag v-if="record.isSystem" color="red" size="small">是</a-tag>
-            <a-tag v-else color="arcoblue" size="small">否</a-tag>
+            <a-tag v-if="record.isSystem" color="red" size="small">{{ $t('page.common.field.true') }}</a-tag>
+            <a-tag v-else color="arcoblue" size="small">{{ $t('page.common.field.false') }}</a-tag>
           </template>
           <template #action="{ record }">
             <a-space>
-              <a-link v-permission="['system:user:detail']" title="详情" @click="onDetail(record)">详情</a-link>
-              <a-link v-permission="['system:user:update']" title="修改" @click="onUpdate(record)">修改</a-link>
+              <a-link v-permission="['system:user:detail']" :title="$t('page.common.button.detail')" @click="onDetail(record)">{{ $t('page.common.button.detail') }}</a-link>
+              <a-link v-permission="['system:user:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
               <a-link
                 v-permission="['system:user:delete']"
                 status="danger"
                 :disabled="record.isSystem"
-                :title="record.isSystem ? '系统内置数据不能删除' : '删除'"
+                :title="record.isSystem ? $t('page.common.tips.data.notDelete') : $t('page.common.button.delete')"
                 @click="onDelete(record)"
               >
-                删除
+                {{ $t('page.common.button.delete') }}
               </a-link>
               <a-dropdown>
                 <a-button v-if="has.hasPermOr(['system:user:resetPwd', 'system:user:updateRole'])" type="text" size="mini" title="更多">
@@ -76,8 +76,8 @@
                   </template>
                 </a-button>
                 <template #content>
-                  <a-doption v-permission="['system:user:resetPwd']" title="重置密码" @click="onResetPwd(record)">重置密码</a-doption>
-                  <a-doption v-permission="['system:user:updateRole']" title="分配角色" @click="onUpdateRole(record)">分配角色</a-doption>
+                  <a-doption v-permission="['system:user:resetPwd']" :title="$t('page.common.button.resetPwd')" @click="onResetPwd(record)"> {{ $t('page.common.button.resetPwd') }}</a-doption>
+                  <a-doption v-permission="['system:user:updateRole']" :title="$t('system.button.roleAssignment')" @click="onUpdateRole(record)"> {{ $t('system.button.roleAssignment') }}</a-doption>
                 </template>
               </a-dropdown>
             </a-space>
@@ -95,6 +95,7 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import DeptTree from './dept/index.vue'
 import UserAddDrawer from './UserAddDrawer.vue'
 import UserImportDrawer from './UserImportDrawer.vue'
@@ -111,6 +112,8 @@ import has from '@/utils/has'
 
 defineOptions({ name: 'SystemUser' })
 
+const { t } = useI18n()
+
 const options: Options = reactive({
   form: { layout: 'inline' },
   grid: { cols: { xs: 1, sm: 1, md: 2, lg: 3, xl: 3, xxl: 3 } },
@@ -119,7 +122,7 @@ const options: Options = reactive({
 const { form: queryForm, resetForm } = useForm({
   sort: ['t1.id,desc'],
 })
-const queryFormColumns: Columns = reactive([
+const queryFormColumns: ComputedRef<Columns> = computed(() => [
   {
     type: 'input',
     field: 'description',
@@ -127,7 +130,7 @@ const queryFormColumns: Columns = reactive([
       hideLabel: true,
     },
     props: {
-      placeholder: '用户名/昵称/描述',
+      placeholder: t('sys.user.search.form.user'),
     },
   },
   {
@@ -138,7 +141,7 @@ const queryFormColumns: Columns = reactive([
       hideLabel: true,
     },
     props: {
-      placeholder: '请选择状态',
+      placeholder: t('sys.user.search.form.status'),
     },
   },
   {
@@ -158,16 +161,16 @@ const {
   search,
   handleDelete,
 } = useTable((page) => listUser({ ...queryForm, ...page }), { immediate: false })
-const columns: TableInstanceColumns[] = [
+const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   {
-    title: '序号',
+    title: t('page.common.field.sn'),
     width: 66,
     align: 'center',
     render: ({ rowIndex }) => h('span', {}, rowIndex + 1 + (pagination.current - 1) * pagination.pageSize),
     fixed: !isMobile() ? 'left' : undefined,
   },
   {
-    title: '昵称',
+    title: t('sys.user.field.nickname'),
     dataIndex: 'nickname',
     slotName: 'nickname',
     minWidth: 140,
@@ -175,21 +178,21 @@ const columns: TableInstanceColumns[] = [
     tooltip: true,
     fixed: !isMobile() ? 'left' : undefined,
   },
-  { title: '用户名', dataIndex: 'username', slotName: 'username', minWidth: 140, ellipsis: true, tooltip: true },
-  { title: '状态', dataIndex: 'status', slotName: 'status', align: 'center' },
-  { title: '性别', dataIndex: 'gender', slotName: 'gender', align: 'center' },
-  { title: '所属部门', dataIndex: 'deptName', minWidth: 180, ellipsis: true, tooltip: true },
-  { title: '角色', dataIndex: 'roleNames', slotName: 'roleNames', minWidth: 165 },
-  { title: '手机号', dataIndex: 'phone', minWidth: 170, ellipsis: true, tooltip: true },
-  { title: '邮箱', dataIndex: 'email', minWidth: 170, ellipsis: true, tooltip: true },
-  { title: '系统内置', dataIndex: 'isSystem', slotName: 'isSystem', width: 100, align: 'center', show: false },
-  { title: '描述', dataIndex: 'description', minWidth: 130, ellipsis: true, tooltip: true },
-  { title: '创建人', dataIndex: 'createUserString', width: 140, ellipsis: true, tooltip: true, show: false },
-  { title: '创建时间', dataIndex: 'createTime', width: 180 },
-  { title: '修改人', dataIndex: 'updateUserString', width: 140, ellipsis: true, tooltip: true, show: false },
-  { title: '修改时间', dataIndex: 'updateTime', width: 180, show: false },
+  { title: t('sys.user.field.username'), dataIndex: 'username', slotName: 'username', minWidth: 140, ellipsis: true, tooltip: true },
+  { title: t('sys.user.field.status'), dataIndex: 'status', slotName: 'status', align: 'center' },
+  { title: t('sys.user.field.gender'), dataIndex: 'gender', slotName: 'gender', align: 'center' },
+  { title: t('sys.user.field.deptId'), dataIndex: 'deptName', minWidth: 180, ellipsis: true, tooltip: true },
+  { title: t('sys.user.field.role'), dataIndex: 'roleNames', slotName: 'roleNames', minWidth: 165 },
+  { title: t('sys.user.field.phone'), dataIndex: 'phone', minWidth: 170, ellipsis: true, tooltip: true },
+  { title: t('sys.user.field.email'), dataIndex: 'email', minWidth: 170, ellipsis: true, tooltip: true },
+  { title: t('sys.user.field.isSystem'), dataIndex: 'isSystem', slotName: 'isSystem', width: 100, align: 'center', show: false },
+  { title: t('sys.user.field.description'), dataIndex: 'description', minWidth: 130, ellipsis: true, tooltip: true },
+  { title: t('sys.user.field.createUser'), dataIndex: 'createUserString', width: 140, ellipsis: true, tooltip: true, show: false },
+  { title: t('sys.user.field.createTime'), dataIndex: 'createTime', width: 180 },
+  { title: t('sys.user.field.updateUser'), dataIndex: 'updateUserString', width: 140, ellipsis: true, tooltip: true, show: false },
+  { title: t('sys.user.field.updateTime'), dataIndex: 'updateTime', width: 180, show: false },
   {
-    title: '操作',
+    title: t('page.common.button.operator'),
     dataIndex: 'action',
     slotName: 'action',
     width: 190,
@@ -203,7 +206,7 @@ const columns: TableInstanceColumns[] = [
       'system:user:updateRole',
     ]),
   },
-]
+])
 
 // 重置
 const reset = () => {
@@ -214,7 +217,7 @@ const reset = () => {
 // 删除
 const onDelete = (record: UserResp) => {
   return handleDelete(() => deleteUser(record.id), {
-    content: `是否确定删除用户「${record.nickname}(${record.username})」？`,
+    content: `${t('sys.user.tips.delete')}「${record.nickname}(${record.username})」？`,
     showModal: true,
   })
 }

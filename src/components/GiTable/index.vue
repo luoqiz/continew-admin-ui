@@ -16,13 +16,13 @@
       </a-space>
       <a-space wrap class="gi-table__toolbar-right" :size="[8, 8]">
         <slot name="toolbar-right"></slot>
-        <a-tooltip content="刷新">
+        <a-tooltip :content="$t('page.common.tips.table.refresh')">
           <a-button v-if="showRefreshBtn" @click="refresh">
             <template #icon><icon-refresh /></template>
           </a-button>
         </a-tooltip>
         <a-dropdown v-if="showSizeBtn" @select="handleSelect">
-          <a-tooltip content="尺寸">
+          <a-tooltip :content="$t('page.common.tips.table.size')">
             <a-button>
               <template #icon><icon-table-size style="width: 14px; height: 14px" /></template>
             </a-button>
@@ -38,7 +38,7 @@
           v-if="showSettingColumnBtn" trigger="click" position="br"
           :content-style="{ minWidth: '120px', padding: '6px 8px 10px' }"
         >
-          <a-tooltip content="列设置">
+          <a-tooltip :content="$t('page.common.tips.table.column.setting')">
             <a-button>
               <template #icon>
                 <icon-settings />
@@ -58,12 +58,12 @@
             <a-row justify="center">
               <a-button type="primary" size="mini" long @click="resetSettingColumns">
                 <template #icon><icon-refresh /></template>
-                <template #default>重置</template>
+                <template #default>{{ $t('page.common.button.reset') }}</template>
               </a-button>
             </a-row>
           </template>
         </a-popover>
-        <a-tooltip content="全屏">
+        <a-tooltip :content="$t('page.common.tips.fullScreen')">
           <a-button v-if="showFullscreenBtn" @click="isFullscreen = !isFullscreen">
             <template #icon>
               <icon-fullscreen v-if="!isFullscreen" />

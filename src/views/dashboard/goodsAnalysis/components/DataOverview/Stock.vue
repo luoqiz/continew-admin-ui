@@ -1,6 +1,6 @@
 <template>
   <div>
-    <PieCard title="库存剩余" :data="chartData" :loading="loading"></PieCard>
+    <PieCard :title="$t('page.home.data.todayStockNum')" :data="chartData" :loading="loading"></PieCard>
   </div>
 </template>
 

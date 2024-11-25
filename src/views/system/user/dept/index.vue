@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="search">
-      <a-input v-model="searchKey" placeholder="请输入部门名称" allow-clear>
+      <a-input v-model="searchKey" :placeholder="$t('sys.user.search.form.dept')" allow-clear>
         <template #prefix><icon-search /></template>
       </a-input>
     </div>

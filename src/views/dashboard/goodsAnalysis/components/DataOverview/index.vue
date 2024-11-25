@@ -1,5 +1,5 @@
 <template>
-  <a-card class="general-card" title="数据总览">
+  <a-card class="general-card" :title="$t('page.home.data.title')">
     <a-grid :cols="24" :col-gap="12" :row-gap="12">
       <a-grid-item :span="{ xs: 24, sm: 24, md: 24, lg: 24, xl: 12, xxl: 12 }">
         <StockOut />
