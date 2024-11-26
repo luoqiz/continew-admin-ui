@@ -9,7 +9,7 @@ import { useDownload, useTable } from '@/hooks'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
 import type { GoodsInventoryCountDetailResp } from '@/apis/wms/goodsInventoryCount'
-import { getGoodsInventoryCount, updateGoodsInventoryCountStatus } from '@/apis/wms/goodsInventoryCount'
+import { exportGoodsInventoryCountDetail, getGoodsInventoryCount, updateGoodsInventoryCountStatus } from '@/apis/wms/goodsInventoryCount'
 
 defineOptions({ name: 'GoodsInventoryCountItem' })
 const { t } = useI18n()
@@ -109,7 +109,9 @@ const onDelete = (record: GoodsInventoryCountItemResp) => {
 
 // 导出
 const onExport = () => {
-  useDownload(() => exportGoodsInventoryCountItem(queryForm))
+  if (icId.value) {
+    useDownload(() => exportGoodsInventoryCountDetail(icId.value!))
+  }
 }
 
 const GoodsInventoryCountItemAddModalRef = ref<InstanceType<typeof GoodsInventoryCountItemAddModal>>()
@@ -125,9 +127,9 @@ const onUpdate = (record: GoodsInventoryCountItemResp) => {
 
 const GoodsInventoryCountItemDetailDrawerRef = ref<InstanceType<typeof GoodsInventoryCountItemDetailDrawer>>()
 // 详情
-const onDetail = (record: GoodsInventoryCountItemResp) => {
-  GoodsInventoryCountItemDetailDrawerRef.value?.onOpen(record.id)
-}
+// const onDetail = (record: GoodsInventoryCountItemResp) => {
+//   GoodsInventoryCountItemDetailDrawerRef.value?.onOpen(record.id)
+// }
 
 const updateInventoryCountStatus = async (status: number) => {
   if (icId.value) {

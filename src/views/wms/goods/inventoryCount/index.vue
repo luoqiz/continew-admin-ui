@@ -12,6 +12,11 @@
       :disabled-column-keys="['name']"
       @refresh="search"
     >
+      <template #status="{ record }">
+        <span v-if="record.status === 1">{{ $t('wms.goods.inventory.count.status.s1') }}</span>
+        <span v-if="record.status === 2">{{ $t('wms.goods.inventory.count.status.s2') }}</span>
+        <span v-if="record.status === 3">{{ $t('wms.goods.inventory.count.status.s3') }}</span>
+      </template>
       <template #toolbar-left>
         <a-input v-model="queryForm.name" :placeholder="$t('wms.goods.inventory.count.field.name_placeholder')" allow-clear @change="search">
           <template #prefix><icon-search /></template>
@@ -116,17 +121,17 @@ const {
 } = useTable((page) => listGoodsInventoryCount({ ...queryForm, ...page }), { immediate: true })
 
 const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
-  { title: t('wms.goods.inventory.count.field.id'), dataIndex: 'id', slotName: 'id' },
+  // { title: t('wms.goods.inventory.count.field.id'), dataIndex: 'id', slotName: 'id' },
   { title: t('wms.goods.inventory.count.field.name'), dataIndex: 'name', slotName: 'name' },
   { title: t('wms.goods.inventory.count.field.whseId'), dataIndex: 'whseName', slotName: 'whseId' },
   { title: t('wms.goods.inventory.count.field.status'), dataIndex: 'status', slotName: 'status' },
   { title: t('wms.goods.inventory.count.field.startTime'), dataIndex: 'startTime', slotName: 'startTime' },
   { title: t('wms.goods.inventory.count.field.endTime'), dataIndex: 'endTime', slotName: 'endTime' },
   { title: t('wms.goods.inventory.count.field.memo'), dataIndex: 'memo', slotName: 'memo' },
-  { title: t('wms.goods.inventory.count.field.createUser'), dataIndex: 'createUser', slotName: 'createUser' },
+  { title: t('wms.goods.inventory.count.field.createUser'), dataIndex: 'createUserString', slotName: 'createUser' },
   { title: t('wms.goods.inventory.count.field.createTime'), dataIndex: 'createTime', slotName: 'createTime' },
-  { title: t('wms.goods.inventory.count.field.updateUser'), dataIndex: 'updateUser', slotName: 'updateUser' },
-  { title: t('wms.goods.inventory.count.field.updateTime'), dataIndex: 'updateTime', slotName: 'updateTime' },
+  // { title: t('wms.goods.inventory.count.field.updateUser'), dataIndex: 'updateUserString', slotName: 'updateUser' },
+  // { title: t('wms.goods.inventory.count.field.updateTime'), dataIndex: 'updateTime', slotName: 'updateTime' },
   {
     title: t('page.common.button.operator'),
     dataIndex: 'action',

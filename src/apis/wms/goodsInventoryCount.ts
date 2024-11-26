@@ -6,7 +6,7 @@ export interface GoodsInventoryCountResp {
   id: string
   name: string
   whseId: string
-  status: string
+  status: number
   startTime: string
   endTime: string
   memo: string
@@ -75,4 +75,9 @@ export function exportGoodsInventoryCount(query: GoodsInventoryCountQuery) {
 /** @desc 更新物料盘点状态 */
 export function updateGoodsInventoryCountStatus(id: string, status: number) {
   return http.put(`${BASE_URL}/status/${id}/${status}`)
+}
+
+/** @desc 导出物料盘点详情 */
+export function exportGoodsInventoryCountDetail(id: string) {
+  return http.download(`${BASE_URL}/export/${id}`)
 }
