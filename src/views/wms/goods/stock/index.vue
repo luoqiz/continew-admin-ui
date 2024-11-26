@@ -248,9 +248,9 @@ const onDetail = (record: GoodsStockResp) => {
       </template>
       <template #action="{ record }">
         <a-space>
-          <a-link v-permission="['wms:goodsStock:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
+          <!-- <a-link v-permission="['wms:goodsStock:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link> -->
           <a-link v-permission="['wms:goodsStock:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
-          <a-link
+          <!-- <a-link
             v-permission="['wms:goodsStock:delete']"
             status="danger"
             :disabled="record.disabled"
@@ -258,7 +258,7 @@ const onDetail = (record: GoodsStockResp) => {
             @click="onDelete(record)"
           >
             {{ $t('page.common.button.delete') }}
-          </a-link>
+          </a-link> -->
         </a-space>
       </template>
     </GiTable>

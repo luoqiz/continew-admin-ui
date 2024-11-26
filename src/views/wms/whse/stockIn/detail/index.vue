@@ -172,18 +172,17 @@ const to_stock_move_info = (moveId: string) => {
       </a-row>
     </a-card>
     <a-card :title="$t('wms.whse.stock.in.detail.table')">
-    </a-card>
-    <GiTable
-      row-key="id"
-      :data="dataList"
-      :columns="columns"
-      :loading="loading"
-      :scroll="{ x: '100%', y: '100%', minWidth: 1000 }"
-      :disabled-tools="['size']"
-      :disabled-column-keys="['name']"
-      @refresh="getStockInInfo"
-    >
-      <!-- <template #toolbar-left>
+      <GiTable
+        row-key="id"
+        :data="dataList"
+        :columns="columns"
+        :loading="loading"
+        :scroll="{ x: '100%', y: '100%', minWidth: 1000 }"
+        :disabled-tools="['size']"
+        :disabled-column-keys="['name']"
+        @refresh="getStockInInfo"
+      >
+        <!-- <template #toolbar-left>
 	    <a-input v-model="queryForm.stockInId" placeholder="请输入入库id编号" allow-clear @change="search">
 	      <template #prefix><icon-search /></template>
 	    </a-input>
@@ -198,43 +197,44 @@ const to_stock_move_info = (moveId: string) => {
           <template #default>{{ $t('page.common.button.reset') }}</template>
         </a-button>
       </template> -->
-      <template #toolbar-right>
-        <a-button v-if="stockInDetail?.status === 1" v-permission="['wms:whseStockInDetail:add']" type="primary" @click="onAdd">
-          <template #icon><icon-plus /></template>
-          <template #default>{{ $t('page.common.button.add') }}</template>
-        </a-button>
+        <template #toolbar-right>
+          <a-button v-if="stockInDetail?.status === 1" v-permission="['wms:whseStockInDetail:add']" type="primary" @click="onAdd">
+            <template #icon><icon-plus /></template>
+            <template #default>{{ $t('page.common.button.add') }}</template>
+          </a-button>
         <!-- <a-button v-permission="['wms:whseStockInDetail:export']" @click="onExport">
           <template #icon><icon-download /></template>
           <template #default>{{ $t('page.common.button.export') }}</template>
         </a-button> -->
-      </template>
-      <template #action="{ record }">
-        <a-space>
-          <span v-if="stockInDetail?.status === 1">
-            <a-link v-permission="['wms:whseStockInDetail:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
-            <a-link v-permission="['wms:whseStockInDetail:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
-            <a-link
-              v-permission="['wms:whseStockInDetail:delete']"
-              status="danger"
-              :disabled="record.disabled"
-              :title="$t('page.common.button.delete')"
-              @click="onDelete(record)"
-            >
-              {{ $t('page.common.button.delete') }}
-            </a-link>
-          </span>
-          <span v-if="stockInDetail?.status === 2">
-            <a-link v-permission="['wms:whseStockInDetail:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
-            <a-link v-if="record.status !== 2" v-permission="['wms:whseStockInDetail:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
-            <a-link v-if="record.status !== 2" v-permission="['wms:whseStockInDetail:update']" :title="$t('page.common.button.audit')" @click="onAudit(record)">{{ $t('page.common.button.audit') }}</a-link>
-            <a-link v-if="record.status === 2" v-permission="['wms:whseStockInDetail:update']" :title="$t('page.common.button.cancel.audit')" @click="onCancelAudit(record)">{{ $t('page.common.button.cancel.audit') }}</a-link>
-          </span>
-          <span v-if="stockInDetail?.status === 3">
-            <a-link v-permission="['wms:whseStockInDetail:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
-          </span>
-        </a-space>
-      </template>
-    </GiTable>
+        </template>
+        <template #action="{ record }">
+          <a-space>
+            <span v-if="stockInDetail?.status === 1">
+              <a-link v-permission="['wms:whseStockInDetail:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
+              <a-link v-permission="['wms:whseStockInDetail:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
+              <a-link
+                v-permission="['wms:whseStockInDetail:delete']"
+                status="danger"
+                :disabled="record.disabled"
+                :title="$t('page.common.button.delete')"
+                @click="onDelete(record)"
+              >
+                {{ $t('page.common.button.delete') }}
+              </a-link>
+            </span>
+            <span v-if="stockInDetail?.status === 2">
+              <a-link v-permission="['wms:whseStockInDetail:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
+              <a-link v-if="record.status !== 2" v-permission="['wms:whseStockInDetail:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
+              <a-link v-if="record.status !== 2" v-permission="['wms:whseStockInDetail:update']" :title="$t('page.common.button.audit')" @click="onAudit(record)">{{ $t('page.common.button.audit') }}</a-link>
+              <a-link v-if="record.status === 2" v-permission="['wms:whseStockInDetail:update']" :title="$t('page.common.button.cancel.audit')" @click="onCancelAudit(record)">{{ $t('page.common.button.cancel.audit') }}</a-link>
+            </span>
+            <span v-if="stockInDetail?.status === 3">
+              <a-link v-permission="['wms:whseStockInDetail:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
+            </span>
+          </a-space>
+        </template>
+      </GiTable>
+    </a-card>
 
     <WhseStockInDetailAddModal ref="WhseStockInDetailAddModalRef" @save-success="getStockInInfo" />
     <WhseStockInDetailDetailDrawer ref="WhseStockInDetailDetailDrawerRef" />

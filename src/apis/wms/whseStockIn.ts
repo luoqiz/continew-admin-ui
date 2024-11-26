@@ -22,6 +22,7 @@ export interface WhseStockInInfoResp {
   stockInNo: string
   stockInType: string
   whseId: string
+  whseName: string
   whseAreaId: string
   stockMoveId: string
   inTime: string
@@ -76,7 +77,7 @@ export function deleteWhseStockIn(id: string) {
 
 /** @desc 导出仓库入库 */
 export function exportWhseStockIn(query: WhseStockInQuery) {
-  return http.download<any>(`${BASE_URL}/export`, query)
+  return http.download(`${BASE_URL}/export`, query)
 }
 
 /** @desc 更新仓库入库状态 */

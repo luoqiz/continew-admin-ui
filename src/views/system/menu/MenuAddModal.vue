@@ -76,7 +76,7 @@
           </a-form-item>
         </a-col>
         <a-col :xs="12" :sm="12" :md="8" :lg="8" :xl="8" :xxl="8">
-          <a-form-item :label="$t('sys.menu.field.isHidden')" field="keepAlive">
+          <a-form-item :label="$t('sys.menu.field.isCache')" field="keepAlive">
             <a-switch
               v-model="form.isCache"
               :checked-value="true"

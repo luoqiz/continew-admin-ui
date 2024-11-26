@@ -4,7 +4,7 @@ import { useAttrs } from 'vue'
 defineOptions({ name: 'CustomWhseSelect' })
 
 const { options } = defineProps({ options: { type: Array<any>, default: [] } })
-const modelValue = defineModel({ type: String || Array<any> })
+const modelValue = defineModel({ type: Array<any> || String })
 
 const attrs = useAttrs()
 </script>
