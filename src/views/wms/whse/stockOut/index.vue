@@ -102,9 +102,9 @@ const onDelete = (record: WhseStockOutResp) => {
 }
 
 // 导出
-const onExport = () => {
-  useDownload(() => exportWhseStockOut(queryForm))
-}
+// const onExport = () => {
+//   useDownload(() => exportWhseStockOut(queryForm))
+// }
 
 const WhseStockOutAddModalRef = ref<InstanceType<typeof WhseStockOutAddModal>>()
 // 新增

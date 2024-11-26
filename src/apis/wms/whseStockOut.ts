@@ -89,3 +89,8 @@ export function updateWhseStockOutStatus(id: string, status: number) {
 export function staticsStockOutToday(whseId: string) {
   return http.get(`${BASE_URL}/statics/${whseId}`)
 }
+
+/** @desc 导出仓库出库单 */
+export function exportWhseStockOutInfo(id: string) {
+  return http.download(`${BASE_URL}/export/${id}`)
+}

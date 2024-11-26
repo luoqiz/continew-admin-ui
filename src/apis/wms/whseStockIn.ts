@@ -83,3 +83,8 @@ export function exportWhseStockIn(query: WhseStockInQuery) {
 export function updateWhseStockInStatus(id: string, status: number) {
   return http.put(`${BASE_URL}/status/${id}/${status}`)
 }
+
+/** @desc 导出仓库入库 */
+export function exportWhseStockInInfo(id: string) {
+  return http.download(`${BASE_URL}/export/${id}`)
+}

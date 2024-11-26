@@ -9,7 +9,7 @@ import { useDict } from '@/hooks/app'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
 import type { WhseStockMoveDetailResp } from '@/apis/wms'
-import { getWhseStockMove } from '@/apis/wms'
+import { exportWhseStockMoveExport, getWhseStockMove } from '@/apis/wms'
 
 defineOptions({ name: 'WmsWhseStockMoveDetail' })
 
@@ -85,9 +85,9 @@ const onDelete = (record: WhseStockMoveDetialResp) => {
 }
 
 // 导出
-// const onExport = () => {
-//   useDownload(() => exportWhseStockMoveDetial(queryForm))
-// }
+const onExport = () => {
+  useDownload(() => exportWhseStockMoveExport(stockMoveId.value!))
+}
 
 const goodsListModalRef = ref<InstanceType<typeof GoodsListModal>>()
 // 新增
@@ -130,9 +130,13 @@ const to_stock_in_info = (stockInId: string) => {
 <template>
   <div class="table-page">
     <a-card :title="$t('wms.whse.stock.in.detail.billInfo.title')">
-      <!-- <template #extra>
-        <a-button v-if="stockMoveDetail?.status === 2" @click="stockMoveDone()">全部完成</a-button>
-      </template> -->
+      <template #extra>
+        <!-- <a-button v-if="stockMoveDetail?.status === 2" @click="stockMoveDone()">全部完成</a-button> -->
+        <a-button v-permission="['wms:whseStockOutDetail:export']" @click="onExport">
+          <template #icon><icon-download /></template>
+          <template #default>{{ $t('page.common.button.export') }}</template>
+        </a-button>
+      </template>
       <a-row>
         <a-col :span="6">
           <span>移库单号: {{ stockMoveDetail?.stockMoveNo }}</span>

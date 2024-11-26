@@ -3,7 +3,7 @@ import { useI18n } from 'vue-i18n'
 import { Message } from '@arco-design/web-vue'
 import WhseStockOutDetailDetailDrawer from './WhseStockOutDetailDetailDrawer.vue'
 import GoodsListModal from './goodsListModal.vue'
-import { type WhseStockOutDetailDetailResp, type WhseStockOutDetailQuery, type WhseStockOutInfoResp, deleteWhseStockOutDetail, exportWhseStockOutDetail, getWhseStockOutInfo, listWhseStockOutDetail, updateWhseStockOutDetail, updateWhseStockOutStatus } from '@/apis/wms'
+import { type WhseStockOutDetailDetailResp, type WhseStockOutDetailQuery, type WhseStockOutInfoResp, deleteWhseStockOutDetail, exportWhseStockOutDetail, exportWhseStockOutInfo, getWhseStockOutInfo, listWhseStockOutDetail, updateWhseStockOutDetail, updateWhseStockOutStatus } from '@/apis/wms'
 
 import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { useDownload, useTable } from '@/hooks'
@@ -88,9 +88,9 @@ const onDelete = (record: WhseStockOutInfoResp) => {
 }
 
 // 导出
-// const onExport = () => {
-//   useDownload(() => exportWhseStockOutDetail(queryForm))
-// }
+const onExport = () => {
+  useDownload(() => exportWhseStockOutInfo(stockOutId.value!))
+}
 
 const goodsListModalRef = ref<InstanceType<typeof GoodsListModal>>()
 // 新增
@@ -148,6 +148,10 @@ const to_stock_move_info = (moveId: string) => {
     <a-card :title="$t('wms.whse.stock.in.detail.billInfo.title')">
       <template #extra>
         <a-button v-if="stockOutDetail?.status === 2" @click="stockOutDone()">全部完成</a-button>
+        <a-button v-permission="['wms:whseStockOutDetail:export']" @click="onExport">
+          <template #icon><icon-download /></template>
+          <template #default>{{ $t('page.common.button.export') }}</template>
+        </a-button>
       </template>
       <a-row>
         <a-col :span="6">

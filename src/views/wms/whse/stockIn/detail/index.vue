@@ -3,7 +3,7 @@ import { useI18n } from 'vue-i18n'
 import { Message } from '@arco-design/web-vue'
 import WhseStockInDetailAddModal from './WhseStockInDetailAddModal.vue'
 import WhseStockInDetailDetailDrawer from './WhseStockInDetailDetailDrawer.vue'
-import { type WhseStockInDetailDetailResp, type WhseStockInDetailQuery, type WhseStockInDetailResp, type WhseStockInInfoResp, deleteWhseStockInDetail, getWhseStockInInfo, listWhseStockInDetail, updateWhseStockInDetail, updateWhseStockInStatus } from '@/apis/wms'
+import { type WhseStockInDetailDetailResp, type WhseStockInDetailQuery, type WhseStockInDetailResp, type WhseStockInInfoResp, deleteWhseStockInDetail, exportWhseStockInInfo, getWhseStockInInfo, listWhseStockInDetail, updateWhseStockInDetail, updateWhseStockInStatus } from '@/apis/wms'
 
 import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { useDownload, useTable } from '@/hooks'
@@ -88,9 +88,9 @@ const onDelete = (record: WhseStockInDetailResp) => {
 }
 
 // 导出
-// const onExport = () => {
-//   useDownload(() => exportWhseStockInDetail(queryForm))
-// }
+const onExport = () => {
+  useDownload(() => exportWhseStockInInfo(stockInId.value!))
+}
 
 const WhseStockInDetailAddModalRef = ref<InstanceType<typeof WhseStockInDetailAddModal>>()
 // 新增
@@ -151,6 +151,10 @@ const to_stock_move_info = (moveId: string) => {
     <a-card :title="$t('wms.whse.stock.in.detail.billInfo.title')">
       <template #extra>
         <a-button v-if="stockInDetail?.status === 2" @click="stockInDone()">全部完成</a-button>
+        <a-button v-permission="['wms:whseStockInDetail:export']" @click="onExport">
+          <template #icon><icon-download /></template>
+          <template #default>{{ $t('page.common.button.export') }}</template>
+        </a-button>
       </template>
       <a-row>
         <a-col :span="6">
