@@ -1,7 +1,7 @@
-import type { AddrQuery } from '@/apis/wms/addr'
+import type { WhseAddrQuery } from '@/apis/wms/addr'
 import { listAddrByUser } from '@/apis/wms/addr'
 
-export function useWhseAddr(query?: AddrQuery) {
+export function useWhseAddr(query?: WhseAddrQuery) {
   const loaded = ref<boolean>(false)
   const whseAddrOptions = ref<{ label: string, value: any }[]>([])
 

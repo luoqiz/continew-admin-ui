@@ -15,10 +15,11 @@
 
 <script setup lang="ts">
 import { Message } from '@arco-design/web-vue'
+import { useI18n } from 'vue-i18n'
 import { addStore, getAddr, updateAddr } from '@/apis/wms/addr'
 import { type Columns, GiForm, type Options } from '@/components/GiForm'
 import { useForm } from '@/hooks'
-import { useDept, useDict } from '@/hooks/app'
+import { useDept } from '@/hooks/app'
 
 const emit = defineEmits<{
   (e: 'save-success'): void
@@ -26,9 +27,11 @@ const emit = defineEmits<{
 
 const { deptList, getDeptList } = useDept()
 
+const { t } = useI18n()
+
 const dataId = ref('')
 const isUpdate = computed(() => !!dataId.value)
-const title = computed(() => (isUpdate.value ? '修改仓库地址' : '新增仓库地址'))
+const title = computed(() => (isUpdate.value ? t('wms.whse.addr.page.modify.title') : t('wms.whse.addr.page.add.title')))
 const formRef = ref<InstanceType<typeof GiForm>>()
 
 const options: Options = {
@@ -42,54 +45,46 @@ const { form, resetForm } = useForm({
 
 const columns = computed<Columns<typeof form>>(() => [
   {
-    label: '仓库编号',
+    label: t('wms.whse.addr.field.whseNo'),
     field: 'whseNo',
     type: 'input',
-    rules: [{ required: true, message: '请输入仓库编号' }],
+    rules: [{ required: true, message: t('wms.whse.addr.field.whseNo_placeholder') }],
   },
   {
-    label: '仓库名称',
+    label: t('wms.whse.addr.field.name'),
     field: 'name',
     type: 'input',
-    rules: [{ required: true, message: '请输入仓库名称' }],
+    rules: [{ required: true, message: t('wms.whse.addr.field.name_placeholder') }],
   },
   {
-    label: '仓库地址',
+    label: t('wms.whse.addr.field.addr'),
     field: 'addr',
     type: 'input',
+    rules: [{ required: false, message: t('wms.whse.addr.field.addr_placeholder') }],
   },
-  // {
-  //   label: '仓库类型 (1国仓  2地仓  3店仓)',
-  //   field: 'whseType',
-  //   type: 'input',
-  // },
   {
-    label: '状态 (1使用  2停用)',
+    label: t('wms.whse.addr.field.status'),
     field: 'status',
     type: 'switch',
     props: {
       checkedValue: 1,
-      uncheckedValue: 0,
+      uncheckedValue: 2,
     },
-    rules: [{ required: true, message: '请输入状态 (1使用  2停用)' }],
+    rules: [{ required: true, message: t('wms.whse.addr.field.status_placeholder') }],
   },
   {
-    label: '备注信息',
+    label: t('wms.whse.addr.field.memo'),
     field: 'memo',
     type: 'input',
+    rules: [{ required: false, message: t('wms.whse.addr.field.memo_placeholder') }],
   },
-  // {
-  //   label: '所属部门',
-  //   field: 'deptId',
-  //   type: 'tree-select',
-  // },
   {
-    label: '所属部门',
+    label: t('wms.whse.addr.field.deptId'),
     field: 'deptId',
     type: 'tree-select',
     data: deptList,
     props: {
-      placeholder: '请选择所属部门',
+      placeholder: t('wms.whse.addr.field.deptId_placeholder'),
       allowClear: true,
       allowSearch: true,
       fallbackOption: false,
@@ -100,7 +95,7 @@ const columns = computed<Columns<typeof form>>(() => [
         return false
       },
     },
-    rules: [{ required: true, message: '请选择所属部门' }],
+    rules: [{ required: true, message: t('wms.whse.addr.field.deptId_placeholder') }],
   },
 ])
 
@@ -140,14 +135,15 @@ const save = async () => {
     if (isInvalid) return false
     if (isUpdate.value) {
       await updateAddr(form, dataId.value)
-      Message.success('修改成功')
+      Message.success(t('page.common.message.modify.success'))
     } else {
       await addStore(form)
-      Message.success('新增成功')
+      Message.success(t('page.common.message.add.success'))
     }
     emit('save-success')
     return true
   } catch (error) {
+    console.error(error)
     return false
   }
 }

@@ -8,7 +8,7 @@ export interface AddrResp {
   name: string
   addr: string
   whseType: string
-  status: string
+  status: number
   memo: string
   deptId: string
   createUser: string
@@ -24,7 +24,7 @@ export interface AddrDetailResp {
   name: string
   addr: string
   whseType: number
-  status: string
+  status: number
   memo: string
   deptId: string
   createUser: string
@@ -34,18 +34,14 @@ export interface AddrDetailResp {
   createUserString: string
   updateUserString: string
 }
-export interface AddrQuery {
-  whseNo: string
-  name: string
-  status: string
-  whseType: number
-  createUser: string
-  createTime: string
-  updateUser: string
-  updateTime: string
+export interface WhseAddrQuery {
+  whseNo: string | undefined
+  name: string | undefined
+  status: number | undefined
+  whseType: number | undefined
   sort: Array<string>
 }
-export interface AddrPageQuery extends AddrQuery, PageQuery {}
+export interface AddrPageQuery extends WhseAddrQuery, PageQuery {}
 
 /** @desc 查询仓库地址列表 */
 export function listAddr(query: AddrPageQuery) {
@@ -95,11 +91,11 @@ export function deleteAddr(id: string) {
 }
 
 /** @desc 导出仓库地址 */
-export function exportAddr(query: AddrQuery) {
-  return http.download<any>(`${BASE_URL}/export`, query)
+export function exportAddr(query: WhseAddrQuery) {
+  return http.download(`${BASE_URL}/export`, query)
 }
 
 // 获取当前用户可操作的仓库
-export function listAddrByUser(query?: AddrQuery) {
+export function listAddrByUser(query?: WhseAddrQuery) {
   return http.get<AddrResp[]>(`${BASE_URL}/all`, query)
 }

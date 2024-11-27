@@ -206,7 +206,7 @@ const to_stock_move_info = (moveId: string) => {
         </template>
         <template #action="{ record }">
           <a-space>
-            <!-- <a-link v-permission="['wms:whseStockOutDetail:detail']" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link> -->
+            <!-- <a-link v-permission="['wms:whseStockOutDetail:detail']" @click="onDetail(record)">{{ $t('page.common.button.detail') }}</a-link> -->
             <!-- <a-link v-permission="['wms:whseStockOutDetail:update']"  @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link> -->
             <a-link
               v-if="stockOutDetail?.status === 1"
