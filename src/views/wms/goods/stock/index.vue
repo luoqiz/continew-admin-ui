@@ -7,26 +7,11 @@ import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { useDownload, useTable, useWhseAddr } from '@/hooks'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
-import { useDict } from '@/hooks/app'
 
 defineOptions({ name: 'WmsGoodsStock' })
 const { t } = useI18n()
 
 const { whseAddrOptions, loaded } = useWhseAddr()
-
-const status_enum = computed(() => [{
-  value: 1,
-  label: t('wms.whse.stock.in.state.s1'),
-  other: 'extra',
-}, {
-  value: 2,
-  label: t('wms.whse.stock.in.state.s2'),
-  other: 'extra',
-}, {
-  value: 3,
-  label: t('wms.whse.stock.in.state.s3'),
-  other: 'extra',
-}])
 
 const queryForm = reactive<GoodsStockQuery>({
   stockInId: undefined,
@@ -77,9 +62,9 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
     slotName: 'action',
     dataIndex: 'action',
     width: 200,
-    // align: 'center',
-    // fixed: !isMobile() ? 'right' : undefined,
-    // show: has.hasPermOr(['wms:goodsStock:update', 'wms:goodsStock:delete']),
+    align: 'center',
+    fixed: !isMobile() ? 'right' : undefined,
+    show: has.hasPermOr(['wms:goodsStock:detail', 'wms:goodsStock:update', 'wms:goodsStock:delete']),
   },
 ])
 

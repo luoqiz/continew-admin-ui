@@ -166,7 +166,8 @@ const auditEvent = async (record: WhseStockOutResp) => {
         <CustomWhseSelect
           v-model="queryForm.whseId" style="width:240px"
           :options="whseAddrOptions"
-          placeholder="请选择仓库" @change="search"
+          placeholder="请选择仓库"
+          @change="search"
         ></CustomWhseSelect>
         <a-select
           v-model="queryForm.status"

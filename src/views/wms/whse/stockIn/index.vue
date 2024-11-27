@@ -152,10 +152,10 @@ const auditEvent = async (record: WhseStockInResp) => {
         <span v-if="record.status === 3"> {{ $t('wms.whse.stock.in.state.s3') }}</span>
       </template>
       <template #toolbar-left>
-        <a-input v-model="queryForm.name" placeholder="请输入入库名称" allow-clear @change="loadData">
+        <a-input v-model="queryForm.name" :placeholder="$t('wms.whse.stock.in.field.name_placeholder')" allow-clear @change="loadData">
           <template #prefix><icon-search /></template>
         </a-input>
-        <a-input v-model="queryForm.stockInNo" placeholder="请输入入库单号" allow-clear @change="loadData">
+        <a-input v-model="queryForm.stockInNo" :placeholder="$t('wms.whse.stock.in.field.stockInNo_placeholder')" allow-clear @change="loadData">
           <template #prefix><icon-search /></template>
         </a-input>
         <!-- <a-input v-model="queryForm.whseId" placeholder="请输入仓库id编号" allow-clear @change="search">
@@ -165,13 +165,13 @@ const auditEvent = async (record: WhseStockInResp) => {
           v-model="queryForm.whseId"
           style="width:240px"
           :options="whseAddrOptions"
-          placeholder="请选择仓库"
+          :placeholder="$t('wms.whse.select_placeholder')"
           @change="loadData"
         ></CustomWhseSelect>
         <a-select
           v-model="queryForm.status"
           :options="status_enum"
-          placeholder="请选择状态"
+          :placeholder="$t('wms.whse.stock.in.field.status_placeholder')"
           allow-clear
           style="width: 150px"
           @change="loadData"
@@ -194,21 +194,20 @@ const auditEvent = async (record: WhseStockInResp) => {
       <template #action="{ record }">
         <a-space>
           <div v-if="record.status === 1">
-            <a-link v-permission="['wms:whseStockIn:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
-            <a-link v-permission="['wms:whseStockIn:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
-            <a-link v-permission="['wms:whseStockIn:adult']" :title="$t('page.common.button.audit')" @click="auditEvent(record)">{{ $t('page.common.button.audit') }}</a-link>
+            <a-link v-permission="['wms:whseStockIn:detail']" @click="onDetail(record)">{{ $t('page.common.button.detail') }}</a-link>
+            <a-link v-permission="['wms:whseStockIn:update']" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
+            <a-link v-permission="['wms:whseStockIn:adult']" @click="auditEvent(record)">{{ $t('page.common.button.audit') }}</a-link>
             <a-link
               v-permission="['wms:whseStockIn:delete']"
               status="danger"
               :disabled="record.disabled"
-              :title="$t('page.common.button.delete')"
               @click="onDelete(record)"
             >
-              {{ $t('page.common.button.delete') }}
+              {{ record.disabled ? $t('page.common.button.disabledDelete') : $t('page.common.button.delete') }}
             </a-link>
           </div>
           <div v-if="record.status === 2 || record.status === 3">
-            <a-link v-permission="['wms:whseStockIn:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
+            <a-link v-permission="['wms:whseStockIn:detail']" @click="onDetail(record)">{{ $t('page.common.button.detail') }}</a-link>
           </div>
         </a-space>
       </template>

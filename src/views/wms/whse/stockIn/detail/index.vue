@@ -67,7 +67,7 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
     width: 180,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
-    show: has.hasPermOr(['wms:whseStockInDetail:update', 'wms:whseStockInDetail:delete']),
+    show: has.hasPermOr(['wms:whseStockInDetail:list', 'wms:whseStockInDetail:update', 'wms:whseStockInDetail:delete']),
   },
 ])
 
@@ -158,16 +158,16 @@ const to_stock_move_info = (moveId: string) => {
       </template>
       <a-row>
         <a-col :span="6">
-          <span>入库单号: {{ stockInDetail?.stockInNo }}</span>
+          <span>{{ $t('wms.whse.stock.in.field.stockInNo') }}:  {{ stockInDetail?.stockInNo }}</span>
         </a-col>
         <a-col :span="6">
-          <span>入库名称: {{ stockInDetail?.name }}</span>
+          <span>{{ $t('wms.whse.stock.in.field.name') }}:  {{ stockInDetail?.name }}</span>
         </a-col>
         <a-col :span="6">
-          <span>仓库地址: {{ stockInDetail?.whseName }}</span>
+          <span>{{ $t('wms.whse.stock.in.field.whseId') }}:  {{ stockInDetail?.whseName }}</span>
         </a-col>
         <a-col :span="6">
-          <span>关联移库单号: <span @click="to_stock_move_info(stockInDetail?.stockMoveId!)">{{ stockInDetail?.stockMoveId }}</span></span>
+          <span>{{ $t('wms.whse.stock.in.field.stockMoveId') }}:   <span @click="to_stock_move_info(stockInDetail?.stockMoveId!)">{{ stockInDetail?.stockMoveId }}</span></span>
         </a-col>
       </a-row>
     </a-card>
@@ -210,7 +210,6 @@ const to_stock_move_info = (moveId: string) => {
         <template #action="{ record }">
           <a-space>
             <span v-if="stockInDetail?.status === 1">
-              <a-link v-permission="['wms:whseStockInDetail:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
               <a-link v-permission="['wms:whseStockInDetail:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
               <a-link
                 v-permission="['wms:whseStockInDetail:delete']"
@@ -227,9 +226,6 @@ const to_stock_move_info = (moveId: string) => {
               <a-link v-if="record.status !== 2" v-permission="['wms:whseStockInDetail:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
               <a-link v-if="record.status !== 2" v-permission="['wms:whseStockInDetail:update']" :title="$t('page.common.button.audit')" @click="onAudit(record)">{{ $t('page.common.button.audit') }}</a-link>
               <a-link v-if="record.status === 2" v-permission="['wms:whseStockInDetail:update']" :title="$t('page.common.button.cancel.audit')" @click="onCancelAudit(record)">{{ $t('page.common.button.cancel.audit') }}</a-link>
-            </span>
-            <span v-if="stockInDetail?.status === 3">
-              <a-link v-permission="['wms:whseStockInDetail:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
             </span>
           </a-space>
         </template>
