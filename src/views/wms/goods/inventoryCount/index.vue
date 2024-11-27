@@ -34,9 +34,9 @@
         <a-select
           v-model="queryForm.status"
           :options="status_enum"
-          placeholder="请选择状态"
+          :placeholder="$t('wms.goods.inventory.count.field.status_placeholder')"
           allow-clear
-          style="width: 150px"
+          style="width: 200px"
           @change="search"
         />
         <a-button @click="reset">
@@ -56,9 +56,10 @@
       </template>
       <template #action="{ record }">
         <a-space>
-          <a-link v-permission="['wms:goodsInventoryCount:detail']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
-          <a-link v-permission="['wms:goodsInventoryCount:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
+          <a-link v-permission="['wms:goodsInventoryCount:detail']" @click="onDetail(record)">{{ $t('page.common.button.detail') }}</a-link>
+          <a-link v-if="record.status === 1" v-permission="['wms:goodsInventoryCount:update']" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
           <a-link
+            v-if="record.status === 1"
             v-permission="['wms:goodsInventoryCount:delete']"
             status="danger"
             :disabled="record.disabled"
@@ -78,11 +79,9 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 import GoodsInventoryCountAddModal from './GoodsInventoryCountAddModal.vue'
-import GoodsInventoryCountDetailDrawer from './GoodsInventoryCountDetailDrawer.vue'
 import { type GoodsInventoryCountQuery, type GoodsInventoryCountResp, deleteGoodsInventoryCount, exportGoodsInventoryCount, listGoodsInventoryCount } from '@/apis/wms/goodsInventoryCount'
 import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { useDownload, useTable, useWhseAddr } from '@/hooks'
-import { useDict } from '@/hooks/app'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
 

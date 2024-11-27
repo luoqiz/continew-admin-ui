@@ -13,6 +13,7 @@
 <script setup lang="ts">
 import type { ShortcutType } from '@arco-design/web-vue'
 import dayjs from 'dayjs'
+import { useI18n } from 'vue-i18n'
 
 defineOptions({ name: 'DateRangePicker' })
 
@@ -35,29 +36,31 @@ defineProps({
   },
 })
 
+const { t } = useI18n()
+
 const shortcuts = computed<ShortcutType[]>(() => {
   return [
     {
-      label: '今天',
+      label: t('page.common.tips.today'),
       value: (): Date[] => [dayjs().startOf('day').toDate(), dayjs().toDate()],
     },
     {
-      label: '昨天',
+      label: t('page.common.tips.yesterday'),
       value: (): Date[] => [
         dayjs().subtract(1, 'day').startOf('day').toDate(),
         dayjs().subtract(1, 'day').endOf('day').toDate(),
       ],
     },
     {
-      label: '本周',
+      label: t('page.common.tips.thisWeek'),
       value: (): Date[] => [dayjs().startOf('week').add(1, 'day').toDate(), dayjs().toDate()],
     },
     {
-      label: '本月',
+      label: t('page.common.tips.thisMonth'),
       value: (): Date[] => [dayjs().startOf('month').toDate(), dayjs().toDate()],
     },
     {
-      label: '本年',
+      label: t('page.common.tips.thisYear'),
       value: (): Date[] => [dayjs().startOf('year').toDate(), dayjs().toDate()],
     },
   ]

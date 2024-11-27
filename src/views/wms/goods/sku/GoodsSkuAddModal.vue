@@ -15,18 +15,19 @@
 
 <script setup lang="ts">
 import { Message } from '@arco-design/web-vue'
+import { useI18n } from 'vue-i18n'
 import { addGoodsSku, getGoodsSku, updateGoodsSku } from '@/apis/wms/goodsSku'
 import { type Columns, GiForm, type Options } from '@/components/GiForm'
 import { useForm } from '@/hooks'
-import { useDict } from '@/hooks/app'
 
 const emit = defineEmits<{
   (e: 'save-success'): void
 }>()
 
+const { t } = useI18n()
 const dataId = ref('')
 const isUpdate = computed(() => !!dataId.value)
-const title = computed(() => (isUpdate.value ? '修改商品规格(sku)' : '新增商品规格(sku)'))
+const title = computed(() => (isUpdate.value ? t('wms.goods.sku.page.modify.title') : t('wms.goods.sku.page.add.title')))
 const formRef = ref<InstanceType<typeof GiForm>>()
 
 const options: Options = {
@@ -40,62 +41,62 @@ const { form, resetForm } = useForm({
 
 const columns = computed<Columns<typeof form>>(() => [
   {
-    label: '条形码',
+    label: t('wms.goods.sku.field.barcode'),
     field: 'barcode',
     type: 'input',
-    rules: [{ required: true, message: '请输入条形码' }],
+    rules: [{ required: true, message: t('wms.goods.sku.field.barcode_placeholder') }],
   },
   {
-    label: '规格名称',
+    label: t('wms.goods.sku.field.name'),
     field: 'name',
     type: 'input',
-    rules: [{ required: true, message: '请输入规格名称' }],
+    rules: [{ required: true, message: t('wms.goods.sku.field.name_placeholder') }],
   },
   {
-    label: '单价',
+    label: t('wms.goods.sku.field.price'),
     field: 'price',
     type: 'input-number',
-    rules: [{ required: true, message: '请输入价格' }],
+    rules: [{ required: true, message: t('wms.goods.sku.field.price_placeholder') }],
   },
   {
-    label: '单位',
+    label: t('wms.goods.sku.field.unit'),
     field: 'unit',
     type: 'input',
-    rules: [{ required: true, message: '请输入单位' }],
+    rules: [{ required: true, message: t('wms.goods.sku.field.unit_placeholder') }],
   },
   {
-    label: '数量',
+    label: t('wms.goods.sku.field.amount'),
     field: 'amount',
     type: 'input-number',
-    rules: [{ required: true, message: '请输入数量' }],
+    rules: [{ required: true, message: t('wms.goods.sku.field.amount_placeholder') }],
   },
   {
-    label: '拆箱',
+    label: t('wms.goods.sku.field.unpacking'),
     field: 'unpacking',
     type: 'radio-group',
     options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
+      { label: t('page.common.field.true'), value: 'true' },
+      { label: t('page.common.field.false'), value: 'false' },
     ],
-    rules: [{ required: true, message: '请输入拆箱' }],
+    rules: [{ required: true, message: t('wms.goods.sku.field.unpacking_placeholder') }],
   },
   {
-    label: '拆箱单位',
+    label: t('wms.goods.sku.field.packUnit'),
     field: 'packUnit',
     type: 'input',
-    rules: [{ message: '请输入拆箱单位' }],
+    rules: [{ required: true, message: t('wms.goods.sku.field.packUnit_placeholder') }],
   },
   {
-    label: '拆箱数量',
+    label: t('wms.goods.sku.field.packAmount'),
     field: 'packAmount',
     type: 'input-number',
-    rules: [{ message: '请输入拆箱数量' }],
+    rules: [{ required: true, message: t('wms.goods.sku.field.packAmount_placeholder') }],
   },
   // {
-  //   label: '状态 1上架  2下架',
+  //   label: t('wms.goods.sku.field.status'),
   //   field: 'status',
   //   type: 'radio-group',
-  //   rules: [{ required: true, message: '请输入状态 1上架  2下架' }],
+  //   rules: [{ required: true, message: t('wms.goods.sku.field.status_placeholder') }]
   // },
 ])
 
@@ -129,10 +130,10 @@ const save = async () => {
     if (isInvalid) return false
     if (isUpdate.value) {
       await updateGoodsSku(form, dataId.value)
-      Message.success('修改成功')
+      Message.success(t('page.common.message.modify.success'))
     } else {
       await addGoodsSku(form)
-      Message.success('新增成功')
+      Message.success(t('page.common.message.add.success'))
     }
     emit('save-success')
     return true

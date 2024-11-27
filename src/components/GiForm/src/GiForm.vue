@@ -147,11 +147,11 @@ const getComponentBindProps = (item: ColumnsItem) => {
     obj.options = dicData[item.field] || item.options
   }
   if (item.type === 'date-picker') {
-    obj.placeholder = '日期'
+    obj.placeholder = `${item.label}`
   }
   if (item.type === 'time-picker') {
     obj.allowClear = true
-    obj.placeholder = `时间`
+    obj.placeholder = `${item.label}`
   }
   return { ...obj, ...item.props }
 }

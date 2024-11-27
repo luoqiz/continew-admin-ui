@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import JsBarcode from 'jsbarcode'
 import { VuePrintNext, vPrint } from 'vue-print-next'
+import { useI18n } from 'vue-i18n'
 import GoodsSkuAddModal from './GoodsSkuAddModal.vue'
 import GoodsSkuDetailDrawer from './GoodsSkuDetailDrawer.vue'
 import { type GoodsSkuQuery, type GoodsSkuResp, deleteGoodsSku, exportGoodsSku, listGoodsSku } from '@/apis/wms'
@@ -12,6 +13,7 @@ import { useDict } from '@/hooks/app'
 
 defineOptions({ name: 'GoodsSku' })
 
+const { t } = useI18n()
 const printDom = () => {
   new VuePrintNext({ el: '#printTest' /** 其他参数 */ })
 }
@@ -59,37 +61,37 @@ const {
   handleDelete,
 } = useTable((page) => listGoodsSku({ ...queryForm, ...page }), { immediate: true })
 
-const columns: TableInstanceColumns[] = [
-  { title: '物料名称', dataIndex: 'name', slotName: 'name' },
-  // { title: '编号', dataIndex: 'id', slotName: 'id' },
-  { title: '条形码', dataIndex: 'barcode', slotName: 'barcode' },
-  // { title: '商品编号', dataIndex: 'spuId', slotName: 'spuId' },
-
-  { title: '单位', dataIndex: 'unit', slotName: 'unit' },
-  { title: '数量', dataIndex: 'amount', slotName: 'amount' },
-  { title: '拆箱', dataIndex: 'unpacking', slotName: 'unpacking' },
-  { title: '拆箱单位', dataIndex: 'packUnit', slotName: 'packUnit' },
-  { title: '拆箱数量', dataIndex: 'packAmount', slotName: 'packAmount' },
-  // { title: '卖点', dataIndex: 'sellPoint', slotName: 'sellPoint' },
-  // { title: '规格列表', dataIndex: 'specs', slotName: 'specs' },
-  { title: '售价', dataIndex: 'price', slotName: 'price' },
-  // { title: '首图', dataIndex: 'img', slotName: 'img' },
-  // { title: '图片列表', dataIndex: 'pics', slotName: 'pics' },
-  // { title: '状态 1上架  2下架', dataIndex: 'status', slotName: 'status' },
-  { title: '备注信息', dataIndex: 'memo', slotName: 'memo' },
-  { title: '创建人', dataIndex: 'createUserString', slotName: 'createUser' },
-  { title: '创建时间', dataIndex: 'createTime', slotName: 'createTime' },
-  // { title: '修改人', dataIndex: 'updateUser', slotName: 'updateUser' },
-  // { title: '修改时间', dataIndex: 'updateTime', slotName: 'updateTime' },
+const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
+  { title: t('wms.goods.sku.field.name'), dataIndex: 'name', slotName: 'name' },
+  //  { title: t('wms.goods.sku.field.id'), dataIndex: 'id', slotName: 'id' },
+  { title: t('wms.goods.sku.field.barcode'), dataIndex: 'barcode', slotName: 'barcode' },
+  //   { title: t('wms.goods.sku.field.spuId'), dataIndex: 'spuId', slotName: 'spuId' },
+  { title: t('wms.goods.sku.field.unit'), dataIndex: 'unit', slotName: 'unit' },
+  { title: t('wms.goods.sku.field.amount'), dataIndex: 'amount', slotName: 'amount' },
+  { title: t('wms.goods.sku.field.unpacking'), dataIndex: 'unpacking', slotName: 'unpacking' },
+  { title: t('wms.goods.sku.field.packUnit'), dataIndex: 'packUnit', slotName: 'packUnit' },
+  { title: t('wms.goods.sku.field.packAmount'), dataIndex: 'packAmount', slotName: 'packAmount' },
+  // { title: t('wms.goods.sku.field.sellPoint'), dataIndex: 'sellPoint', slotName: 'sellPoint' },
+  // { title: t('wms.goods.sku.field.specs'), dataIndex: 'specs', slotName: 'specs' },
+  { title: t('wms.goods.sku.field.price'), dataIndex: 'price', slotName: 'price' },
+  // { title: t('wms.goods.sku.field.img'), dataIndex: 'img', slotName: 'img' },
+  // { title: t('wms.goods.sku.field.pics'), dataIndex: 'pics', slotName: 'pics' },
+  // { title: t('wms.goods.sku.field.status'), dataIndex: 'status', slotName: 'status' },
+  { title: t('wms.goods.sku.field.memo'), dataIndex: 'memo', slotName: 'memo' },
+  { title: t('wms.goods.sku.field.createUser'), dataIndex: 'createUserString', slotName: 'createUser' },
+  { title: t('wms.goods.sku.field.createTime'), dataIndex: 'createTime', slotName: 'createTime' },
+  // { title: t('wms.goods.sku.field.updateUser'), dataIndex: 'updateUser', slotName: 'updateUser' },
+  // { title: t('wms.goods.sku.field.updateTime'), dataIndex: 'updateTime', slotName: 'updateTime' },
   {
-    title: '操作',
+    title: t('page.common.button.operator'),
+    dataIndex: 'action',
     slotName: 'action',
-    width: 130,
+    width: 180,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
-    show: has.hasPermOr(['wms:goodsSku:update', 'wms:goodsSku:delete']),
+    show: has.hasPermOr(['wms:goodsSku:detail', 'wms:goodsSku:update', 'wms:goodsSku:delete']),
   },
-]
+])
 
 // 重置
 const reset = () => {
@@ -134,7 +136,7 @@ const onDetail = (record: GoodsSkuResp) => {
   <div class="table-page">
     <GiTable
       row-key="id"
-      title="物料管理"
+      :title="$t('wms.goods.sku.table')"
       :data="dataList"
       :columns="columns"
       :loading="loading"
@@ -153,22 +155,22 @@ const onDetail = (record: GoodsSkuResp) => {
         </sapn>
       </template>
       <template #toolbar-left>
-        <a-input v-model="queryForm.barcode" placeholder="请输入条形码" allow-clear @change="search">
+        <a-input v-model="queryForm.barcode" :placeholder="$t('wms.goods.sku.field.barcode_placeholder')" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input>
-        <a-input v-model="queryForm.name" placeholder="请输入物料名称" allow-clear @change="search">
+        <a-input v-model="queryForm.name" :placeholder="$t('wms.goods.sku.field.name_placeholder')" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input>
         <!-- <a-radio-group v-model="queryForm.status" :options="" @change="search" /> -->
         <a-button @click="reset">
           <template #icon><icon-refresh /></template>
-          <template #default>重置</template>
+          <template #default>{{ $t('page.common.button.reset') }}</template>
         </a-button>
       </template>
       <template #toolbar-right>
         <a-button v-permission="['wms:goodsSku:add']" type="primary" @click="onAdd">
           <template #icon><icon-plus /></template>
-          <template #default>新增</template>
+          <template #default>{{ $t('page.common.button.add') }}</template>
         </a-button>
         <!-- <a-button v-permission="['wms:goodsSku:export']" @click="onExport">
           <template #icon><icon-download /></template>
@@ -177,17 +179,17 @@ const onDetail = (record: GoodsSkuResp) => {
       </template>
       <template #action="{ record }">
         <a-space>
-          <a-link v-permission="['wms:goodsSku:list']" title="查看" @click="onDetail(record)">查看</a-link>
-          <a-link @click="createBarcode(record.barcode)"> 打印</a-link>
-          <a-link v-permission="['wms:goodsSku:update']" title="修改" @click="onUpdate(record)">修改</a-link>
+          <!-- <a-link v-permission="['wms:goodsSku:detail']" @click="onDetail(record)"> {{ $t('page.common.button.detail') }}</a-link> -->
+          <a-link @click="createBarcode(record.barcode)"> {{ $t('wms.goods.sku.printBarcode') }}</a-link>
+          <a-link v-permission="['wms:goodsSku:update']" @click="onUpdate(record)"> {{ $t('page.common.button.modify') }}</a-link>
           <a-link
             v-permission="['wms:goodsSku:delete']"
             status="danger"
             :disabled="record.disabled"
-            title="删除"
+            :title="record.disabled ? $t('page.common.button.disabledDelete') : $t('page.common.button.delete')"
             @click="onDelete(record)"
           >
-            删除
+            {{ $t('page.common.button.delete') }}
           </a-link>
         </a-space>
       </template>

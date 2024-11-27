@@ -56,7 +56,7 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
 
   // { title: t('wms.goods.stock.field.stockInDetailId'), dataIndex: 'stockInDetailId', slotName: 'stockInDetailId' },
   // { title: t('wms.goods.stock.field.goodsId'), dataIndex: 'goodsId', slotName: 'goodsId' },
-  { title: t('wms.goods.stock.field.goodsName'), dataIndex: 'goodsName', slotName: 'goodsName' },
+  { title: t('wms.goods.stock.field.goodsName'), dataIndex: 'goodsName', slotName: 'goodsName', width: 140 },
   { title: t('wms.goods.stock.field.goodsSku'), dataIndex: 'goodsSku', slotName: 'goodsSku' },
   { title: t('wms.goods.stock.field.stockInNo'), dataIndex: 'stockInNo', slotName: 'stockInNo' },
   { title: t('wms.goods.stock.field.initNum'), dataIndex: 'initNum', slotName: 'initNum' },
@@ -76,7 +76,7 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
     title: t('page.common.button.operator'),
     slotName: 'action',
     dataIndex: 'action',
-    width: 240,
+    width: 200,
     // align: 'center',
     // fixed: !isMobile() ? 'right' : undefined,
     // show: has.hasPermOr(['wms:goodsStock:update', 'wms:goodsStock:delete']),
@@ -200,7 +200,7 @@ const onDetail = (record: GoodsStockResp) => {
         <!-- <a-input v-model="queryForm.stockInId" placeholder="请输入入库单编号" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input> -->
-        <a-input v-model="queryForm.stockInNo" placeholder="请输入入库单号" allow-clear @change="loadData">
+        <a-input v-model="queryForm.stockInNo" :placeholder="$t('wms.goods.stock.field.stockInNo_placeholder')" allow-clear @change="loadData">
           <template #prefix><icon-search /></template>
         </a-input>
         <!-- <a-input v-model="queryForm.stockInDetailId" placeholder="请输入入库单明细编号" allow-clear @change="search">
@@ -209,7 +209,7 @@ const onDetail = (record: GoodsStockResp) => {
         <!-- <a-input v-model="queryForm.goodsId" placeholder="请输入物料编号" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input> -->
-        <a-input v-model="queryForm.goodsSku" placeholder="请输入物料sku条码" allow-clear @change="loadData">
+        <a-input v-model="queryForm.goodsSku" :placeholder="$t('wms.goods.stock.field.goodsSku_placeholder')" allow-clear @change="loadData">
           <template #prefix><icon-search /></template>
         </a-input>
         <!-- <a-radio-group v-model="queryForm.whseType" :options="" @change="search" /> -->
@@ -217,9 +217,11 @@ const onDetail = (record: GoodsStockResp) => {
           <template #prefix><icon-search /></template>
         </a-input> -->
         <CustomWhseSelect
-          v-model="queryForm.whseId" style="width:240px"
+          v-model="queryForm.whseId"
+          style="width:240px"
           :options="whseAddrOptions"
-          placeholder="请选择仓库" @change="loadData"
+          :placeholder="$t('wms.whse.select_placeholder')"
+          @change="loadData"
         ></CustomWhseSelect>
         <!-- <a-select
           v-model="queryForm.status"
@@ -229,8 +231,8 @@ const onDetail = (record: GoodsStockResp) => {
           style="width: 150px"
           @change="search"
         /> -->
-        <DateRangePicker v-model="queryForm.prodTime" @change="loadData" />
-        <DateRangePicker v-model="queryForm.expiryTime" @change="loadData" />
+        <DateRangePicker v-model="queryForm.prodTime" :placeholder="[$t('wms.goods.stock.field.prodTime_start'), $t('wms.goods.stock.field.prodTime_end')]" @change="loadData" />
+        <DateRangePicker v-model="queryForm.expiryTime" :placeholder="[$t('wms.goods.stock.field.expiryTime_start'), $t('wms.goods.stock.field.expiryTime_end')]" @change="loadData" />
         <a-button @click="reset">
           <template #icon><icon-refresh /></template>
           <template #default>{{ $t('page.common.button.reset') }}</template>

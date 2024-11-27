@@ -202,19 +202,19 @@ const verifyCancel = async (record: GoodsInventoryCountItemResp) => {
           <!-- <a-input v-model="queryForm.inventoryCountId" placeholder="请输入盘点表id" allow-clear @change="search">
             <template #prefix><icon-search /></template>
           </a-input> -->
-          <a-input v-model="queryForm.stockId" placeholder="请输入库存id" allow-clear @change="search">
+          <!-- <a-input v-model="queryForm.stockId" placeholder="请输入库存id" allow-clear @change="search">
             <template #prefix><icon-search /></template>
-          </a-input>
-          <a-input v-model="queryForm.goodsId" placeholder="请输入物料编号" allow-clear @change="search">
+          </a-input> -->
+          <!-- <a-input v-model="queryForm.goodsId" placeholder="请输入物料编号" allow-clear @change="search">
             <template #prefix><icon-search /></template>
-          </a-input>
-          <a-input v-model="queryForm.goodsSku" placeholder="请输入物料sku条码" allow-clear @change="search">
+          </a-input> -->
+          <a-input v-model="queryForm.goodsSku" :placeholder="$t('wms.goods.inventory.count.item.field.goodsSku_placeholder')" allow-clear @change="search">
             <template #prefix><icon-search /></template>
           </a-input>
           <a-select
             v-model="queryForm.status"
             :options="status_enum"
-            placeholder="请选择状态"
+            :placeholder="$t('wms.goods.inventory.count.item.field.status_placeholder')"
             allow-clear
             style="width: 150px"
             @change="search"
