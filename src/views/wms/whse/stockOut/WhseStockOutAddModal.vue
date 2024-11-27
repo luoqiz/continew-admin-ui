@@ -19,7 +19,6 @@ import { Message } from '@arco-design/web-vue'
 import { addWhseStockOut, getWhseStockOut, updateWhseStockOut } from '@/apis/wms/whseStockOut'
 import { type Columns, GiForm, type Options } from '@/components/GiForm'
 import { useForm, useWhseAddr } from '@/hooks'
-import { useDict } from '@/hooks/app'
 
 const emit = defineEmits<{
   (e: 'save-success'): void
@@ -110,6 +109,7 @@ const save = async () => {
     emit('save-success')
     return true
   } catch (error) {
+    console.error(error)
     return false
   }
 }

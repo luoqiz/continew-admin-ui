@@ -5,8 +5,7 @@ import WhseStockMoveAddModal from './WhseStockMoveAddModal.vue'
 import WhseStockMoveDetailDrawer from './WhseStockMoveDetailDrawer.vue'
 import { type WhseStockMoveQuery, type WhseStockMoveResp, deleteWhseStockMove, exportWhseStockMove, listWhseStockMove, updateWhseStockMoveStatus } from '@/apis/wms/whseStockMove'
 import type { TableInstanceColumns } from '@/components/GiTable/type'
-import { useDownload, useTable, useWhseAddr } from '@/hooks'
-import { useDict } from '@/hooks/app'
+import { useTable, useWhseAddr } from '@/hooks'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
 
@@ -94,9 +93,9 @@ const onDelete = (record: WhseStockMoveResp) => {
 }
 
 // 导出
-const onExport = () => {
-  useDownload(() => exportWhseStockMove(queryForm))
-}
+// const onExport = () => {
+//   useDownload(() => exportWhseStockMove(queryForm))
+// }
 
 const WhseStockMoveAddModalRef = ref<InstanceType<typeof WhseStockMoveAddModal>>()
 // 新增
@@ -146,10 +145,10 @@ const auditEvent = async (record: WhseStockMoveResp) => {
         <span v-if="record.status === 3"> {{ $t('wms.whse.stock.move.state.s3') }}</span>
       </template>
       <template #toolbar-left>
-        <a-input v-model="queryForm.name" placeholder="请输入移库名称" allow-clear @change="loadData">
+        <a-input v-model="queryForm.name" :placeholder="$t('wms.whse.stock.move.field.name_placeholder')" allow-clear @change="loadData">
           <template #prefix><icon-search /></template>
         </a-input>
-        <a-input v-model="queryForm.stockMoveNo" placeholder="请输入移库单号" allow-clear @change="loadData">
+        <a-input v-model="queryForm.stockMoveNo" :placeholder="$t('wms.whse.stock.move.field.stockMoveNo_placeholder')" allow-clear @change="loadData">
           <template #prefix><icon-search /></template>
         </a-input>
         <!-- <a-input v-model="queryForm.stockMoveType" placeholder="请输入出库类型" allow-clear @change="search">
@@ -161,8 +160,8 @@ const auditEvent = async (record: WhseStockMoveResp) => {
         <a-input v-model="queryForm.stockOutWhseId" placeholder="请输入出仓id编号" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input> -->
-        <CustomWhseSelect v-model="queryForm.stockOutWhseId" style="width:240px" placeholder="请选择出仓仓库" :options="whseAddrOptions" @change="loadData"></CustomWhseSelect>
-        <CustomWhseSelect v-model="queryForm.stockInWhseId" style="width:240px" placeholder="请选择入仓仓库" :options="whseAddrOptions" @change="loadData"></CustomWhseSelect>
+        <CustomWhseSelect v-model="queryForm.stockOutWhseId" style="width:240px" :placeholder="$t('wms.whse.stock.move.field.stockOutWhseId_placeholder')" :options="whseAddrOptions" @change="loadData"></CustomWhseSelect>
+        <CustomWhseSelect v-model="queryForm.stockInWhseId" style="width:240px" :placeholder="$t('wms.whse.stock.move.field.stockInWhseId_placeholder')" :options="whseAddrOptions" @change="loadData"></CustomWhseSelect>
         <!-- <a-input v-model="queryForm.status" placeholder="请输入状态" allow-clear @change="search">
           <template #prefix><icon-search /></template>
         </a-input> -->
@@ -183,7 +182,7 @@ const auditEvent = async (record: WhseStockMoveResp) => {
       </template>
       <template #action="{ record }">
         <a-space>
-          <a-link v-permission="['wms:whseStockMove:detail']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
+          <a-link v-permission="['wms:whseStockMove:detail']" :title="$t('page.common.button.detail')" @click="onDetail(record)">{{ $t('page.common.button.detail') }}</a-link>
           <a-link v-if="record.status === 1" v-permission="['wms:whseStockMove:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
           <a-link v-if="record.status === 1" v-permission="['wms:whseStockMove:adult']" :title="$t('page.common.button.audit')" @click="auditEvent(record)">{{ $t('page.common.button.audit') }}</a-link>
           <a-link
@@ -191,10 +190,9 @@ const auditEvent = async (record: WhseStockMoveResp) => {
             v-permission="['wms:whseStockMove:delete']"
             status="danger"
             :disabled="record.disabled"
-            :title="record.disabled ? $t('page.common.button.disabledDelete') : $t('page.common.button.delete')"
             @click="onDelete(record)"
           >
-            {{ $t('page.common.button.delete') }}
+            {{ record.disabled ? $t('page.common.button.disabledDelete') : $t('page.common.button.delete') }}
           </a-link>
         </a-space>
       </template>

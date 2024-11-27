@@ -55,9 +55,9 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   { title: t('wms.whse.stock.out.detail.field.prodTime'), dataIndex: 'prodTime', slotName: 'prodTime' },
   { title: t('wms.whse.stock.out.detail.field.expiryTime'), dataIndex: 'expiryTime', slotName: 'expiryTime' },
   { title: t('wms.whse.stock.out.detail.field.planNum'), dataIndex: 'planNum', slotName: 'planNum' },
-  { title: t('wms.whse.stock.out.detail.field.realNum'), dataIndex: 'realNum', slotName: 'realNum' },
+  // { title: t('wms.whse.stock.out.detail.field.realNum'), dataIndex: 'realNum', slotName: 'realNum' },
   { title: t('wms.whse.stock.out.detail.field.memo'), dataIndex: 'memo', slotName: 'memo' },
-  { title: t('wms.whse.stock.out.detail.field.status'), dataIndex: 'status', slotName: 'status' },
+  // { title: t('wms.whse.stock.out.detail.field.status'), dataIndex: 'status', slotName: 'status' },
   { title: t('wms.whse.stock.out.detail.field.createUser'), dataIndex: 'createUserString', slotName: 'createUser' },
   { title: t('wms.whse.stock.out.detail.field.createTime'), dataIndex: 'createTime', slotName: 'createTime' },
   {
@@ -67,7 +67,7 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
     width: 180,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
-    show: has.hasPermOr(['wms:whseStockOutDetail:update', 'wms:whseStockOutDetail:delete']),
+    show: has.hasPermOr(['wms:whseStockOutDetail:detail', 'wms:whseStockOutDetail:update', 'wms:whseStockOutDetail:delete']),
   },
 ])
 
@@ -100,9 +100,9 @@ const onAdd = () => {
 
 const WhseStockOutDetailDetailDrawerRef = ref<InstanceType<typeof WhseStockOutDetailDetailDrawer>>()
 // 详情
-const onDetail = (record: WhseStockOutInfoResp) => {
-  WhseStockOutDetailDetailDrawerRef.value?.onDetail(record.id)
-}
+// const onDetail = (record: WhseStockOutInfoResp) => {
+//   WhseStockOutDetailDetailDrawerRef.value?.onDetail(record.id)
+// }
 
 const stockOutDone = async () => {
   for (const item of dataList.value ?? []) {
@@ -155,16 +155,16 @@ const to_stock_move_info = (moveId: string) => {
       </template>
       <a-row>
         <a-col :span="6">
-          <span>出库单号: {{ stockOutDetail?.stockOutNo }}</span>
+          <span>{{ $t('wms.whse.stock.out.field.stockOutNo') }}: {{ stockOutDetail?.stockOutNo }}</span>
         </a-col>
         <a-col :span="6">
-          <span>出库名称: {{ stockOutDetail?.name }}</span>
+          <span>{{ $t('wms.whse.stock.out.field.name') }}: {{ stockOutDetail?.name }}</span>
         </a-col>
         <a-col :span="6">
-          <span>仓库地址: {{ stockOutDetail?.whseName }}</span>
+          <span>{{ $t('wms.whse.stock.out.field.whseId') }}: {{ stockOutDetail?.whseName }}</span>
         </a-col>
         <a-col :span="6">
-          <span>关联移库单号: <span @click="to_stock_move_info(stockOutDetail?.stockMoveId!)">{{ stockOutDetail?.stockMoveId }} </span></span>
+          <span>{{ $t('wms.whse.stock.out.field.stockMoveId') }}: <span @click="to_stock_move_info(stockOutDetail?.stockMoveId!)">{{ stockOutDetail?.stockMoveId }} </span></span>
         </a-col>
       </a-row>
     </a-card>
@@ -206,8 +206,8 @@ const to_stock_move_info = (moveId: string) => {
         </template>
         <template #action="{ record }">
           <a-space>
-            <a-link v-permission="['wms:whseStockOutDetail:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
-            <!-- <a-link v-permission="['wms:whseStockOutDetail:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link> -->
+            <!-- <a-link v-permission="['wms:whseStockOutDetail:detail']" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link> -->
+            <!-- <a-link v-permission="['wms:whseStockOutDetail:update']"  @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link> -->
             <a-link
               v-if="stockOutDetail?.status === 1"
               v-permission="['wms:whseStockOutDetail:delete']"
@@ -218,8 +218,8 @@ const to_stock_move_info = (moveId: string) => {
             >
               {{ $t('page.common.button.delete') }}
             </a-link>
-            <a-link v-if="stockOutDetail?.status === 2 && record.status !== 2 " v-permission="['wms:whseStockInDetail:update']" :title="$t('page.common.button.audit')" @click="onAudit(record)">{{ $t('page.common.button.audit') }}</a-link>
-            <a-link v-if="stockOutDetail?.status === 2 && record.status === 2" v-permission="['wms:whseStockInDetail:update']" :title="$t('page.common.button.cancel.audit')" @click="onCancelAudit(record)">{{ $t('page.common.button.cancel.audit') }}</a-link>
+            <a-link v-if="stockOutDetail?.status === 2 && record.status !== 2 " v-permission="['wms:whseStockInDetail:update']" @click="onAudit(record)">{{ $t('page.common.button.audit') }}</a-link>
+            <a-link v-if="stockOutDetail?.status === 2 && record.status === 2" v-permission="['wms:whseStockInDetail:update']" @click="onCancelAudit(record)">{{ $t('page.common.button.cancel.audit') }}</a-link>
           </a-space>
         </template>
       </GiTable>

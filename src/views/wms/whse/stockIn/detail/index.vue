@@ -215,14 +215,13 @@ const to_stock_move_info = (moveId: string) => {
                 v-permission="['wms:whseStockInDetail:delete']"
                 status="danger"
                 :disabled="record.disabled"
-                :title="$t('page.common.button.delete')"
                 @click="onDelete(record)"
               >
                 {{ $t('page.common.button.delete') }}
               </a-link>
             </span>
             <span v-if="stockInDetail?.status === 2">
-              <a-link v-permission="['wms:whseStockInDetail:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link>
+              <!-- <a-link v-permission="['wms:whseStockInDetail:list']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link> -->
               <a-link v-if="record.status !== 2" v-permission="['wms:whseStockInDetail:update']" :title="$t('page.common.button.modify')" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
               <a-link v-if="record.status !== 2" v-permission="['wms:whseStockInDetail:update']" :title="$t('page.common.button.audit')" @click="onAudit(record)">{{ $t('page.common.button.audit') }}</a-link>
               <a-link v-if="record.status === 2" v-permission="['wms:whseStockInDetail:update']" :title="$t('page.common.button.cancel.audit')" @click="onCancelAudit(record)">{{ $t('page.common.button.cancel.audit') }}</a-link>
