@@ -17,6 +17,7 @@
 import { Message } from '@arco-design/web-vue'
 import { useWindowSize } from '@vueuse/core'
 import { mapTree } from 'xe-utils'
+import { useI18n } from 'vue-i18n'
 import { type DeptResp, addDept, getDept, updateDept } from '@/apis/system/dept'
 import { type Columns, GiForm, type Options } from '@/components/GiForm'
 import { useForm } from '@/hooks'
@@ -34,10 +35,12 @@ const emit = defineEmits<{
 
 const { width } = useWindowSize()
 
+const t = useI18n().t
+
 const dataId = ref('')
 const visible = ref(false)
 const isUpdate = computed(() => !!dataId.value)
-const title = computed(() => (isUpdate.value ? '修改部门' : '新增部门'))
+const title = computed(() => (isUpdate.value ? t('sys.dept.page.modify.title') : t('sys.dept.page.add.title')))
 const formRef = ref<InstanceType<typeof GiForm>>()
 
 // 转换为部门树
@@ -60,68 +63,70 @@ const { form, resetForm } = useForm({
   status: 1,
 })
 
-const columns: Columns = reactive([
-  {
-    label: '上级部门',
-    field: 'parentId',
-    type: 'tree-select',
-    data: deptSelectTree,
-    hide: (form) => {
-      return form.parentId === 0
+const columns = computed(() => {
+  return [
+    {
+      label: t('sys.dept.field.parentId'),
+      field: 'parentId',
+      type: 'tree-select',
+      data: deptSelectTree,
+      hide: (form) => {
+        return form.parentId === 0
+      },
+      props: {
+        allowClear: true,
+        allowSearch: true,
+        fallbackOption: false,
+        filterTreeNode(searchKey, nodeData) {
+          if (nodeData.title) {
+            return nodeData.title.toLowerCase().includes(searchKey.toLowerCase())
+          }
+          return false
+        },
+      },
+      rules: [{ required: true, message: t('sys.dept.field.parentId_placeholder') }],
     },
-    props: {
-      allowClear: true,
-      allowSearch: true,
-      fallbackOption: false,
-      filterTreeNode(searchKey, nodeData) {
-        if (nodeData.title) {
-          return nodeData.title.toLowerCase().includes(searchKey.toLowerCase())
-        }
-        return false
+    {
+      label: t('sys.dept.field.name'),
+      field: 'name',
+      type: 'input',
+      rules: [{ required: true, message: t('sys.dept.field.name_placeholder') }],
+      props: {
+        maxLength: 30,
       },
     },
-    rules: [{ required: true, message: '请选择上级部门' }],
-  },
-  {
-    label: '名称',
-    field: 'name',
-    type: 'input',
-    rules: [{ required: true, message: '请输入名称' }],
-    props: {
-      maxLength: 30,
+    {
+      label: t('sys.dept.field.sort'),
+      field: 'sort',
+      type: 'input-number',
+      props: {
+        min: 1,
+        mode: 'button',
+      },
     },
-  },
-  {
-    label: '排序',
-    field: 'sort',
-    type: 'input-number',
-    props: {
-      min: 1,
-      mode: 'button',
+    {
+      label: t('sys.dept.field.description'),
+      field: 'description',
+      type: 'textarea',
+      props: {
+        maxLength: 200,
+        autoSize: { minRows: 3, maxRows: 5 },
+      },
     },
-  },
-  {
-    label: '描述',
-    field: 'description',
-    type: 'textarea',
-    props: {
-      maxLength: 200,
-      autoSize: { minRows: 3, maxRows: 5 },
+    {
+      label: t('sys.dept.field.status'),
+      field: 'status',
+      type: 'switch',
+      props: {
+        type: 'round',
+        checkedValue: 1,
+        uncheckedValue: 2,
+        checkedText: t('page.common.tips.enable'),
+        uncheckedText: t('page.common.tips.disable'),
+      },
     },
-  },
-  {
-    label: '状态',
-    field: 'status',
-    type: 'switch',
-    props: {
-      type: 'round',
-      checkedValue: 1,
-      uncheckedValue: 2,
-      checkedText: '启用',
-      uncheckedText: '禁用',
-    },
-  },
-])
+  ]
+})
 
 // 重置
 const reset = () => {
@@ -144,6 +149,7 @@ const save = async () => {
     emit('save-success')
     return true
   } catch (error) {
+    console.error(error)
     return false
   }
 }

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Message } from '@arco-design/web-vue'
+import { useI18n } from 'vue-i18n'
 import LanguageAddModal from './LanguageAddModal.vue'
 import { type LanguageQuery, type LanguageResp, deleteLanguage, getLanguage, listLanguage, updateLanguage } from '@/apis/system/language'
 import { useDict } from '@/hooks/app'
@@ -8,6 +9,8 @@ import { useDeleteDialog } from '@/hooks/modules/useDeleteDialog'
 defineOptions({ name: 'Language' })
 
 const { language_type } = useDict('language_type')
+
+const t = useI18n().t
 
 const queryForm = reactive<LanguageQuery>({
   moduleId: undefined,
@@ -20,7 +23,7 @@ const queryForm = reactive<LanguageQuery>({
   sort: ['createTime,desc'],
 })
 
-const dataList = ref([], { immediate: true })
+const dataList = ref([])
 // 获取列表
 const search = async () => {
   const data = await listLanguage({ ...queryForm, page: 1, size: 1000 })
@@ -32,7 +35,7 @@ const onDelete = (record: LanguageResp) => {
   return useDeleteDialog(() => deleteLanguage(record.id), () => {
     search()
   }, {
-    content: `是否确定删除该条数据？`,
+    content: t('page.common.message.delete'),
     showModal: true,
   })
 }
@@ -54,9 +57,9 @@ const changeModule = async (item) => {
 const saveContent = async () => {
   const res = await updateLanguage(currentModule.value, currentModule.value!.id)
   if (res.success) {
-    Message.success('修改成功')
+    Message.success(t('page.common.message.modify.success'))
   } else {
-    Message.error('修改失败')
+    Message.success(t('page.common.message.add.success'))
   }
 }
 
@@ -89,13 +92,13 @@ onMounted(() => { search() })
   <div class="table-page">
     <a-row justify="space-between" align="center" class="header page_header">
       <a-space wrap>
-        <div class="title">语言管理</div>
+        <div class="title">{{ $t('menu.system.multilLang') }}</div>
       </a-space>
     </a-row>
     <a-row justify="space-between" align="center" class="header page_header">
       <a-space wrap>
         <a-radio-group v-model="queryForm.dictItem" type="button" @change="search">
-          <a-radio key="all" value="">全部</a-radio>
+          <a-radio key="all" value="">{{ $t('page.common.tips.all') }}</a-radio>
           <a-radio v-for="item of language_type" :key="item.value" :value="item.value"> {{ item.label }}</a-radio>
         </a-radio-group>
       </a-space>
@@ -104,12 +107,14 @@ onMounted(() => { search() })
       <a-col :xs="0" :sm="0" :md="6" :lg="5" :xl="5" :xxl="4" class="h-full ov-hidden">
         <div class="left-tree">
           <div class="left-tree__search flex flex-row">
-            <a-input v-model="queryForm.moduleName" placeholder="请输入模块名称" allow-clear>
+            <!-- <a-input v-model="queryForm.moduleName" placeholder="请输入模块名称" allow-clear>
               <template #prefix><icon-search /></template>
-            </a-input>
-            <button class="m-2" size="large" @click="onAdd">
-              <icon-plus />
-            </button>
+            </a-input> -->
+
+            <a-button v-permission="['wms:language:add']" type="primary" @click="onAdd()">
+              <template #icon><icon-plus /></template>
+              <template #default>{{ $t('page.common.button.add') }}</template>
+            </a-button>
           </div>
           <div class="left-tree__container mt-4">
             <div class="left-tree__tree">
@@ -118,7 +123,7 @@ onMounted(() => { search() })
                   {{ item.moduleName }}
                   <template #actions>
                     <a-link
-                      v-permission="['generator:language:delete']"
+                      v-permission="['wms:language:delete']"
                       status="danger"
                       @click="onDelete(item)"
                     >

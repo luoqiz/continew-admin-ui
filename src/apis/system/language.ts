@@ -31,13 +31,13 @@ export interface LanguageDetailResp {
   updateUserString: string
 }
 export interface LanguageQuery {
-  moduleId: string
-  moduleName: string
-  content: string
-  dictItem: string
-  status: string
-  createUser: string
-  createTime: string
+  moduleId: string | undefined
+  moduleName: string | undefined
+  content: string | undefined
+  dictItem: string | undefined
+  status: string | undefined
+  createUser: string | undefined
+  createTime: string | undefined
   sort: Array<string>
 }
 export interface LanguagePageQuery extends LanguageQuery, PageQuery {}

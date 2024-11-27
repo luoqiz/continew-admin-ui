@@ -2,7 +2,7 @@
   <div class="table-page">
     <GiTable
       ref="tableRef"
-      title="部门管理"
+      :title="$t('sys.dept.table')"
       row-key="id"
       :data="dataList"
       :columns="columns"
@@ -17,44 +17,44 @@
         <IconRight v-else />
       </template>
       <template #toolbar-left>
-        <a-input v-model="name" placeholder="请输入名称" allow-clear>
+        <a-input v-model="name" :placeholder="$t('sys.dept.field.name_placeholder')" allow-clear>
           <template #prefix><icon-search /></template>
         </a-input>
         <a-button @click="reset">
           <template #icon><icon-refresh /></template>
-          <template #default>重置</template>
+          <template #default>{{ $t('page.common.button.reset') }}</template>
         </a-button>
       </template>
       <template #toolbar-right>
         <a-button v-permission="['system:dept:add']" type="primary" @click="onAdd()">
           <template #icon><icon-plus /></template>
-          <template #default>新增</template>
+          <template #default>{{ $t('page.common.button.add') }}</template>
         </a-button>
         <a-button v-permission="['system:dept:export']" @click="onExport">
           <template #icon><icon-download /></template>
-          <template #default>导出</template>
+          <template #default>{{ $t('page.common.button.export') }}</template>
         </a-button>
       </template>
       <template #status="{ record }">
         <GiCellStatus :status="record.status" />
       </template>
       <template #isSystem="{ record }">
-        <a-tag v-if="record.isSystem" color="red" size="small">是</a-tag>
-        <a-tag v-else color="arcoblue" size="small">否</a-tag>
+        <a-tag v-if="record.isSystem" color="red" size="small">{{ $t('page.common.field.true') }}</a-tag>
+        <a-tag v-else color="arcoblue" size="small">{{ $t('page.common.field.false') }}</a-tag>
       </template>
       <template #action="{ record }">
         <a-space>
-          <a-link v-permission="['system:dept:update']" title="修改" @click="onUpdate(record)">修改</a-link>
+          <a-link v-permission="['system:dept:update']" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
           <a-link
             v-permission="['system:dept:delete']"
             status="danger"
             :disabled="record.isSystem"
-            :title="record.isSystem ? '系统内置数据不能删除' : '删除'"
+            :title="record.isSystem ? $t('page.common.tips.data.notDelete') : $t('page.common.button.delete')"
             @click="onDelete(record)"
           >
-            删除
+            {{ $t('page.common.button.delete') }}
           </a-link>
-          <a-link v-permission="['system:dept:add']" title="新增" @click="onAdd(record.id)">新增</a-link>
+          <a-link v-permission="['system:dept:add']" @click="onAdd(record.id)">{{ $t('page.common.button.add') }}</a-link>
         </a-space>
       </template>
     </GiTable>
@@ -64,6 +64,7 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import DeptAddModal from './DeptAddModal.vue'
 import { type DeptQuery, type DeptResp, deleteDept, exportDept, listDept } from '@/apis/system/dept'
 import type { TableInstanceColumns } from '@/components/GiTable/type'
@@ -73,6 +74,8 @@ import { isMobile } from '@/utils'
 import has from '@/utils/has'
 
 defineOptions({ name: 'SystemDept' })
+
+const { t } = useI18n()
 
 const queryForm = reactive<DeptQuery>({})
 const tableRef = ref<InstanceType<typeof GiTable>>()
@@ -118,18 +121,18 @@ const dataList = computed(() => {
   return searchData(name.value)
 })
 
-const columns: TableInstanceColumns[] = [
-  { title: '名称', dataIndex: 'name', minWidth: 170, ellipsis: true, tooltip: true },
-  { title: '状态', dataIndex: 'status', slotName: 'status', align: 'center' },
-  { title: '排序', dataIndex: 'sort', align: 'center', show: false },
-  { title: '系统内置', dataIndex: 'isSystem', slotName: 'isSystem', align: 'center', show: false },
-  { title: '描述', dataIndex: 'description', ellipsis: true, tooltip: true },
-  { title: '创建人', dataIndex: 'createUserString', ellipsis: true, tooltip: true, show: false },
-  { title: '创建时间', dataIndex: 'createTime', width: 180 },
-  { title: '修改人', dataIndex: 'updateUserString', ellipsis: true, tooltip: true, show: false },
-  { title: '修改时间', dataIndex: 'updateTime', width: 180, show: false },
+const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
+  { title: t('sys.dept.field.name'), dataIndex: 'name', minWidth: 170, ellipsis: true, tooltip: true },
+  { title: t('sys.dept.field.status'), dataIndex: 'status', slotName: 'status', align: 'center' },
+  { title: t('sys.dept.field.sort'), dataIndex: 'sort', align: 'center', show: false },
+  { title: t('sys.dept.field.isSystem'), dataIndex: 'isSystem', slotName: 'isSystem', align: 'center', show: false },
+  { title: t('sys.dept.field.description'), dataIndex: 'description', ellipsis: true, tooltip: true },
+  { title: t('sys.dept.field.createUser'), dataIndex: 'createUserString', ellipsis: true, tooltip: true, show: false },
+  { title: t('sys.dept.field.createTime'), dataIndex: 'createTime', width: 180 },
+  { title: t('sys.dept.field.updateUser'), dataIndex: 'updateUserString', ellipsis: true, tooltip: true, show: false },
+  { title: t('sys.dept.field.updateTime'), dataIndex: 'updateTime', width: 180, show: false },
   {
-    title: '操作',
+    title: t('page.common.button.operator'),
     dataIndex: 'action',
     slotName: 'action',
     width: 160,
@@ -137,7 +140,7 @@ const columns: TableInstanceColumns[] = [
     fixed: !isMobile() ? 'right' : undefined,
     show: has.hasPermOr(['system:dept:update', 'system:dept:delete', 'system:dept:add']),
   },
-]
+])
 
 // 重置
 const reset = () => {
@@ -147,7 +150,7 @@ const reset = () => {
 // 删除
 const onDelete = (record: DeptResp) => {
   return handleDelete(() => deleteDept(record.id), {
-    content: `是否确定删除部门「${record.name}」？`,
+    content: `${t('sys.dept.tips.delete')}「${record.name}」？`,
     showModal: true,
   })
 }

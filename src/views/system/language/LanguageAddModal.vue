@@ -15,41 +15,40 @@
 
 <script setup lang="ts">
 import { Message } from '@arco-design/web-vue'
+import { useI18n } from 'vue-i18n'
 import { addLanguage, getLanguage, updateLanguage } from '@/apis/system/language'
 import { type Columns, GiForm, type Options } from '@/components/GiForm'
 import { useForm } from '@/hooks'
-import { useDict } from '@/hooks/app'
 
 const emit = defineEmits<{
   (e: 'save-success'): void
 }>()
 
+const { t } = useI18n()
 const dataId = ref('')
 const isUpdate = computed(() => !!dataId.value)
-const title = computed(() => (isUpdate.value ? '修改语言模块' : '新增语言模块'))
+const title = computed(() => (isUpdate.value ? t('sys.language.page.modify.title') : t('sys.language.page.add.title')))
 const formRef = ref<InstanceType<typeof GiForm>>()
-
-const { language_type } = useDict('language_type')
 
 const options: Options = {
   form: {},
   col: { xs: 24, sm: 24, md: 24, lg: 24, xl: 24, xxl: 24 },
-  btns: { hide: true }
+  btns: { hide: true },
 }
 
-const columns: Columns = reactive([
+const columns: Columns = computed(() => [
   {
-    label: '模块标识',
+    label: t('sys.language.field.moduleId'),
     field: 'moduleId',
     type: 'input',
-    rules: [{ required: true, message: '请输入模块标识' }]
+    rules: [{ required: true, message: t('sys.language.field.moduleId_placeholder') }],
   },
   {
-    label: '模块名称',
+    label: t('sys.language.field.moduleName'),
     field: 'moduleName',
     type: 'input',
-    rules: [{ required: true, message: '请输入模块名称' }]
-  }
+    rules: [{ required: true, message: t('sys.language.field.moduleName_placeholder') }],
+  },
 ])
 
 const { form, resetForm } = useForm({
@@ -86,14 +85,15 @@ const save = async () => {
     if (isInvalid) return false
     if (isUpdate.value) {
       await updateLanguage(form, dataId.value)
-      Message.success('修改成功')
+      Message.success(t('page.common.message.modify.success'))
     } else {
       await addLanguage(form)
-      Message.success('新增成功')
+      Message.success(t('page.common.message.add.success'))
     }
     emit('save-success')
     return true
   } catch (error) {
+    console.error(error)
     return false
   }
 }
