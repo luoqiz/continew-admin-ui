@@ -78,7 +78,7 @@ importers:
         specifier: ^1.11.4
         version: 1.11.13
       echarts:
-        specifier: ^5.4.2
+        specifier: ^5.5.1
         version: 5.5.1
       jsbarcode:
         specifier: ^3.11.6
@@ -107,6 +107,9 @@ importers:
       pinia-plugin-persistedstate:
         specifier: ^3.1.0
         version: 3.2.3(pinia@2.2.6(typescript@5.0.4)(vue@3.5.12(typescript@5.0.4)))
+      qrcode.vue:
+        specifier: ^3.6.0
+        version: 3.6.0(vue@3.5.12(typescript@5.0.4))
       qs:
         specifier: ^6.11.2
         version: 6.13.0
@@ -144,8 +147,8 @@ importers:
         specifier: ^0.3.5
         version: 0.3.5(@types/sortablejs@1.15.8)
       vue-echarts:
-        specifier: ^6.5.5
-        version: 6.7.3(@vue/runtime-core@3.5.12)(echarts@5.5.1)(vue@3.5.12(typescript@5.0.4))
+        specifier: ^7.0.3
+        version: 7.0.3(@vue/runtime-core@3.5.12)(echarts@5.5.1)(vue@3.5.12(typescript@5.0.4))
       vue-i18n:
         specifier: ^10.0.4
         version: 10.0.4(vue@3.5.12(typescript@5.0.4))
@@ -4265,6 +4268,11 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
+  qrcode.vue@3.6.0:
+    resolution: {integrity: sha512-vQcl2fyHYHMjDO1GguCldJxepq2izQjBkDEEu9NENgfVKP6mv/e2SU62WbqYHGwTgWXLhxZ1NCD1dAZKHQq1fg==}
+    peerDependencies:
+      vue: ^3.0.0
+
   qs@6.13.0:
     resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
     engines: {node: '>=0.6'}
@@ -4341,9 +4349,6 @@ packages:
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
     engines: {node: '>=0.10.0'}
-
-  resize-detector@0.3.0:
-    resolution: {integrity: sha512-R/tCuvuOHQ8o2boRP6vgx8hXCCy87H1eY9V5imBYeVNyNVpuL9ciReSccLj2gDcax9+2weXy3bc8Vv+NRXeEvQ==}
 
   resize-observer-polyfill@1.5.1:
     resolution: {integrity: sha512-LwZrotdHOo12nQuZlHEmtuXdqGoOD0OhaxopaNFxWzInpEgaLWoVuAMbTzixuosCx2nEG58ngzW3vxdWoxIgdg==}
@@ -5125,16 +5130,13 @@ packages:
       '@vue/composition-api':
         optional: true
 
-  vue-echarts@6.7.3:
-    resolution: {integrity: sha512-vXLKpALFjbPphW9IfQPOVfb1KjGZ/f8qa/FZHi9lZIWzAnQC1DgnmEK3pJgEkyo6EP7UnX6Bv/V3Ke7p+qCNXA==}
+  vue-echarts@7.0.3:
+    resolution: {integrity: sha512-/jSxNwOsw5+dYAUcwSfkLwKPuzTQ0Cepz1LxCOpj2QcHrrmUa/Ql0eQqMmc1rTPQVrh2JQ29n2dhq75ZcHvRDw==}
     peerDependencies:
-      '@vue/composition-api': ^1.0.5
       '@vue/runtime-core': ^3.0.0
-      echarts: ^5.4.1
-      vue: ^2.6.12 || ^3.1.1
+      echarts: ^5.5.1
+      vue: ^2.7.0 || ^3.1.1
     peerDependenciesMeta:
-      '@vue/composition-api':
-        optional: true
       '@vue/runtime-core':
         optional: true
 
@@ -7606,9 +7608,10 @@ snapshots:
       vue-cropper: 1.1.4
       vue-demi: 0.14.10(vue@3.5.12(typescript@5.0.4))
       vue-draggable-plus: 0.3.5(@types/sortablejs@1.15.8)
-      vue-echarts: 6.7.3(@vue/runtime-core@3.5.12)(echarts@5.5.1)(vue@3.5.12(typescript@5.0.4))
+      vue-echarts: 7.0.3(@vue/runtime-core@3.5.12)(echarts@5.5.1)(vue@3.5.12(typescript@5.0.4))
       vue-i18n: 10.0.4(vue@3.5.12(typescript@5.0.4))
       vue-json-pretty: 2.4.0(vue@3.5.12(typescript@5.0.4))
+      vue-print-next: 1.0.9(vue@3.5.12(typescript@5.0.4))
       vue-router: 4.4.5(vue@3.5.12(typescript@5.0.4))
       xe-utils: 3.5.31
       xgplayer: 2.32.6
@@ -9763,6 +9766,10 @@ snapshots:
 
   punycode@2.3.1: {}
 
+  qrcode.vue@3.6.0(vue@3.5.12(typescript@5.0.4)):
+    dependencies:
+      vue: 3.5.12(typescript@5.0.4)
+
   qs@6.13.0:
     dependencies:
       side-channel: 1.0.6
@@ -9843,8 +9850,6 @@ snapshots:
   repeat-string@1.6.1: {}
 
   require-directory@2.1.1: {}
-
-  resize-detector@0.3.0: {}
 
   resize-observer-polyfill@1.5.1: {}
 
@@ -10752,14 +10757,15 @@ snapshots:
     dependencies:
       '@types/sortablejs': 1.15.8
 
-  vue-echarts@6.7.3(@vue/runtime-core@3.5.12)(echarts@5.5.1)(vue@3.5.12(typescript@5.0.4)):
+  vue-echarts@7.0.3(@vue/runtime-core@3.5.12)(echarts@5.5.1)(vue@3.5.12(typescript@5.0.4)):
     dependencies:
       echarts: 5.5.1
-      resize-detector: 0.3.0
       vue: 3.5.12(typescript@5.0.4)
       vue-demi: 0.13.11(vue@3.5.12(typescript@5.0.4))
     optionalDependencies:
       '@vue/runtime-core': 3.5.12
+    transitivePeerDependencies:
+      - '@vue/composition-api'
 
   vue-eslint-parser@9.4.3(eslint@9.14.0(jiti@1.21.6)):
     dependencies:

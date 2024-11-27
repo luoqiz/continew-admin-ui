@@ -2,6 +2,7 @@
 import JsBarcode from 'jsbarcode'
 import { VuePrintNext, vPrint } from 'vue-print-next'
 import { useI18n } from 'vue-i18n'
+import QrcodeVue from 'qrcode.vue'
 import GoodsSkuAddModal from './GoodsSkuAddModal.vue'
 import GoodsSkuDetailDrawer from './GoodsSkuDetailDrawer.vue'
 import { type GoodsSkuQuery, type GoodsSkuResp, deleteGoodsSku, exportGoodsSku, listGoodsSku } from '@/apis/wms'
@@ -14,11 +15,21 @@ import { useDict } from '@/hooks/app'
 defineOptions({ name: 'GoodsSku' })
 
 const { t } = useI18n()
-const printDom = () => {
-  new VuePrintNext({ el: '#printTest' /** 其他参数 */ })
+const qrcode = ref('')
+const barcodeRef = ref(null)
+
+const printBarcode = () => {
+  new VuePrintNext({ el: '#barcodeEle' /** 其他参数 */ })
 }
 
-const barcodeRef = ref(null)
+const printQrcode = async (text: string) => {
+  qrcode.value = text
+
+  setTimeout(() => {
+    new VuePrintNext({ el: '#qrcodeEle' /** 其他参数 */ })
+  }, 1000)
+}
+
 const createBarcode = (text: string) => {
   const options = {
   // format: 'EAN13', // 格式
@@ -29,22 +40,8 @@ const createBarcode = (text: string) => {
     lineColor: 'black',
   }
   JsBarcode(barcodeRef.value, text, options)
-  printDom()
+  printBarcode()
 }
-// const printObj = reactive({
-//   id: 'printTest', // 绑定打印区域的id
-//   beforeOpenCallback(vue) {
-//     vue.printLoading = true
-//     console.log('打开之前')
-//   },
-//   openCallback(vue) {
-//     vue.printLoading = false
-//     console.log('执行了打印')
-//   },
-//   closeCallback(vue) {
-//     console.log('关闭了打印工具')
-//   },
-// })
 
 const queryForm = reactive<GoodsSkuQuery>({
   barcode: undefined,
@@ -86,7 +83,7 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
     title: t('page.common.button.operator'),
     dataIndex: 'action',
     slotName: 'action',
-    width: 180,
+    width: 220,
     align: 'center',
     fixed: !isMobile() ? 'right' : undefined,
     show: has.hasPermOr(['wms:goodsSku:detail', 'wms:goodsSku:update', 'wms:goodsSku:delete']),
@@ -127,9 +124,9 @@ const onUpdate = (record: GoodsSkuResp) => {
 
 const GoodsSkuDetailDrawerRef = ref<InstanceType<typeof GoodsSkuDetailDrawer>>()
 // 详情
-const onDetail = (record: GoodsSkuResp) => {
-  GoodsSkuDetailDrawerRef.value?.onDetail(record.id)
-}
+// const onDetail = (record: GoodsSkuResp) => {
+//   GoodsSkuDetailDrawerRef.value?.onDetail(record.id)
+// }
 </script>
 
 <template>
@@ -181,6 +178,7 @@ const onDetail = (record: GoodsSkuResp) => {
         <a-space>
           <!-- <a-link v-permission="['wms:goodsSku:detail']" @click="onDetail(record)"> {{ $t('page.common.button.detail') }}</a-link> -->
           <a-link @click="createBarcode(record.barcode)"> {{ $t('wms.goods.sku.printBarcode') }}</a-link>
+          <a-link @click="printQrcode(record.barcode)"> {{ $t('wms.goods.sku.printQrcode') }}</a-link>
           <a-link v-permission="['wms:goodsSku:update']" @click="onUpdate(record)"> {{ $t('page.common.button.modify') }}</a-link>
           <a-link
             v-permission="['wms:goodsSku:delete']"
@@ -198,8 +196,13 @@ const onDetail = (record: GoodsSkuResp) => {
     <GoodsSkuAddModal ref="GoodsSkuAddModalRef" @save-success="search" />
     <GoodsSkuDetailDrawer ref="GoodsSkuDetailDrawerRef" />
     <div v-show="false">
-      <div id="printTest">
+      <div id="barcodeEle">
         <svg ref="barcodeRef"></svg>
+      </div>
+    </div>
+    <div v-show="false">
+      <div id="qrcodeEle">
+        <QrcodeVue :value="qrcode" :size="size" level="H" />
       </div>
     </div>
   </div>
