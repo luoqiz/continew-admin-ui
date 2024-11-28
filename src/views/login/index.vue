@@ -14,17 +14,17 @@
       </a-col>
       <a-col :xs="24" :sm="12" :md="11">
         <div class="login-right">
-          <h3 v-if="isEmailLogin" class="login-right__title">邮箱登录</h3>
+          <!-- <h3 v-if="isEmailLogin" class="login-right__title">邮箱登录</h3> -->
           <EmailLogin v-show="isEmailLogin" />
           <a-tabs v-show="!isEmailLogin" class="login-right__form">
-            <a-tab-pane key="1" title="账号登录">
+            <a-tab-pane key="1" :title="$t('page.login.button.account')">
               <AccountLogin />
             </a-tab-pane>
-            <a-tab-pane key="2" title="手机号登录">
+            <!-- <a-tab-pane key="2" title="手机号登录">
               <PhoneLogin />
-            </a-tab-pane>
+            </a-tab-pane> -->
           </a-tabs>
-          <div class="login-right__oauth">
+          <!-- <div class="login-right__oauth">
             <a-divider orientation="center">其他登录方式</a-divider>
             <div class="list">
               <div v-if="isEmailLogin" class="mode item" @click="toggleLoginMode"><icon-user /> 账号/手机号登录</div>
@@ -36,7 +36,7 @@
                 <GiSvgIcon name="github" :size="24" />
               </a>
             </div>
-          </div>
+          </div> -->
         </div>
       </a-col>
     </a-row>
@@ -63,20 +63,20 @@
     <a-row align="stretch" class="login-box">
       <a-col :xs="24" :sm="12" :md="11">
         <div class="login-right">
-          <h3 v-if="isEmailLogin" class="login-right__title">邮箱登录</h3>
+          <!-- <h3 v-if="isEmailLogin" class="login-right__title">邮箱登录</h3> -->
           <EmailLogin v-show="isEmailLogin" />
           <a-tabs v-show="!isEmailLogin" class="login-right__form">
-            <a-tab-pane key="1" title="账号登录">
+            <a-tab-pane key="1" :title="$t('page.login.button.account')">
               <AccountLogin />
             </a-tab-pane>
-            <a-tab-pane key="2" title="手机号登录">
+            <!-- <a-tab-pane key="2" title="手机号登录">
               <PhoneLogin />
-            </a-tab-pane>
+            </a-tab-pane> -->
           </a-tabs>
         </div>
       </a-col>
     </a-row>
-    <div class="login-right__oauth">
+    <!-- <div class="login-right__oauth">
       <a-divider orientation="center">其他登录方式</a-divider>
       <div class="list">
         <div v-if="isEmailLogin" class="mode item" @click="toggleLoginMode"><icon-user /> 账号/手机号登录</div>
@@ -88,7 +88,7 @@
           <GiSvgIcon name="github" :size="24" />
         </a>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 

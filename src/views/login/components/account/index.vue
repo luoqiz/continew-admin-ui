@@ -4,29 +4,29 @@
     :wrapper-col-style="{ flex: 1 }" size="large" @submit="handleLogin"
   >
     <a-form-item field="username" hide-label>
-      <a-input v-model="form.username" placeholder="请输入用户名" allow-clear />
+      <a-input v-model="form.username" :placeholder="$t('page.login.tips.username_placeholder')" allow-clear />
     </a-form-item>
     <a-form-item field="password" hide-label>
-      <a-input-password v-model="form.password" placeholder="请输入密码" />
+      <a-input-password v-model="form.password" :placeholder="$t('page.login.tips.password_placeholder')" />
     </a-form-item>
     <a-form-item field="captcha" hide-label>
-      <a-input v-model="form.captcha" placeholder="请输入验证码" :max-length="4" allow-clear style="flex: 1 1" />
+      <a-input v-model="form.captcha" :placeholder="$t('page.login.tips.captcha_placeholder')" :max-length="4" allow-clear style="flex: 1 1" />
       <div class="captcha-container" @click="getCaptcha">
-        <img :src="captchaImgBase64" alt="验证码" class="captcha" />
+        <img :src="captchaImgBase64" :alt="$t('captcha')" class="captcha" />
         <div v-if="form.expired" class="overlay">
-          <p>已过期，请刷新</p>
+          <p>{{ $t('page.login.tips.expiredAndRefresh') }}</p>
         </div>
       </div>
     </a-form-item>
     <a-form-item>
       <a-row justify="space-between" align="center" class="w-full">
-        <a-checkbox v-model="loginConfig.rememberMe">记住我</a-checkbox>
-        <a-link>忘记密码</a-link>
+        <a-checkbox v-model="loginConfig.rememberMe">{{ $t('page.login.tips.rememberMe') }}</a-checkbox>
+        <!-- <a-link>{{ $t('page.login.tips.forgotPwd') }}</a-link> -->
       </a-row>
     </a-form-item>
     <a-form-item>
       <a-space direction="vertical" fill class="w-full">
-        <a-button class="btn" type="primary" :loading="loading" html-type="submit" size="large" long>立即登录</a-button>
+        <a-button class="btn" type="primary" :loading="loading" html-type="submit" size="large" long>{{ $t('page.login.button.login') }}</a-button>
       </a-space>
     </a-form-item>
   </a-form>
@@ -35,6 +35,7 @@
 <script setup lang="ts">
 import { type FormInstance, Message } from '@arco-design/web-vue'
 import { useStorage } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
 import { getImageCaptcha } from '@/apis/common'
 import { useTabsStore, useUserStore } from '@/stores'
 import { encryptByRsa } from '@/utils/encrypt'
@@ -55,11 +56,15 @@ const form = reactive({
   uuid: '',
   expired: false,
 })
-const rules: FormInstance['rules'] = {
-  username: [{ required: true, message: '请输入用户名' }],
-  password: [{ required: true, message: '请输入密码' }],
-  captcha: [{ required: true, message: '请输入验证码' }],
-}
+const t = useI18n().t
+
+const rules: FormInstance['rules'] = computed(() => {
+  return {
+    username: [{ required: true, message: t('page.login.tips.username_placeholder') }],
+    password: [{ required: true, message: t('page.login.tips.password_placeholder') }],
+    captcha: [{ required: true, message: t('page.login.tips.captcha_placeholder') }],
+  }
+})
 
 // 验证码过期定时器
 let timer
