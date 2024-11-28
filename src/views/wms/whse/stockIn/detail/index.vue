@@ -167,7 +167,7 @@ const to_stock_move_info = (moveId: string) => {
           <span>{{ $t('wms.whse.stock.in.field.whseId') }}:  {{ stockInDetail?.whseName }}</span>
         </a-col>
         <a-col :span="6">
-          <span>{{ $t('wms.whse.stock.in.field.stockMoveId') }}:   <span @click="to_stock_move_info(stockInDetail?.stockMoveId!)">{{ stockInDetail?.stockMoveId }}</span></span>
+          <span>{{ $t('wms.whse.stock.in.field.stockMoveId') }}:   <a-link @click="to_stock_move_info(stockInDetail?.stockMoveId!)">{{ stockInDetail?.stockMoveNo }}</a-link></span>
         </a-col>
       </a-row>
     </a-card>

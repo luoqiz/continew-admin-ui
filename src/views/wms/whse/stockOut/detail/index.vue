@@ -9,7 +9,6 @@ import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { useDownload, useTable } from '@/hooks'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
-import { useDict } from '@/hooks/app'
 
 defineOptions({ name: 'WhseStockOutDetail' })
 const { t } = useI18n()
@@ -164,7 +163,7 @@ const to_stock_move_info = (moveId: string) => {
           <span>{{ $t('wms.whse.stock.out.field.whseId') }}: {{ stockOutDetail?.whseName }}</span>
         </a-col>
         <a-col :span="6">
-          <span>{{ $t('wms.whse.stock.out.field.stockMoveId') }}: <span @click="to_stock_move_info(stockOutDetail?.stockMoveId!)">{{ stockOutDetail?.stockMoveId }} </span></span>
+          <span>{{ $t('wms.whse.stock.out.field.stockMoveId') }}: <a-link @click="to_stock_move_info(stockOutDetail?.stockMoveId!)">{{ stockOutDetail?.stockMoveNo }} </a-link></span>
         </a-col>
       </a-row>
     </a-card>

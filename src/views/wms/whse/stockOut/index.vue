@@ -53,7 +53,7 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   // { title: t('wms.whse.stock.out.field.whseId'), dataIndex: 'whseId', slotName: 'whseId' },
   { title: t('wms.whse.stock.out.field.whseName'), dataIndex: 'whseName', slotName: 'whseName' },
   { title: t('wms.whse.stock.out.field.whseAreaId'), dataIndex: 'whseAreaId', slotName: 'whseAreaId' },
-  { title: t('wms.whse.stock.out.field.stockMoveId'), dataIndex: 'stockMoveId', slotName: 'stockMoveId' },
+  { title: t('wms.whse.stock.out.field.stockMoveId'), dataIndex: 'stockMoveNo', slotName: 'stockMoveId' },
   { title: t('wms.whse.stock.out.field.outTime'), dataIndex: 'outTime', slotName: 'outTime' },
   { title: t('wms.whse.stock.out.field.status'), dataIndex: 'status', slotName: 'status' },
   { title: t('wms.whse.stock.out.field.createUser'), dataIndex: 'createUser', slotName: 'createUser' },

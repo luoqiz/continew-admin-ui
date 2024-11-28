@@ -84,13 +84,16 @@ const columns = computed<Columns<typeof form>>(() => [
     label: t('wms.goods.sku.field.packUnit'),
     field: 'packUnit',
     type: 'input',
-    rules: [{ required: true, message: t('wms.goods.sku.field.packUnit_placeholder') }],
+    rules: [{ required: false, message: t('wms.goods.sku.field.packUnit_placeholder') }],
   },
   {
     label: t('wms.goods.sku.field.packAmount'),
     field: 'packAmount',
     type: 'input-number',
-    rules: [{ required: true, message: t('wms.goods.sku.field.packAmount_placeholder') }],
+    props: {
+
+    },
+    rules: [{ required: false, message: t('wms.goods.sku.field.packAmount_placeholder') }],
   },
   // {
   //   label: t('wms.goods.sku.field.status'),

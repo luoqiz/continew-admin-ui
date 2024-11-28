@@ -5,7 +5,6 @@ import WhseStockMoveDetialDetailDrawer from './WhseStockMoveDetialDetailDrawer.v
 import { type WhseStockMoveDetialQuery, type WhseStockMoveDetialResp, deleteWhseStockMoveDetial, exportWhseStockMoveDetial, getWhseStockMoveDetail, listWhseStockMoveDetial } from '@/apis/wms/whseStockMoveDetail'
 import type { TableInstanceColumns } from '@/components/GiTable/type'
 import { useDownload, useTable } from '@/hooks'
-import { useDict } from '@/hooks/app'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
 import type { WhseStockMoveDetailResp } from '@/apis/wms'
@@ -137,7 +136,7 @@ const to_stock_in_info = (stockInId: string) => {
           <template #default>{{ $t('page.common.button.export') }}</template>
         </a-button>
       </template>
-      <a-row>
+      <a-row style="height: 36px;">
         <a-col :span="6">
           <span>{{ t('wms.whse.stock.move.field.stockMoveNo') }}: {{ stockMoveDetail?.stockMoveNo }}</span>
         </a-col>
@@ -148,15 +147,15 @@ const to_stock_in_info = (stockInId: string) => {
           <span>{{ t('wms.whse.stock.move.field.stockOutWhseId') }}: {{ stockMoveDetail?.stockOutWhseName }}</span>
         </a-col>
         <a-col :span="6">
-          <span>{{ t('wms.whse.stock.move.field.stockOutId') }}: <span @click="to_stock_out_info(stockMoveDetail?.stockOutId!)">{{ stockMoveDetail?.stockOutId }}</span></span>
+          <span>{{ t('wms.whse.stock.move.field.stockOutId') }}: <a-link @click="to_stock_out_info(stockMoveDetail?.stockOutId!)">{{ stockMoveDetail?.stockOutNo }}</a-link></span>
         </a-col>
       </a-row>
-      <a-row>
+      <a-row style="height: 36px;">
         <a-col :span="6">
           <span>{{ t('wms.whse.stock.move.field.stockInWhseId') }}: {{ stockMoveDetail?.stockInWhseName }}</span>
         </a-col>
         <a-col :span="6">
-          <span>{{ t('wms.whse.stock.move.field.stockInId') }}: <span @click="to_stock_in_info(stockMoveDetail?.stockInId!)">{{ stockMoveDetail?.stockInId }}</span></span>
+          <span>{{ t('wms.whse.stock.move.field.stockInId') }}: <a-link @click="to_stock_in_info(stockMoveDetail?.stockInId!)">{{ stockMoveDetail?.stockInNo }}</a-link></span>
         </a-col>
       </a-row>
     </a-card>

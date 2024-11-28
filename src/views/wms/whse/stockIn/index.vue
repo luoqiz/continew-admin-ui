@@ -5,7 +5,7 @@ import { Message } from '@arco-design/web-vue'
 import WhseStockInAddModal from './WhseStockInAddModal.vue'
 import { type WhseStockInQuery, type WhseStockInResp, deleteWhseStockIn, exportWhseStockIn, listWhseStockIn, updateWhseStockIn, updateWhseStockInStatus } from '@/apis/wms'
 import type { TableInstanceColumns } from '@/components/GiTable/type'
-import { useDownload, useTable, useWhseAddr } from '@/hooks'
+import { useTable, useWhseAddr } from '@/hooks'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
 import CustomWhseSelect from '@/components/WhseSelect/index.vue'
@@ -53,7 +53,7 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   { title: t('wms.whse.stock.in.field.stockInNo'), dataIndex: 'stockInNo', slotName: 'stockInNo' },
   // { title: t('wms.whse.stock.in.field.whseId'), dataIndex: 'whseId', slotName: 'whseId' },
   { title: t('wms.whse.stock.in.field.whseName'), dataIndex: 'whseName', slotName: 'whseName' },
-  { title: t('wms.whse.stock.in.field.stockMoveId'), dataIndex: 'stockMoveId', slotName: 'stockMoveId' },
+  { title: t('wms.whse.stock.in.field.stockMoveId'), dataIndex: 'stockMoveNo', slotName: 'stockMoveId' },
   { title: t('wms.whse.stock.in.field.inTime'), dataIndex: 'inTime', slotName: 'inTime' },
   { title: t('wms.whse.stock.in.field.status'), dataIndex: 'status', slotName: 'status' },
   { title: t('wms.whse.stock.in.field.memo'), dataIndex: 'memo', slotName: 'memo' },
