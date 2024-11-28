@@ -14,6 +14,7 @@ const chartData = ref<{ name: string, value: any }[]>([])
 const loading = ref(false)
 const getTodayStockOut = async () => {
   loading.value = true
+  chartData.value = []
   try {
     const res = await staticsStockOutToday(whseId!.value)
     for (const item of res.data) {

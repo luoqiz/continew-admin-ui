@@ -44,7 +44,7 @@ const { whseAddrOptions, loaded } = useWhseAddr()
 const whseId = ref()
 provide('whseId', whseId)
 const changeWhseSelect = () => {
-  console.log('changeWhseSelect', whseId.value)
+  console.log('changeWhseSelect %s', whseId.value)
 }
 
 watch(loaded, () => {
