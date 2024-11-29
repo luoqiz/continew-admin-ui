@@ -23,6 +23,7 @@ export interface WhseStockInInfoResp {
   stockInType: string
   whseId: string
   whseName: string
+  whseType: number
   whseAreaId: string
   stockMoveId: string
   inTime: string

@@ -45,7 +45,7 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   // { title: t('wms.whse.stock.move.detial.field.goodsStockId'), dataIndex: 'goodsStockId', slotName: 'goodsStockId' },
   { title: t('wms.whse.stock.move.detial.field.goodsSku'), dataIndex: 'goodsSku', slotName: 'goodsSku' },
   { title: t('wms.whse.stock.move.detial.field.goodsName'), dataIndex: 'goodsName', slotName: 'goodsName' },
-  { title: t('wms.whse.stock.move.detial.field.moveTime'), dataIndex: 'moveTime', slotName: 'moveTime' },
+  // { title: t('wms.whse.stock.move.detial.field.moveTime'), dataIndex: 'moveTime', slotName: 'moveTime' },
   { title: t('wms.whse.stock.move.detial.field.prodTime'), dataIndex: 'prodTime', slotName: 'prodTime' },
   { title: t('wms.whse.stock.move.detial.field.expiryTime'), dataIndex: 'expiryTime', slotName: 'expiryTime' },
   { title: t('wms.whse.stock.move.detial.field.planNum'), dataIndex: 'planNum', slotName: 'planNum' },
@@ -171,6 +171,14 @@ const to_stock_in_info = (stockInId: string) => {
       :disabled-column-keys="['name']"
       @refresh="search"
     >
+      <template #planNum="{ record }">
+        <span v-if="stockMoveDetail?.stockOutWhseType === 1">
+          {{ record.planNum }}  {{ record.goodsUnit }}
+        </span>
+        <span v-else>
+          {{ record.planNum ? `${record.planNum} ${record.goodsPackUnit}` : "" }}
+        </span>
+      </template>
       <!-- <template #toolbar-left>
         <a-input v-model="queryForm.stockMoveNo" placeholder="请输入移库单号" allow-clear @change="search">
           <template #prefix><icon-search /></template>

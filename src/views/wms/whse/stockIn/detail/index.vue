@@ -182,6 +182,22 @@ const to_stock_move_info = (moveId: string) => {
         :disabled-column-keys="['name']"
         @refresh="getStockInInfo"
       >
+        <template #planNum="{ record }">
+          <span v-if="stockInDetail?.whseType === 1 || stockInDetail?.whseType === 2">
+            {{ record.planNum }}  {{ record.goodsUnit }}
+          </span>
+          <span v-else>
+            {{ record.planNum ? `${record.planNum} ${record.goodsPackUnit}` : "" }}
+          </span>
+        </template>
+        <template #realNum="{ record }">
+          <span v-if="stockInDetail?.whseType === 1 || stockInDetail?.whseType === 2">
+            {{ record.realNum ? `${record.realNum} ${record.goodsUnit}` : "" }}
+          </span>
+          <span v-else>
+            {{ record.realNum ? `${record.realNum} ${record.goodsPackUnit}` : "" }}
+          </span>
+        </template>
         <!-- <template #toolbar-left>
 	    <a-input v-model="queryForm.stockInId" placeholder="请输入入库id编号" allow-clear @change="search">
 	      <template #prefix><icon-search /></template>

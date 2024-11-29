@@ -178,6 +178,14 @@ const to_stock_move_info = (moveId: string) => {
         :disabled-column-keys="['name']"
         @refresh="getStockOutInfo"
       >
+        <template #planNum="{ record }">
+          <span v-if="stockOutDetail?.whseType === 1">
+            {{ record.planNum }}  {{ record.goodsUnit }}
+          </span>
+          <span v-else>
+            {{ record.planNum ? `${record.planNum} ${record.goodsPackUnit}` : "" }}
+          </span>
+        </template>
         <!-- <template #toolbar-left>
           <a-input v-model="queryForm.stockOutId" placeholder="请输入出库单号" allow-clear @change="getStockOutInfo">
             <template #prefix><icon-search /></template>

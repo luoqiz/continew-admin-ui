@@ -9,7 +9,7 @@
     <a-row align="stretch" class="login-box">
       <a-col :xs="0" :sm="12" :md="13">
         <div class="login-left">
-          <img class="login-left__img" src="@/assets/images/banner.png" alt="banner" />
+          <img class="login-left__img" src="@/assets/images/logo.png" alt="banner" />
         </div>
       </a-col>
       <a-col :xs="24" :sm="12" :md="11">
@@ -365,7 +365,8 @@ const onOauth = async (source: string) => {
     align-items: center;
     position: relative;
     overflow: hidden;
-    background: linear-gradient(60deg, rgb(var(--primary-6)), rgb(var(--primary-3)));
+    // background: linear-gradient(60deg, rgb(var(--primary-6)), rgb(var(--primary-3)));
+    background: linear-gradient(60deg, #FBA707, #FFE880);
 
     &__img {
       width: 100%;
