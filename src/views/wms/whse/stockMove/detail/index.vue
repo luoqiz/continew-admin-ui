@@ -159,9 +159,10 @@ const to_stock_in_info = (stockInId: string) => {
         </a-col>
       </a-row>
     </a-card>
+    <a-card :title="$t('wms.whse.stock.move.detial.table')" class="mb--16px">
+    </a-card>
     <GiTable
       row-key="id"
-      :title="$t('wms.whse.stock.move.detial.table')"
       :data="dataList"
       :columns="columns"
       :loading="loading"

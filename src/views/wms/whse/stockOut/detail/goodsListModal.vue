@@ -2,10 +2,7 @@
 import { useI18n } from 'vue-i18n'
 import { type GoodsStockQuery, type GoodsStockResp, addWhseStockOutDetail, deleteGoodsStock, exportGoodsStock, listGoodsStock } from '@/apis/wms'
 import type { TableInstanceColumns } from '@/components/GiTable/type'
-import { useDownload, useTable } from '@/hooks'
-import { isMobile } from '@/utils'
-import has from '@/utils/has'
-import { useDict } from '@/hooks/app'
+import { useTable } from '@/hooks'
 
 defineOptions({ name: 'WmsGoodsStock' })
 const emit = defineEmits<{
@@ -52,10 +49,10 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   { title: t('wms.goods.stock.field.stockInNo'), dataIndex: 'stockInNo', slotName: 'stockInNo' },
   { title: t('wms.goods.stock.field.initNum'), dataIndex: 'initNum', slotName: 'initNum' },
   { title: t('wms.goods.stock.field.realNum'), dataIndex: 'realNum', slotName: 'realNum' },
-  { title: t('wms.goods.stock.field.whseType'), dataIndex: 'whseType', slotName: 'whseType' },
+  // { title: t('wms.goods.stock.field.whseType'), dataIndex: 'whseType', slotName: 'whseType' },
   // { title: t('wms.goods.stock.field.whseId'), dataIndex: 'whseId', slotName: 'whseId' },
   { title: t('wms.goods.stock.field.whseName'), dataIndex: 'whseName', slotName: 'whseId' },
-  { title: t('wms.goods.stock.field.status'), dataIndex: 'status', slotName: 'status' },
+  // { title: t('wms.goods.stock.field.status'), dataIndex: 'status', slotName: 'status' },
   { title: t('wms.goods.stock.field.prodTime'), dataIndex: 'prodTime', slotName: 'prodTime' },
   { title: t('wms.goods.stock.field.expiryTime'), dataIndex: 'expiryTime', slotName: 'expiryTime' },
   { title: t('wms.goods.stock.field.info'), dataIndex: 'info', slotName: 'info' },
@@ -153,6 +150,22 @@ defineExpose({ show })
         :disabled-column-keys="['name']"
         @refresh="search"
       >
+        <template #initNum="{ record }">
+          <span v-if="record?.whseType === 1">
+            {{ record.initNum }}  {{ record.goodsUnit }}
+          </span>
+          <span v-else>
+            {{ record.initNum ? `${record.initNum} ${record.goodsPackUnit}` : "" }}
+          </span>
+        </template>
+        <template #realNum="{ record }">
+          <span v-if="record?.whseType === 1">
+            {{ record.realNum }}  {{ record.goodsUnit }}
+          </span>
+          <span v-else>
+            {{ record.realNum ? `${record.realNum} ${record.goodsPackUnit}` : "" }}
+          </span>
+        </template>
         <template #action="{ record }">
           <a-space>
             <a-link :title="$t('page.common.button.checkout')" @click="handleClick(record)">{{ $t('wms.whse.stock.out.button.stockOut') }}</a-link>

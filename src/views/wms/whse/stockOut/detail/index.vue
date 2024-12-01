@@ -146,7 +146,7 @@ const to_stock_move_info = (moveId: string) => {
   <div class="table-page">
     <a-card :title="$t('wms.whse.stock.in.detail.billInfo.title')">
       <template #extra>
-        <a-button v-if="stockOutDetail?.status === 2" @click="stockOutDone()">全部完成</a-button>
+        <a-button v-if="stockOutDetail?.status === 2" @click="stockOutDone()">{{ $t('page.common.tips.allFinish') }}</a-button>
         <a-button v-permission="['wms:whseStockOutDetail:export']" @click="onExport">
           <template #icon><icon-download /></template>
           <template #default>{{ $t('page.common.button.export') }}</template>
@@ -167,26 +167,27 @@ const to_stock_move_info = (moveId: string) => {
         </a-col>
       </a-row>
     </a-card>
-    <a-card :title="$t('wms.whse.stock.out.detail.table')">
-      <GiTable
-        row-key="id"
-        :data="dataList"
-        :columns="columns"
-        :loading="loading"
-        :scroll="{ x: '100%', y: '100%', minWidth: 1000 }"
-        :disabled-tools="['size']"
-        :disabled-column-keys="['name']"
-        @refresh="getStockOutInfo"
-      >
-        <template #planNum="{ record }">
-          <span v-if="stockOutDetail?.whseType === 1">
-            {{ record.planNum }}  {{ record.goodsUnit }}
-          </span>
-          <span v-else>
-            {{ record.planNum ? `${record.planNum} ${record.goodsPackUnit}` : "" }}
-          </span>
-        </template>
-        <!-- <template #toolbar-left>
+    <a-card :title="$t('wms.whse.stock.out.detail.table')" class="mb--16px">
+    </a-card>
+    <GiTable
+      row-key="id"
+      :data="dataList"
+      :columns="columns"
+      :loading="loading"
+      :scroll="{ x: '100%', y: '100%', minWidth: 1000 }"
+      :disabled-tools="['size']"
+      :disabled-column-keys="['name']"
+      @refresh="getStockOutInfo"
+    >
+      <template #planNum="{ record }">
+        <span v-if="stockOutDetail?.whseType === 1">
+          {{ record.planNum }}  {{ record.goodsUnit }}
+        </span>
+        <span v-else>
+          {{ record.planNum ? `${record.planNum} ${record.goodsPackUnit}` : "" }}
+        </span>
+      </template>
+      <!-- <template #toolbar-left>
           <a-input v-model="queryForm.stockOutId" placeholder="请输入出库单号" allow-clear @change="getStockOutInfo">
             <template #prefix><icon-search /></template>
           </a-input>
@@ -201,36 +202,35 @@ const to_stock_move_info = (moveId: string) => {
             <template #default>{{ $t('page.common.button.reset') }}</template>
           </a-button>
         </template> -->
-        <template #toolbar-right>
-          <a-button v-if="stockOutDetail?.status === 1 " v-permission="['wms:whseStockOutDetail:add']" type="primary" @click="onAdd">
-            <template #icon><icon-plus /></template>
-            <template #default>{{ $t('page.common.button.add') }}</template>
-          </a-button>
-          <!-- <a-button v-permission="['wms:whseStockOutDetail:export']" @click="onExport">
+      <template #toolbar-right>
+        <a-button v-if="stockOutDetail?.status === 1 " v-permission="['wms:whseStockOutDetail:add']" type="primary" @click="onAdd">
+          <template #icon><icon-plus /></template>
+          <template #default>{{ $t('page.common.button.add') }}</template>
+        </a-button>
+        <!-- <a-button v-permission="['wms:whseStockOutDetail:export']" @click="onExport">
             <template #icon><icon-download /></template>
             <template #default>{{ $t('page.common.button.export') }}</template>
           </a-button> -->
-        </template>
-        <template #action="{ record }">
-          <a-space>
-            <!-- <a-link v-permission="['wms:whseStockOutDetail:detail']" @click="onDetail(record)">{{ $t('page.common.button.detail') }}</a-link> -->
-            <!-- <a-link v-permission="['wms:whseStockOutDetail:update']"  @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link> -->
-            <a-link
-              v-if="stockOutDetail?.status === 1"
-              v-permission="['wms:whseStockOutDetail:delete']"
-              status="danger"
-              :disabled="record.disabled"
-              :title="$t('page.common.button.delete')"
-              @click="onDelete(record)"
-            >
-              {{ $t('page.common.button.delete') }}
-            </a-link>
-            <a-link v-if="stockOutDetail?.status === 2 && record.status !== 2 " v-permission="['wms:whseStockInDetail:update']" @click="onAudit(record)">{{ $t('page.common.button.audit') }}</a-link>
-            <a-link v-if="stockOutDetail?.status === 2 && record.status === 2" v-permission="['wms:whseStockInDetail:update']" @click="onCancelAudit(record)">{{ $t('page.common.button.cancel.audit') }}</a-link>
-          </a-space>
-        </template>
-      </GiTable>
-    </a-card>
+      </template>
+      <template #action="{ record }">
+        <a-space>
+          <!-- <a-link v-permission="['wms:whseStockOutDetail:detail']" @click="onDetail(record)">{{ $t('page.common.button.detail') }}</a-link> -->
+          <!-- <a-link v-permission="['wms:whseStockOutDetail:update']"  @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link> -->
+          <a-link
+            v-if="stockOutDetail?.status === 1"
+            v-permission="['wms:whseStockOutDetail:delete']"
+            status="danger"
+            :disabled="record.disabled"
+            :title="$t('page.common.button.delete')"
+            @click="onDelete(record)"
+          >
+            {{ $t('page.common.button.delete') }}
+          </a-link>
+          <a-link v-if="stockOutDetail?.status === 2 && record.status !== 2 " v-permission="['wms:whseStockInDetail:update']" @click="onAudit(record)">{{ $t('page.common.button.audit') }}</a-link>
+          <a-link v-if="stockOutDetail?.status === 2 && record.status === 2" v-permission="['wms:whseStockInDetail:update']" @click="onCancelAudit(record)">{{ $t('page.common.button.cancel.audit') }}</a-link>
+        </a-space>
+      </template>
+    </GiTable>
 
     <GoodsListModal ref="goodsListModalRef" @save-success="getStockOutInfo" />
     <WhseStockOutDetailDetailDrawer ref="WhseStockOutDetailDetailDrawerRef" />

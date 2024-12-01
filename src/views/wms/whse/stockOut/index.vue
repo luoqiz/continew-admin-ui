@@ -5,10 +5,9 @@ import WhseStockOutAddModal from './WhseStockOutAddModal.vue'
 import WhseStockOutDetailDrawer from './WhseStockOutDetailDrawer.vue'
 import { type WhseStockOutQuery, type WhseStockOutResp, deleteWhseStockOut, exportWhseStockOut, listWhseStockOut, updateWhseStockOutStatus } from '@/apis/wms'
 import type { TableInstanceColumns } from '@/components/GiTable/type'
-import { useDownload, useTable, useWhseAddr } from '@/hooks'
+import { useTable, useWhseAddr } from '@/hooks'
 import { isMobile } from '@/utils'
 import has from '@/utils/has'
-import { useDict } from '@/hooks/app'
 
 defineOptions({ name: 'WmsWhseStockOut' })
 const { t } = useI18n()
