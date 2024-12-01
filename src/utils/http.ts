@@ -7,6 +7,7 @@ import modalErrorWrapper from '@/utils/modal-error-wrapper'
 import messageErrorWrapper from '@/utils/message-error-wrapper'
 import notificationErrorWrapper from '@/utils/notification-error-wrapper'
 import router from '@/router'
+import { i18n } from '@/config/i18n'
 
 interface ICodeMessage {
   [propName: number]: string
@@ -41,6 +42,9 @@ http.interceptors.request.use(
     if (token) {
       if (!config.headers) {
         config.headers = {}
+      }
+      if (i18n) {
+        config.headers['accept-language'] = i18n.global.availableLocales[0] ?? 'zh'
       }
       config.headers.Authorization = `Bearer ${token}`
     }
