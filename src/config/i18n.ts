@@ -9,8 +9,8 @@ const setI18n = (lang) => {
     legacy: false,
     globalInjection: true,
     messages: {
-      zh: lang.data
-    }
+      zh: lang.data,
+    },
   })
   return i18n
 }

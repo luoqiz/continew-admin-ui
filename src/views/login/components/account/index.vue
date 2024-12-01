@@ -12,7 +12,7 @@
     <a-form-item field="captcha" hide-label>
       <a-input v-model="form.captcha" :placeholder="$t('page.login.tips.captcha_placeholder')" :max-length="4" allow-clear style="flex: 1 1" />
       <div class="captcha-container" @click="getCaptcha">
-        <img :src="captchaImgBase64" :alt="$t('captcha')" class="captcha" />
+        <img :src="captchaImgBase64" :alt="$t('page.login.tips.captcha')" class="captcha" />
         <div v-if="form.expired" class="overlay">
           <p>{{ $t('page.login.tips.expiredAndRefresh') }}</p>
         </div>
@@ -126,7 +126,7 @@ const handleLogin = async () => {
     })
     const { rememberMe } = loginConfig.value
     loginConfig.value.username = rememberMe ? form.username : ''
-    Message.success('欢迎使用')
+    // Message.success('欢迎使用')
   } catch (error) {
     getCaptcha()
     form.captcha = ''
