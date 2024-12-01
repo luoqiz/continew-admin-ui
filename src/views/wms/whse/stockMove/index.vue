@@ -47,7 +47,6 @@ const columns: ComputedRef<TableInstanceColumns[]> = computed(() => [
   { title: t('wms.whse.stock.move.field.memo'), dataIndex: 'memo', slotName: 'memo' },
   { title: t('wms.whse.stock.move.field.createUser'), dataIndex: 'createUserString', slotName: 'createUser' },
   { title: t('wms.whse.stock.move.field.createTime'), dataIndex: 'createTime', slotName: 'createTime' },
-
   {
     title: t('page.common.button.operator'),
     slotName: 'action',
@@ -143,6 +142,7 @@ const auditEvent = async (record: WhseStockMoveResp) => {
         <span v-if="record.status === 1"> {{ $t('wms.whse.stock.move.state.s1') }}</span>
         <span v-if="record.status === 2"> {{ $t('wms.whse.stock.move.state.s2') }}</span>
         <span v-if="record.status === 3"> {{ $t('wms.whse.stock.move.state.s3') }}</span>
+        <span v-if="record.status === 4"> {{ $t('wms.whse.stock.move.state.s4') }}</span>
       </template>
       <template #toolbar-left>
         <a-input v-model="queryForm.name" :placeholder="$t('wms.whse.stock.move.field.name_placeholder')" allow-clear @change="loadData">

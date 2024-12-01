@@ -180,11 +180,8 @@ const to_stock_move_info = (moveId: string) => {
       @refresh="getStockOutInfo"
     >
       <template #planNum="{ record }">
-        <span v-if="stockOutDetail?.whseType === 1">
-          {{ record.planNum }}  {{ record.goodsUnit }}
-        </span>
-        <span v-else>
-          {{ record.planNum ? `${record.planNum} ${record.goodsPackUnit}` : "" }}
+        <span>
+          {{ record.planNum ? `${record.planNum} ${record.goodsUnit}` : "" }}
         </span>
       </template>
       <!-- <template #toolbar-left>

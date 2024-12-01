@@ -186,61 +186,77 @@ const verifyCancel = async (record: GoodsInventoryCountItemResp) => {
         </a-col>
       </a-row>
     </a-card>
-    <a-card :title="$t('wms.goods.inventory.count.item.table')">
-      <GiTable
-        row-key="id"
-        :data="dataList"
-        :columns="columns"
-        :loading="loading"
-        :scroll="{ x: '100%', y: '100%', minWidth: 1000 }"
-        :pagination="pagination"
-        :disabled-tools="['size']"
-        :disabled-column-keys="['name']"
-        @refresh="search"
-      >
-        <template #toolbar-left>
-          <!-- <a-input v-model="queryForm.inventoryCountId" placeholder="请输入盘点表id" allow-clear @change="search">
+    <a-card :title="$t('wms.goods.inventory.count.item.table')" class="mb-16px">    </a-card>
+    <GiTable
+      row-key="id"
+      :data="dataList"
+      :columns="columns"
+      :loading="loading"
+      :scroll="{ x: '100%', y: '100%', minWidth: 1000 }"
+      :pagination="pagination"
+      :disabled-tools="['size']"
+      :disabled-column-keys="['name']"
+      @refresh="search"
+    >
+      <template #initNum="{ record }">
+        <span v-if="record.goodsUnpacking && icDetail?.whseType === 1">
+          {{ record.initNum }} {{ record.goodsPackUnit }}
+        </span>
+        <span v-else>
+          {{ record.initNum }} {{ record.goodsUnit }}
+        </span>
+      </template>
+      <template #realNum="{ record }">
+        <span v-if="record.goodsUnpacking && icDetail?.whseType === 1">
+          {{ record.realNum ? record.realNum + record.goodsPackUnit : "" }}
+        </span>
+        <span v-else>
+          {{ record.realNum ? record.realNum + record.goodsUnit : "" }}
+        </span>
+      </template>
+      <template #toolbar-left>
+        <!-- <a-input v-model="queryForm.inventoryCountId" placeholder="请输入盘点表id" allow-clear @change="search">
             <template #prefix><icon-search /></template>
           </a-input> -->
-          <!-- <a-input v-model="queryForm.stockId" placeholder="请输入库存id" allow-clear @change="search">
+        <!-- <a-input v-model="queryForm.stockId" placeholder="请输入库存id" allow-clear @change="search">
             <template #prefix><icon-search /></template>
           </a-input> -->
-          <!-- <a-input v-model="queryForm.goodsId" placeholder="请输入物料编号" allow-clear @change="search">
+        <!-- <a-input v-model="queryForm.goodsId" placeholder="请输入物料编号" allow-clear @change="search">
             <template #prefix><icon-search /></template>
           </a-input> -->
-          <a-input v-model="queryForm.goodsSku" :placeholder="$t('wms.goods.inventory.count.item.field.goodsSku_placeholder')" allow-clear @change="search">
-            <template #prefix><icon-search /></template>
-          </a-input>
-          <a-select
-            v-model="queryForm.status"
-            :options="status_enum"
-            :placeholder="$t('wms.goods.inventory.count.item.field.status_placeholder')"
-            allow-clear
-            style="width: 150px"
-            @change="search"
-          />
-          <a-button @click="reset">
-            <template #icon><icon-refresh /></template>
-            <template #default>{{ $t('page.common.button.reset') }}</template>
-          </a-button>
-        </template>
-        <template #toolbar-right>
-          <!-- <a-button v-permission="['wms:goodsInventoryCountItem:add']" type="primary" @click="onAdd">
+        <a-input v-model="queryForm.goodsSku" :placeholder="$t('wms.goods.inventory.count.item.field.goodsSku_placeholder')" allow-clear @change="search">
+          <template #prefix><icon-search /></template>
+        </a-input>
+        <!-- <a-select
+          v-model="queryForm.status"
+          :options="status_enum"
+          :placeholder="$t('wms.goods.inventory.count.item.field.status_placeholder')"
+          allow-clear
+          style="width: 150px"
+          @change="search"
+        /> -->
+        <a-button @click="reset">
+          <template #icon><icon-refresh /></template>
+          <template #default>{{ $t('page.common.button.reset') }}</template>
+        </a-button>
+      </template>
+      <template #toolbar-right>
+        <!-- <a-button v-permission="['wms:goodsInventoryCountItem:add']" type="primary" @click="onAdd">
             <template #icon><icon-plus /></template>
             <template #default>{{ $t('page.common.button.add') }}</template>
           </a-button> -->
-          <a-button v-permission="['wms:goodsInventoryCountItem:export']" @click="onExport">
-            <template #icon><icon-download /></template>
-            <template #default>{{ $t('page.common.button.export') }}</template>
-          </a-button>
-        </template>
-        <template #action="{ record }">
-          <a-space>
-            <!-- <a-link v-permission="['wms:goodsInventoryCountItem:detail']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link> -->
-            <a-link v-if="record.status === 1" v-permission="['wms:goodsInventoryCountItem:update']" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
-            <a-link v-if="record.status === 1" v-permission="['wms:goodsInventoryCountItem:update']" @click="verifySuccess(record)">{{ $t('page.common.button.verify') }}</a-link>
-            <a-link v-if="record.status === 2" v-permission="['wms:goodsInventoryCountItem:update']" @click="verifyCancel(record)">{{ $t('page.common.button.verifyCancel') }}</a-link>
-            <!--
+        <a-button v-permission="['wms:goodsInventoryCountItem:export']" @click="onExport">
+          <template #icon><icon-download /></template>
+          <!-- <template #default>{{ $t('page.common.button.export') }}</template> -->
+        </a-button>
+      </template>
+      <template #action="{ record }">
+        <a-space>
+          <!-- <a-link v-permission="['wms:goodsInventoryCountItem:detail']" :title="$t('page.common.button.checkout')" @click="onDetail(record)">{{ $t('page.common.button.checkout') }}</a-link> -->
+          <a-link v-if="record.status === 1" v-permission="['wms:goodsInventoryCountItem:update']" @click="onUpdate(record)">{{ $t('page.common.button.modify') }}</a-link>
+          <a-link v-if="record.status === 1" v-permission="['wms:goodsInventoryCountItem:update']" @click="verifySuccess(record)">{{ $t('page.common.button.verify') }}</a-link>
+          <a-link v-if="record.status === 2" v-permission="['wms:goodsInventoryCountItem:update']" @click="verifyCancel(record)">{{ $t('page.common.button.verifyCancel') }}</a-link>
+          <!--
             <a-link
               v-permission="['wms:goodsInventoryCountItem:delete']"
               status="danger"
@@ -250,10 +266,9 @@ const verifyCancel = async (record: GoodsInventoryCountItemResp) => {
             >
               {{ $t('page.common.button.delete') }}
             </a-link> -->
-          </a-space>
-        </template>
-      </GiTable>
-    </a-card>
+        </a-space>
+      </template>
+    </GiTable>
 
     <GoodsInventoryCountItemAddModal ref="GoodsInventoryCountItemAddModalRef" @save-success="search" />
     <GoodsInventoryCountItemDetailDrawer ref="GoodsInventoryCountItemDetailDrawerRef" />
