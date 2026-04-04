@@ -1,14 +1,21 @@
+<!--
+  @file Breadcrumb 组件
+  @description 面包屑导航组件，支持路由导航、动画效果和自定义样式
+-->
 <template>
   <a-breadcrumb>
     <transition-group name="breadcrumb">
-      <div v-for="(item, index) in breadcrumbList" :key="item.meta.title">
+      <div v-for="(item, index) in breadcrumbList" :key="item.path + index">
         <a-breadcrumb-item v-bind="attrs">
-          <span
-            v-if="item.redirect === 'noRedirect' || item.redirect === '' || index === breadcrumbList.length - 1"
-            class="gi_line_1"
-          >{{ item.meta.title }}</span>
-          <span v-else class="gi_line_1 breadcrumb-item-title" @click="handleLink(item)">{{ item.meta.title }}</span>
-          <icon-right v-if="index !== breadcrumbList.length - 1" />
+          <template v-if="isLastItem(index) && !hasRedirect(item)">
+            <span class="gi-line-1">{{ lastTitle || item.meta.title }}</span>
+          </template>
+          <template v-else>
+            <span class="gi-line-1 breadcrumb__item-title" @click="handleLink(item)">
+              {{ item.meta.title }}
+            </span>
+          </template>
+          <icon-right v-if="!isLastItem(index)" />
         </a-breadcrumb-item>
       </div>
     </transition-group>
@@ -16,56 +23,81 @@
 </template>
 
 <script setup lang="ts">
-import type { RouteLocationMatched } from 'vue-router'
-import { findTree } from 'xe-utils'
-import { useRouteStore } from '@/stores'
+import type { RouteLocationMatched, RouteLocationNormalized, RouteRecordNormalized } from 'vue-router'
 import { useRouteListener } from '@/hooks'
+import { useTabsStore } from '@/stores'
 
+/** 组件名称 */
+defineOptions({ name: 'Breadcrumb' })
+
+/** 路由相关 */
 const route = useRoute()
 const router = useRouter()
-const { routes } = useRouteStore()
 const attrs = useAttrs()
+
 const { listenerRouteChange } = useRouteListener()
+const tabsStore = useTabsStore()
 
-let home: RouteLocationMatched | null = null
-const getHome = () => {
-  if (!home) {
-    const cloneRoutes = JSON.parse(JSON.stringify(routes)) as RouteLocationMatched[]
-    const obj = findTree(cloneRoutes, (i) => i.path === '/dashboard/workplace')
-    home = obj.item
+type BreadcrumbRoute = RouteLocationMatched | RouteRecordNormalized
+
+/** 首页路由缓存 */
+let homeRoute: BreadcrumbRoute | null = null
+
+/** 获取首页路由信息 */
+const getHomeRoute = () => {
+  if (homeRoute) return homeRoute
+  const allRoutes = router.getRoutes()
+  const obj = allRoutes.find((i) => i.path === '/')
+  if (obj) {
+    homeRoute = obj
   }
+  return homeRoute
 }
 
-const breadcrumbList = ref<RouteLocationMatched[]>([])
-function getBreadcrumbList() {
-  getHome()
-  const cloneRoutes = JSON.parse(JSON.stringify(routes)) as RouteLocationMatched[]
-  const obj = findTree(cloneRoutes, (i) => i.path === route.path)
-  // 获取当前节点的所有上级节点集合，包含当前节点
-  const arr = obj ? obj.nodes.filter((item) => item.meta && item.meta.title && item.meta.breadcrumb !== false) : []
-  if (home) {
-    breadcrumbList.value = [home, ...arr]
-  }
+/** 面包屑列表 */
+const breadcrumbList = ref<BreadcrumbRoute[]>([])
+
+/** 获取面包屑列表 */
+const getBreadcrumbList = (to: RouteLocationNormalized) => {
+  const home = getHomeRoute()
+  const arr = to.matched.filter((i) => i.meta.title && i.meta.breadcrumb !== false)
+  breadcrumbList.value = home && arr[0]?.path !== home.path ? [home, ...arr] : arr
 }
-getBreadcrumbList()
+
+/** 判断是否为最后一项 */
+const isLastItem = (index: number) => index === breadcrumbList.value.length - 1
+
+/** 判断是否有重定向 */
+const hasRedirect = (item: BreadcrumbRoute) =>
+  item.redirect && item.redirect !== 'noRedirect' && item.redirect !== ''
+
+/** 处理路由跳转 */
+const handleLink = (item: BreadcrumbRoute) => {
+  const { redirect, path, children } = item
+  if (redirect === 'noRedirect' && children.length) {
+    const obj = children?.[0]
+    router.push(obj?.meta?.activeMenu || obj.path)
+    return
+  }
+  if (redirect) {
+    router.push(redirect as string)
+    return
+  }
+  router.push(path)
+}
 
 /** 监听路由变化 */
 listenerRouteChange(({ to }) => {
   if (to.path.startsWith('/redirect/')) return
-  getBreadcrumbList()
+  getBreadcrumbList(to)
 }, true)
 
-// 路由跳转
-function handleLink(item: RouteLocationMatched) {
-  const { redirect, path } = item
-  if (redirect) {
-    return router.push(redirect as string)
-  }
-  router.push(path)
-}
+const lastTitle = computed(() => {
+  return tabsStore.tabList.find((i) => i.path === route.path)?.meta?.title || ''
+})
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 /** breadcrumb-transform 面包屑动画 */
 .breadcrumb-enter-active {
   transition: all 0.2s;
@@ -78,21 +110,22 @@ function handleLink(item: RouteLocationMatched) {
 }
 
 :deep(.arco-breadcrumb-item) {
-  padding: 0;
   display: flex;
   align-items: center;
+  padding: 0;
 
   .arco-icon-right {
     margin: 0 4px;
   }
 }
 
-.breadcrumb-item-title {
-  transition: all 0.3s;
+.breadcrumb__item-title {
   cursor: pointer;
+  transition: all 0.3s;
+
   &:hover {
-    color: $color-theme;
     font-weight: 600;
+    color: rgb(var(--primary-6));
   }
 }
 </style>
