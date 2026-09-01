@@ -53,6 +53,7 @@ const storeSetup = () => {
 
   // 登录
   const accountLogin = async (req: AccountLoginReq, tenantCode?: string) => {
+    // tenantCode 仅用于无域名租户；有域名租户由后端从当前 Host 解析。
     const res = await accountLoginApi({ ...req, clientId: import.meta.env.VITE_CLIENT_ID, authType: AuthTypeConstants.ACCOUNT }, tenantCode)
     setToken(res.data.token)
     tenantStore.setTenantId(res.data.tenantId)
@@ -76,8 +77,9 @@ const storeSetup = () => {
   }
 
   // 三方账号登录
-  const socialLogin = async (source: string, req: any) => {
-    const res: any = await socialLoginApi({ ...req, source, clientId: import.meta.env.VITE_CLIENT_ID, authType: AuthTypeConstants.SOCIAL })
+  const socialLogin = async (source: string, req: any, tenantCode?: string) => {
+    // 社交登录回调与账号登录遵循同一套租户入口规则。
+    const res: any = await socialLoginApi({ ...req, source, clientId: import.meta.env.VITE_CLIENT_ID, authType: AuthTypeConstants.SOCIAL }, tenantCode)
     setToken(res.data.token)
     tenantStore.setTenantId(res.data.tenantId)
     token.value = res.data.token

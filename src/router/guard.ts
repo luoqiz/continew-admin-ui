@@ -2,6 +2,7 @@ import { Button, Message, Notification, Space } from '@arco-design/web-vue'
 import NProgress from 'nprogress'
 import type { Router } from 'vue-router'
 import { useRouteStore, useUserStore } from '@/stores'
+import { ensureTenantAuthContext } from '@/apis/tenant/common'
 import { getToken } from '@/utils/auth'
 import { isHttp } from '@/utils/validate'
 import 'nprogress/nprogress.css'
@@ -83,6 +84,8 @@ export const resetHasRouteFlag = () => {
 export const setupRouterGuard = (router: Router) => {
   router.beforeEach(async (to, from, next) => {
     NProgress.start()
+    // 权限判断前先确定当前 Host 的租户认证入口，避免刷新后沿用上一次入口的租户状态。
+    await ensureTenantAuthContext().catch(() => undefined)
     const userStore = useUserStore()
     const routeStore = useRouteStore()
     // 判断该用户是否登录

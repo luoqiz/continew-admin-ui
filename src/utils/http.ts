@@ -59,8 +59,16 @@ http.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`
     }
     const tenantStore = useTenantStore()
-    if (tenantStore.tenantEnabled && tenantStore.tenantId) {
+    // 只有兼容入口才发送租户 ID；平台域名和普通租户域名由后端根据 Host 解析租户。
+    const hasTenantCode = Object.keys(config.headers).some((name) => {
+      return name.toLowerCase() === 'x-tenant-code' && !!config.headers?.[name]
+    })
+    if (tenantStore.shouldSendTenantHeader && tenantStore.tenantId && !hasTenantCode) {
+      // 兼容旧租户模式：优先使用已解析/登录返回的租户 ID，减少只传租户编码的查询。
       config.headers['X-Tenant-Id'] = tenantStore.tenantId
+    } else {
+      // 域名入口必须移除客户端租户 ID，避免前端状态污染请求。
+      delete config.headers['X-Tenant-Id']
     }
     return config
   },

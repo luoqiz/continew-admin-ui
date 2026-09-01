@@ -8,8 +8,9 @@
     size="large"
     @submit="handleLogin"
   >
+    <!-- 只有无域名租户的兼容入口需要手工输入租户编码。 -->
     <a-form-item v-if="tenantStore.needInputTenantCode" field="tenantCode" hide-label>
-      <a-input v-model="tenantCode" placeholder="请输入租户编码（不输入时为默认租户）" allow-clear />
+      <a-input v-model="tenantStore.tenantCode" placeholder="请输入租户编码" allow-clear />
     </a-form-item>
     <a-form-item field="phone" hide-label>
       <a-input v-model="form.phone" placeholder="请输入手机号" :max-length="11" allow-clear />
@@ -53,8 +54,6 @@ const form = reactive({
   phone: '',
   captcha: '',
 })
-const tenantCode = ref()
-
 const rules: FormInstance['rules'] = {
   phone: [
     { required: true, message: '请输入手机号' },
@@ -74,7 +73,8 @@ const handleLogin = async () => {
   if (isInvalid) return
   try {
     loading.value = true
-    await userStore.phoneLogin(form, tenantCode.value)
+    // 域名入口不会传 tenantCode，后端使用当前 Host 解析租户。
+    await userStore.phoneLogin(form, tenantStore.tenantCode)
     tabsStore.reset()
     const { redirect, ...othersQuery } = router.currentRoute.value.query
 

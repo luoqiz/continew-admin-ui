@@ -96,16 +96,17 @@
 </template>
 
 <script setup lang="ts">
+import { Message } from '@arco-design/web-vue'
 import { computed, ref } from 'vue'
 import Background from './components/background/index.vue'
 import AccountLogin from './components/account/index.vue'
 import PhoneLogin from './components/phone/index.vue'
 import EmailLogin from './components/email/index.vue'
+import { ensureTenantAuthContext } from '@/apis/tenant/common'
 import { socialAuth } from '@/apis/auth'
 import { useAppStore } from '@/stores'
-import { useTenantStore } from '@/stores/modules/tenant'
+import { TENANT_AUTH_CODE_STORAGE_KEY, useTenantStore } from '@/stores/modules/tenant'
 import { useDevice } from '@/hooks'
-import { getTenantIdByDomain, getTenantStatus } from '@/apis'
 
 defineOptions({ name: 'Login' })
 
@@ -126,23 +127,25 @@ const toggleLoginMode = () => {
 
 // 第三方登录授权
 const onOauth = async (source: string) => {
-  const { data } = await socialAuth(source)
+  // 域名入口的租户上下文由后端签名写入 state；只有兼容入口才传租户编码。
+  const tenantCode = tenantStore.tenantAuthMode === 'LEGACY' ? tenantStore.tenantCode : undefined
+  if (tenantStore.needInputTenantCode && !tenantCode) {
+    Message.warning('请先输入租户编码')
+    return
+  }
+  if (tenantCode) {
+    // OAuth 回调可能跨域，暂存租户编码供回调页恢复旧模式上下文。
+    sessionStorage.setItem(TENANT_AUTH_CODE_STORAGE_KEY, tenantCode)
+  } else {
+    sessionStorage.removeItem(TENANT_AUTH_CODE_STORAGE_KEY)
+  }
+  const { data } = await socialAuth(source, tenantCode)
   window.location.href = data.authorizeUrl
 }
 
-// 查询租户状态和租户编码
-const onGetTenant = async () => {
-  const { data } = await getTenantStatus()
-  tenantStore.setTenantEnable(data)
-  // 开启租户 根据地址(域名)查询租户code
-  if (data) {
-    const domain = window.location.hostname
-    const { data: tenantId } = await getTenantIdByDomain(domain)
-    tenantStore.setTenantId(tenantId)
-  }
-}
+// 租户认证入口由路由守卫统一初始化；这里兜底触发，保证直接打开登录页也能正确显示表单。
 onMounted(() => {
-  onGetTenant()
+  ensureTenantAuthContext().catch(() => undefined)
 })
 </script>
 

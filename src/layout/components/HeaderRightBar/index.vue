@@ -81,7 +81,7 @@ import Message from './Message.vue'
 import SettingDrawer from './SettingDrawer.vue'
 import Search from './Search.vue'
 import { getUnreadMessageCount } from '@/apis'
-import { useUserStore } from '@/stores'
+import { useTenantStore, useUserStore } from '@/stores'
 import { getToken } from '@/utils/auth'
 import { useBreakpoint, useDevice } from '@/hooks'
 
@@ -97,9 +97,17 @@ onBeforeUnmount(() => {
 })
 
 const unreadMessageCount = ref(0)
+const tenantStore = useTenantStore()
 // 初始化 WebSocket
 const initWebSocket = (token: string) => {
-  socket = new WebSocket(`${import.meta.env.VITE_API_WS_URL}/websocket?token=${token}`)
+  // 优先使用显式配置的地址；未配置时使用当前页面同源地址，适配平台和普通租户域名。
+  const wsBaseUrl = import.meta.env.VITE_API_WS_URL || `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}`
+  const query = new URLSearchParams({ token })
+  if (tenantStore.shouldSendTenantHeader && tenantStore.tenantId) {
+    // 仅兼容入口需要通过 query 传租户 ID，域名入口由后端根据握手 Host 解析。
+    query.set('tenantId', tenantStore.tenantId)
+  }
+  socket = new WebSocket(`${wsBaseUrl}/websocket?${query.toString()}`)
   socket.onopen = () => {
     // console.log('WebSocket connection opened')
   }

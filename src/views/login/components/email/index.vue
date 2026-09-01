@@ -8,8 +8,9 @@
     size="large"
     @submit="handleLogin"
   >
+    <!-- 只有无域名租户的兼容入口需要手工输入租户编码。 -->
     <a-form-item v-if="tenantStore.needInputTenantCode" field="tenantCode" hide-label>
-      <a-input v-model="tenantCode" placeholder="请输入租户编码（不输入时为默认租户）" allow-clear />
+      <a-input v-model="tenantStore.tenantCode" placeholder="请输入租户编码" allow-clear />
     </a-form-item>
     <a-form-item field="email" hide-label>
       <a-input v-model="form.email" placeholder="请输入邮箱" allow-clear />
@@ -53,8 +54,6 @@ const form = reactive({
   email: '',
   captcha: '',
 })
-const tenantCode = ref()
-
 const rules: FormInstance['rules'] = {
   email: [
     { required: true, message: '请输入邮箱' },
@@ -74,7 +73,8 @@ const handleLogin = async () => {
     const isInvalid = await formRef.value?.validate()
     if (isInvalid) return
     loading.value = true
-    await userStore.emailLogin(form, tenantCode.value)
+    // 域名入口不会传 tenantCode，后端使用当前 Host 解析租户。
+    await userStore.emailLogin(form, tenantStore.tenantCode)
     tabsStore.reset()
     const { redirect, ...othersQuery } = router.currentRoute.value.query
 

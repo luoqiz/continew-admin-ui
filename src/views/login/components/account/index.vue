@@ -8,8 +8,9 @@
     size="large"
     @submit="handleLogin"
   >
+    <!-- 只有无域名租户的兼容入口需要手工输入租户编码。 -->
     <a-form-item v-if="tenantStore.needInputTenantCode" field="tenantCode" hide-label>
-      <a-input v-model="tenantCode" placeholder="请输入租户编码（不输入时为默认租户）" allow-clear />
+      <a-input v-model="tenantStore.tenantCode" placeholder="请输入租户编码" allow-clear />
     </a-form-item>
     <a-form-item field="username" hide-label>
       <a-input v-model="form.username" placeholder="请输入用户名" allow-clear />
@@ -58,7 +59,6 @@ const loginConfig = useStorage('login-config', {
 const isCaptchaEnabled = ref(true)
 // 验证码图片
 const captchaImgBase64 = ref()
-const tenantCode = ref()
 const formRef = ref<FormInstance>()
 const form = reactive({
   username: loginConfig.value.username,
@@ -120,12 +120,13 @@ const handleLogin = async () => {
     if (isInvalid) return
     loading.value = true
 
+    // 登录 API 会由请求层按入口模式决定是否附加租户信息。
     await userStore.accountLogin({
       username: form.username,
       password: encryptByRsa(form.password) || '',
       captcha: form.captcha,
       uuid: form.uuid,
-    }, tenantCode.value)
+    }, tenantStore.tenantCode)
     tabsStore.reset()
     const { redirect, ...othersQuery } = router.currentRoute.value.query
     const { rememberMe } = loginConfig.value
